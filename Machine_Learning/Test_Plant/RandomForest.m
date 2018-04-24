@@ -1,0 +1,196 @@
+%RANDOMFOREST Creates and evaluates RF performance
+clear all;
+close all;
+clc;
+%% Test Plant Specifics
+load('testData_0104.mat');
+saveToMatFile = true;
+matFileName = 'ResultsRF_1404';
+optimizeMLHyperparameters = false;
+mlMethod = 'RF';
+freqsTotal = length(freqs);
+wavesTotal = length(waveform);
+[makeTotal ~] = size(makeMatrix);
+% DataSet
+fSelected = 1;
+waveformSelected = 3;
+if waveformSelected == 1
+    appendMatFileName = '_sine.mat';
+elseif waveformSelected == 2
+    appendMatFileName = '_square.mat';    
+elseif waveformSelected == 3
+    appendMatFileName = '_saw.mat';
+elseif waveformSelected == 4
+    appendMatFileName = '_step.mat';
+end
+matFileName = [matFileName appendMatFileName]; 
+makeSelected = 1:8;
+numInputs = 4;
+numOutputs = 3;
+NameInputs = {'DmndVap','Combs','Aire','Agua'};
+NameOutputs = {'PressVap','Oxy','WaterLvl'};
+%% Training & Testing
+% effectiveReactionTime = Different from actual sampling time, because it
+% corresponds to the time that the process actually shows some relevant
+% change. In other words, its a multiple of the sampling time (required for
+% simulation or implementation) that produces relevant observations.
+effectiveReactionTime = 5;
+selectionParameters.p1 = fSelected;
+selectionParameters.p2 = waveformSelected;
+% Each Subset on it's own (leaves 8 out, because it is test) -> XVal
+% afterwards
+for m = 1:length(makeSelected)-1
+    dataTraining(m).subSetsIndex = [m];
+end
+% Special Combinations
+dataTraining(m+1).subSetsIndex = [1 3 5 7];
+dataTraining(m+2).subSetsIndex = [2 4 6];
+dataTraining(m+3).subSetsIndex = [1 2 3 4 5 6 7];
+[garbage , numSubSets] = size(dataTraining);
+UBackshiftMatrix = [0 0 0 0;
+                    1 1 1 1;
+                    2 2 2 2;
+                    2 1 1 0;
+                    2 0 1 1;
+                    1 0 2 2;
+                    2 0 0 2;
+                    ];
+
+[backshiftCasesU garbage] = size(UBackshiftMatrix);
+YBackshiftMatrix = [1 1 1;
+                    2 2 2;
+                    2 1 2;
+                    1 2 1;
+                    1 1 2;
+                    ];
+[backshiftCasesY garbage] = size(YBackshiftMatrix);
+% numTrees = {100};
+% inBagFraction = {1};
+% predictOOB = {'on'};
+% minLeafSize = {5};
+% oobPredictorImporance = {'on'};
+% predictorSelectionTest = {'curvature','allpairs'};
+mlParameters = {100,1,'on',10,'on','curvature'};
+maxMinLS = 20;
+minLS = optimizableVariable('minLS',[1,maxMinLS],'Type','integer');
+hyperparametersRF = minLS;
+
+seed = rng('default'); % For reproducibility (should look into this after)
+bayOptIterations = 30;
+for experiment = 1:numSubSets%1:numSubSets
+    for delayUCases = 1:backshiftCasesU%1:backshiftCasesU
+        UPastValues = UBackshiftMatrix(delayUCases,:);
+        for delayYCases = 1:backshiftCasesY%1:backshiftCasesY
+            YPastValues = YBackshiftMatrix(delayYCases,:);
+            printInConsole = sprintf("Experimento %d para delay en U %d y delay en y %d",experiment,...
+                delayUCases,delayYCases);
+            disp(printInConsole)
+            pause(1)
+            for y = 1:numOutputs
+                TrainingSubset(y).InputData = [];
+                TrainingSubset(y).OutputData = [];
+                TrainingSubset(y).PredictorNames = {};
+            end
+            for subsetIndex = 1:length(dataTraining(experiment).subSetsIndex)
+                choice = subsetIndex;
+                % Prepare IO Data for model building
+                [IOData,garbage] = Prepare_IO_Data(choice,numInputs,numOutputs,effectiveReactionTime,...
+                                                          selectionParameters,UPastValues,YPastValues,...
+                                                          results,NameInputs,NameOutputs,mlMethod);
+                for y = 1:numOutputs
+                   TrainingSubset(y).InputData = vertcat(TrainingSubset(y).InputData,IOData(y).InputTimeSeries); 
+                   TrainingSubset(y).OutputData = vertcat(TrainingSubset(y).OutputData,IOData(y).OutputTimeSeries);
+                   TrainingSubset(y).PredictorNames = IOData(y).PredictorNames;
+                end
+            end
+            
+%             if (optimizeMLHyperparameters)
+%                 
+%             else
+            % Generate Machine Learnt model for IO Data
+            % Under construction (too many results, impossible to
+            % handle/analize)
+% %             for nt = 1:length(numTrees)
+% %                 for ibf = 1:length(inBagFraction)
+% %                     for pOOB = 1:length(predictOOB)
+% %                         for mls = 1:length(minLeafSize)
+% %                             for oobpi = 1:length(oobPredictorImportance)
+% %                                 for pst = 1:length(predictorSelectionTest)
+% %                                     mlParameters = {numTrees{nt},inBagFraction{ibf},predictOOB{pOOB},minLeafSize{mls},...
+% %                                         oobPredictorImportance{oobpi},predictorSelectionTest{pst}};
+% %                                     ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters);
+% %                                 end
+% %                             end
+% %                         end
+% %                     end
+% %                 end
+% %             end
+            if (optimizeMLHyperparameters)
+            % Optimize HyperParameter LeafSize
+                disp('Optimizing')
+                pause(2)
+                tic;
+                for y = 1:numOutputs
+                    BayOptResults = bayesopt(@(params)oobErrorRF(params,TrainingSubset(y).InputData,TrainingSubset(y).OutputData,...
+                        mlParameters),hyperparametersRF,'AcquisitionFunctionName','expected-improvement-plus','Verbose',0,...
+                        'PlotFcn',[],'MaxObjectiveEvaluations',bayOptIterations);
+                    bestHyp(y) = BayOptResults.XAtMinObjective{1,1};
+    %                 close all;
+                end
+                optimizationTimes(experiment,delayUCases,delayYCases) = toc;
+                clear BayOptResults
+            else
+                for y = 1:numOutputs
+                    bestHyp(y) = mlParameters{4};
+                end
+                optimizationTimes(experiment,delayUCases,delayYCases) = NaN;
+            end
+            pause(2)
+            disp('Generating Machine Learning Model')
+            
+            tic;
+            ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,bestHyp,mlMethod);
+            mlTimes(experiment,delayUCases,delayYCases) = toc;
+            % Test Model
+            testBatch = 8;
+            % Test Model
+            choice = testBatch;
+
+            for y = 1:numOutputs
+                TrainingSubset(y).InputData = [];
+                TrainingSubset(y).OutputData = [];
+            end
+            % Prepare IO Data for model building
+            [IOData,delayMaxInTime] = Prepare_IO_Data(choice,numInputs,numOutputs,effectiveReactionTime,...
+                                                      selectionParameters,UPastValues,YPastValues,...
+                                                      results,NameInputs,NameOutputs,mlMethod);
+
+            % Prediction
+            for y = 1:numOutputs
+               PredictedOutputs = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
+               ValidationOutputs = results(selectionParameters.p1,selectionParameters.p2,choice).outputs(1+delayMaxInTime:end,y);
+               ML_Results(experiment,delayUCases,delayYCases).Results(y).MSE = immse(PredictedOutputs,ValidationOutputs);
+               ML_Results(experiment,delayUCases,delayYCases).Results(y).Correlation = corr(PredictedOutputs,ValidationOutputs);
+               ML_Results(experiment,delayUCases,delayYCases).Results(y).OOBError = oobError(ML_Model(y).Model);
+               ML_Results(experiment,delayUCases,delayYCases).Results(y).OOBPredictorImportance = ML_Model(y).Model.OOBPermutedPredictorDeltaError;
+               ML_Results(experiment,delayUCases,delayYCases).Results(y).NumPredictorSplit = ML_Model(y).Model.NumPredictorSplit;
+               ML_Results(experiment,delayUCases,delayYCases).Results(y).MinLeafSize = ML_Model(y).Model.MinLeafSize;
+
+
+%             end
+            end
+%             clearvars -except ML_Results results experiment delayUCases delayYCases dataTraining fSelected waveformSelected makeSelected ...
+%                 UBackshiftMatrix YBackshiftMatrix effectiveReactionTime numInputs numOutputs numSamples numSubSets ...
+%                 UPastValues numDelayUCases numDelayYCases NameInputs NameOutputs selectionParameters hyperparametersRF mlParameters...
+%                 optimizeMLHyperparameters backshiftCasesY backshiftCasesU bayOptIterations optimizationTimes mlTimes saveToMatFile...
+%                 mlMethod;
+            clearvars IOData delayMaxInTime ML_Model BayOptResults
+        end
+    end
+end
+%% Save
+if (saveToMatFile)
+    save(matFileName,'ML_Results','numSubSets','backshiftCasesY','backshiftCasesU','effectiveReactionTime',...
+           'UBackshiftMatrix','YBackshiftMatrix','dataTraining','NameInputs','NameOutputs','optimizationTimes','mlTimes',...
+           'bayOptIterations','optimizeMLHyperparameters','testBatch');
+end
