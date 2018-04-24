@@ -40,6 +40,39 @@ for m = 1:length(makeSelected)
     dataTraining(m).subSetsIndex = [m];
 end
 [garbage , numSubSets] = size(dataTraining);
+for ns = 1:numSubSets
+    tSets = dataTraining(ns).subSetsIndex;
+    VLADIMIR = [];
+    for cv = 1:numOutputs
+        OutputVLADIMIR = [];
+        for tS = 1:length(tSets)
+            choice = tSets(tS);
+            OutputVLADIMIR = vertcat(OutputVLADIMIR(:),...
+                   results(selectionParameters.p1,selectionParameters.p2,choice).outputs(:,cv));
+        end
+        NameOutputs{cv} = NameOutputs{cv};
+        TrainingBigSet(ns).Outputs.TimeSeries(:,cv)  = OutputVLADIMIR(:);
+        TestBigSet.Outputs.TimeSeries(:,cv) = results(selectionParameters.p1,selectionParameters.p2,testBatch).outputs(:,cv);
+    end
+         
+end
+for ns = 1:numSubSets
+    tSets = dataTraining(ns).subSetsIndex;
+    VLADIMIR = [];
+    for cv = 1:numInputs
+        OutputVLADIMIR = [];
+        for tS = 1:length(tSets)
+            choice = tSets(tS);
+            OutputVLADIMIR = vertcat(OutputVLADIMIR(:),...
+                   results(selectionParameters.p1,selectionParameters.p2,choice).inputs.signals.values(:,cv));
+        end
+        NameInputs{cv} = NameInputs{cv};
+        TrainingBigSet(ns).Inputs.TimeSeries(:,cv)  = OutputVLADIMIR(:);
+        TestBigSet.Inputs.TimeSeries(:,cv) = results(selectionParameters.p1,selectionParameters.p2,testBatch).inputs.signals.values(:,cv);
+    end
+         
+end
+%%
 NA = [0:1]*effectiveReactionTime; %Order
 NB = [1:2]*effectiveReactionTime; % Order of B+1 polinomial 
 NC = [0:2]*effectiveReactionTime;
@@ -52,7 +85,7 @@ seed = rng('default'); % For reproducibility (should look into this after)
 bayOptIterations = 30;
 bestHyp = -1; % Bogey
 %%
-for experiment = 1:numSubSets%1:numSubSets
+for experiment = 7:numSubSets%1:numSubSets
     for offsetChoice = 1:2
         for focusChoice = 1:2
             for na = 1:length(NA)
@@ -63,20 +96,19 @@ for experiment = 1:numSubSets%1:numSubSets
                             mlParameters{3} = offsetOptions{2,offsetChoice};
                             mlParameters{6} = focusOptions{focusChoice};
                             armaxOrder = [NA(na) NB(nb) NC(nc) NK(nk)];
-                            choice = experiment;
                             % Bogey: backward compatibility
                             UPastValues = -1;
                             YPastValues = Dt; %Should change in next versions
-                            [TrainingSubset,garbage] = Prepare_IO_Data(choice,numInputs,numOutputs,effectiveReactionTime,...
-                                                                  selectionParameters,UPastValues,YPastValues,...
-                                                                  results,NameInputs,NameOutputs,mlMethod);
+                            [TrainingSubset,garbage] = Prepare_IO_Data(experiment,numInputs,numOutputs,effectiveReactionTime,...
+                                                                        UPastValues,YPastValues,...
+                                                                        TrainingBigSet,NameInputs,NameOutputs,mlMethod);
                             ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,armaxOrder,mlMethod);
                             % Test
 
                             choice = testBatch;
-                            [TestSubset,garbage] = Prepare_IO_Data(choice,numInputs,numOutputs,effectiveReactionTime,...
-                                                                  selectionParameters,UPastValues,YPastValues,...
-                                                                  results,NameInputs,NameOutputs,mlMethod);
+                            [TestSubset,garbage] = Prepare_IO_Data(1,numInputs,numOutputs,effectiveReactionTime,...
+                                                    UPastValues,YPastValues,...
+                                                    TestBigSet,NameInputs,NameOutputs,mlMethod);
                             YOffset = zeros(numOutputs,numOutputs);
                             UOffset = zeros(numInputs,numInputs);
                             if strcmp(mlParameters{2},'R_I_DC')
@@ -99,8 +131,6 @@ for experiment = 1:numSubSets%1:numSubSets
                                     end
                                 end
                             end
-%                             PredictedOutputs = lsim(ML_Model.Model,TestSubset.InputData-ones(length(tVector),numInputs)*...
-%                                 UOffset,tVector,ML_Model.Model.x0);
                             PredictedOutputs = lsim(ML_Model.Model,TestSubset.InputData-ones(length(tVector),numInputs)*...
                                 UOffset,tVector);
                             PredictedOutputs = PredictedOutputs+ones(length(tVector),numOutputs)*YOffset;

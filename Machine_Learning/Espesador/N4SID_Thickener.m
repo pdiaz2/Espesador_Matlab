@@ -59,19 +59,19 @@ for experiment = 1:1%1:numSubSets
             % Bogey: backward compatibility
             UPastValues = -1;
             YPastValues = Dt; %Should change in next versions
-            [TrainingSubset,garbage] = Prepare_IO_Data(choice,numInputs,numOutputs,effectiveReactionTime,...
-                                                  selectionParameters,UPastValues,YPastValues,...
+            [TrainingSubset,garbage] = Prepare_IO_Data(numInputs,numOutputs,effectiveReactionTime,UPastValues,YPastValues,...
                                                   TrainingBigSet,NameInputs,NameOutputs,mlMethod);
 
             ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,bestHyp,mlMethod);
             % Test
 
             choice = testBatch;
-            [TestSubset,garbage] = Prepare_IO_Data(choice,numInputs,numOutputs,effectiveReactionTime,...
-                                                  selectionParameters,UPastValues,YPastValues,...
+            [TestSubset,garbage] = Prepare_IO_Data(numInputs,numOutputs,effectiveReactionTime,UPastValues,YPastValues,...
                                                   TestBigSet,NameInputs,NameOutputs,mlMethod);
             YOffset = zeros(numOutputs,numOutputs);
             UOffset = zeros(numInputs,numInputs);
+            % Remove Input offset if Required (centers the model in the
+            % origin of where it was identified)
             if strcmp(mlParameters{2},'R_I_DC')
                 UDC = mean(TrainingSubset.InputData)';
                 for a = 1:numInputs
@@ -82,6 +82,8 @@ for experiment = 1:1%1:numSubSets
                     end
                 end  
             end
+            % Remove output offset if Required (centers the model in the
+            % origin of where it was identified)
             if strcmp(mlParameters{3},'R_O_DC')
                 YDC = mean(TrainingSubset.OutputData)';
                 for a = 1:numOutputs

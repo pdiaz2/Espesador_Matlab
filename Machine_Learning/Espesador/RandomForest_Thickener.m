@@ -75,18 +75,14 @@ selectionParameters = -1; % Bogey
                 TrainingSubset(y).OutputData = [];
                 TrainingSubset(y).PredictorNames = {};
             end
-%             for subsetIndex = 1:length(dataTraining(experiment).subSetsIndex)
-                choice = -1;
-                % Prepare IO Data for model building
-                [IOData,garbage] = Prepare_IO_Data(choice,numInputs,numOutputs,effectiveReactionTime,...
-                                                          selectionParameters,UPastValues,YPastValues,...
-                                                          TrainingBigSet,NameInputs,NameOutputs,mlMethod);
-                for y = 1:numOutputs
-                   TrainingSubset(y).InputData = vertcat(TrainingSubset(y).InputData,IOData(y).InputTimeSeries); 
-                   TrainingSubset(y).OutputData = vertcat(TrainingSubset(y).OutputData,IOData(y).OutputTimeSeries);
-                   TrainingSubset(y).PredictorNames = IOData(y).PredictorNames;
-                end
-%             end
+            % Prepare IO Data for model building
+            [IOData,garbage] = Prepare_IO_Data(numInputs,numOutputs,effectiveReactionTime,UPastValues,YPastValues,...
+                                                      TrainingBigSet,NameInputs,NameOutputs,mlMethod);
+            for y = 1:numOutputs
+               TrainingSubset(y).InputData = vertcat(TrainingSubset(y).InputData,IOData(y).InputTimeSeries); 
+               TrainingSubset(y).OutputData = vertcat(TrainingSubset(y).OutputData,IOData(y).OutputTimeSeries);
+               TrainingSubset(y).PredictorNames = IOData(y).PredictorNames;
+            end
             if (optimizeMLHyperparameters)
             % Optimize HyperParameter LeafSize
                 disp('Optimizing')
@@ -114,7 +110,6 @@ selectionParameters = -1; % Bogey
             ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,bestHyp,mlMethod);
             mlTimes(experiment,delayUCases,delayYCases) = toc;
             % Test Model
-            % Test Model
             choice = testBatch;
 
             for y = 1:numOutputs
@@ -122,8 +117,7 @@ selectionParameters = -1; % Bogey
                 TrainingSubset(y).OutputData = [];
             end
             % Prepare IO Data for model building
-            [IOData,delayMaxInTime] = Prepare_IO_Data(choice,numInputs,numOutputs,effectiveReactionTime,...
-                                                      selectionParameters,UPastValues,YPastValues,...
+            [IOData,delayMaxInTime] = Prepare_IO_Data(numInputs,numOutputs,effectiveReactionTime,UPastValues,YPastValues,...
                                                       TestBigSet,NameInputs,NameOutputs,mlMethod);
 
             % Prediction
