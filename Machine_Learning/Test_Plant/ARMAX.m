@@ -40,7 +40,7 @@ for m = 1:length(makeSelected)
     dataTraining(m).subSetsIndex = [m];
 end
 [garbage , numSubSets] = size(dataTraining);
-NA = [0:3]*effectiveReactionTime; %Order
+NA = [0:1]*effectiveReactionTime; %Order
 NB = [1:2]*effectiveReactionTime; % Order of B+1 polinomial 
 NC = [0:2]*effectiveReactionTime;
 NK = [0:3]; % IO Delay
@@ -136,3 +136,4 @@ for experiment = 1:numSubSets%1:numSubSets
         end
     end
 end
+save(matFileName,'ML_Results','testBatch')
