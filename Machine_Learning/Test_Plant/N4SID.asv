@@ -13,7 +13,7 @@ wavesTotal = length(waveform);
 [makeTotal ~] = size(makeMatrix);
 % DataSet
 fSelected = 1;
-waveformSelected = 1;
+waveformSelected = 4;
 if waveformSelected == 1
     appendMatFileName = '_sine.mat';
 elseif waveformSelected == 2
@@ -141,15 +141,15 @@ for experiment = 1:numSubSets%1:numSubSets
             for y = 1:length(TestSubset.OutputData(1,:))
                 % Backward Compatibility
                 if experiment == testBatch
-                    ML_Results.Output(y).MSE(experiment,offsetChoice,focusChoice) = 1e14;
-                    ML_Results.Output(y).Correlation(experiment,offsetChoice,focusChoice) = -100;
+                    ML_Results(y).MSE(experiment,offsetChoice,focusChoice) = 1e14;
+                    ML_Results.Correlation(experiment,offsetChoice,focusChoice,y) = -100;
                     ML_Results.Fit.FPE(experiment,offsetChoice,focusChoice) = 1e14;
                     ML_Results.Fit.AIC(experiment,offsetChoice,focusChoice) = 1e14;
                     ML_Results.Fit.MSE(experiment,offsetChoice,focusChoice) = 1e14;
                     ML_Results.Horizon(experiment,offsetChoice,focusChoice,:) = [-1 -1 -1];
                 else
-                    ML_Results.Output(y).MSE(experiment,offsetChoice,focusChoice) = immse(PredictedOutputs(:,y),ValidationOutputs(:,y));
-                    ML_Results.Output(y).Correlation(experiment,offsetChoice,focusChoice) = corr(PredictedOutputs(:,y),ValidationOutputs(:,y));
+                    ML_Results.MSE(experiment,offsetChoice,focusChoice,y) = immse(PredictedOutputs(:,y),ValidationOutputs(:,y));
+                    ML_Results.Correlation(experiment,offsetChoice,focusChoice,y) = corr(PredictedOutputs(:,y),ValidationOutputs(:,y));
                     ML_Results.Fit.FPE(experiment,offsetChoice,focusChoice) = ML_Model.Model.Report.Fit.FPE;
                     ML_Results.Fit.AIC(experiment,offsetChoice,focusChoice) = ML_Model.Model.Report.Fit.AIC;
                     ML_Results.Fit.MSE(experiment,offsetChoice,focusChoice) = ML_Model.Model.Report.Fit.MSE;
