@@ -97,6 +97,10 @@ for experiment = 1:numSubSets%1:numSubSets
                             mlParameters{6} = focusOptions{focusChoice};
                             armaxOrder = [NA(na) NB(nb) NC(nc) NK(nk)];
                             % Bogey: backward compatibility
+                            printInConsole = sprintf("Experimento %d para offsetChoice %d, focusChoice %d y ordenes %d,%d,%d,%d"...
+                                ,experiment,offsetChoice,focusChoice,na,nb,nc,nk);
+                            disp(printInConsole)
+                            pause(1)
                             UPastValues = -1;
                             YPastValues = Dt; %Should change in next versions
                             [TrainingSubset,garbage] = Prepare_IO_Data(experiment,numInputs,numOutputs,effectiveReactionTime,...
@@ -155,14 +159,12 @@ for experiment = 1:numSubSets%1:numSubSets
                                     ML_Results.Fit.FPE(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = 1e14;
                                     ML_Results.Fit.AIC(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = 1e14;
                                     ML_Results.Fit.MSE(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = 1e14;
-%                                     ML_Results(experiment,offsetChoice,focusChoice).N4Horizon = 500;
                                 else
                                     ML_Results.Output(y).MSE(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = immse(PredictedOutputs(:,y),ValidationOutputs(:,y));
                                     ML_Results.Output(y).Correlation(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = corr(PredictedOutputs(:,y),ValidationOutputs(:,y));
                                     ML_Results.Fit.FPE(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = ML_Model.Model.Report.Fit.FPE;
                                     ML_Results.Fit.AIC(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = ML_Model.Model.Report.Fit.AIC;
                                     ML_Results.Fit.MSE(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = ML_Model.Model.Report.Fit.MSE;
-%                                     ML_Results(experiment,offsetChoice,focusChoice).N4Horizon = ML_Model.Model.Report.N4Horizon;
                                 end
                             end
                         end

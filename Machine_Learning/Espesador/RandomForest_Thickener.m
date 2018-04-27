@@ -122,23 +122,17 @@ selectionParameters = -1; % Bogey
 
             % Prediction
             for y = 1:numOutputs
-               PredictedOutputs = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
-               ValidationOutputs = TestBigSet.Outputs.TimeSeries(1+delayMaxInTime:end,y);
-               ML_Results(experiment,delayUCases,delayYCases).Results(y).MSE = immse(PredictedOutputs,ValidationOutputs);
-               ML_Results(experiment,delayUCases,delayYCases).Results(y).Correlation = corr(PredictedOutputs,ValidationOutputs);
-               ML_Results(experiment,delayUCases,delayYCases).Results(y).OOBError = oobError(ML_Model(y).Model);
-               ML_Results(experiment,delayUCases,delayYCases).Results(y).OOBPredictorImportance = ML_Model(y).Model.OOBPermutedPredictorDeltaError;
-               ML_Results(experiment,delayUCases,delayYCases).Results(y).NumPredictorSplit = ML_Model(y).Model.NumPredictorSplit;
-               ML_Results(experiment,delayUCases,delayYCases).Results(y).MinLeafSize = ML_Model(y).Model.MinLeafSize;
-
-
-%             end
+                PredictedOutputs = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
+                ValidationOutputs = TestBigSet.Outputs.TimeSeries(1+delayMaxInTime:end,y);
+%                 ML_Results(experiment,delayUCases,delayYCases).Results(y).OOBPredictorImportance = ML_Model(y).Model.OOBPermutedPredictorDeltaError;
+%                 ML_Results(experiment,delayUCases,delayYCases).Results(y).NumPredictorSplit = ML_Model(y).Model.NumPredictorSplit;
+%                 ML_Results(experiment,delayUCases,delayYCases).Results(y).MinLeafSize = ML_Model(y).Model.MinLeafSize;
+                ML_Results.Output(y).MSE(experiment,delayUCases,delayYCases) = immse(PredictedOutputs,ValidationOutputs);
+                ML_Results.Output(y).Correlation(experiment,delayUCases,delayYCases) = corr(PredictedOutputs,ValidationOutputs);
+                OOB = oobError(ML_Model(y).Model);
+                ML_Results.Output(y).OOBError(experiment,delayUCases,delayYCases) = OOB(end);
+                
             end
-%             clearvars -except ML_Results results experiment delayUCases delayYCases dataTraining fSelected waveformSelected makeSelected ...
-%                 UBackshiftMatrix YBackshiftMatrix effectiveReactionTime numInputs numOutputs numSamples numSubSets ...
-%                 UPastValues numDelayUCases numDelayYCases NameInputs NameOutputs selectionParameters hyperparametersRF mlParameters...
-%                 optimizeMLHyperparameters backshiftCasesY backshiftCasesU bayOptIterations optimizationTimes mlTimes saveToMatFile...
-%                 mlMethod;
             clearvars IOData delayMaxInTime ML_Model BayOptResults
         end
     end
