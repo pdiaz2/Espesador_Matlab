@@ -65,17 +65,24 @@ for experiment = 1:1%1:numSubSets
                             armaxOrder = [NA(na) NB(nb) NC(nc) NK(nk)];
                             choice = experiment;
                             % Bogey: backward compatibility
+                            printInConsole = sprintf("Experimento %d para offsetChoice %d, focusChoice %d y ordenes %d,%d,%d,%d"...
+                                ,experiment,offsetChoice,focusChoice,na,nb,nc,nk);
+                            disp(printInConsole)
+                            pause(1)
                             UPastValues = -1;
                             YPastValues = Dt; %Should change in next versions
-                            [TrainingSubset,garbage] = Prepare_IO_Data(choice,numInputs,numOutputs,effectiveReactionTime,...
-                                                                  selectionParameters,UPastValues,YPastValues,...
+                            [TrainingSubset,garbage] = Prepare_IO_Data(numInputs,numOutputs,effectiveReactionTime,...
+                                                                  UPastValues,YPastValues,...
                                                                   TrainingBigSet,NameInputs,NameOutputs,mlMethod);
+                                                              
+                            tic;
                             ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,armaxOrder,mlMethod);
+                            trainingTimes(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = toc;
                             % Test
 
                             choice = testBatch;
-                            [TestSubset,garbage] = Prepare_IO_Data(choice,numInputs,numOutputs,effectiveReactionTime,...
-                                                                  selectionParameters,UPastValues,YPastValues,...
+                            [TestSubset,garbage] = Prepare_IO_Data(numInputs,numOutputs,effectiveReactionTime,...
+                                                                  UPastValues,YPastValues,...
                                                                   TestBigSet,NameInputs,NameOutputs,mlMethod);
                             YOffset = zeros(numOutputs,numOutputs);
                             UOffset = zeros(numInputs,numInputs);
@@ -138,3 +145,4 @@ for experiment = 1:1%1:numSubSets
         end
     end
 end
+save(matFileName,'ML_Results','testBatch','NameInputs','NameOutputs','trainingTimes','effectiveReactionTime','-v7.3','-nocompression');

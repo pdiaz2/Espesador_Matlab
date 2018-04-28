@@ -4,7 +4,7 @@ clc;
 %% Test Plant Specifics
 load('Agosto_SimResults_1304.mat');
 saveToMatFile = true;
-matFileName = 'ResultsN4SID_1404';
+matFileName = 'ResultsN4SID_2604';
 optimizeMLHyperparameters = false;
 comparePlots = false;
 mlMethod = 'SS';
@@ -64,10 +64,11 @@ for experiment = 1:1%1:numSubSets
 
             ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,bestHyp,mlMethod);
             % Test
-
+            tic;
             choice = testBatch;
             [TestSubset,garbage] = Prepare_IO_Data(numInputs,numOutputs,effectiveReactionTime,UPastValues,YPastValues,...
                                                   TestBigSet,NameInputs,NameOutputs,mlMethod);
+            trainingTimes(experiment,offsetChoice,focusChoice) = toc;
             YOffset = zeros(numOutputs,numOutputs);
             UOffset = zeros(numInputs,numInputs);
             % Remove Input offset if Required (centers the model in the
@@ -133,4 +134,4 @@ for experiment = 1:1%1:numSubSets
 %     [~,ML_Results(experiment).Fit,~] = compare(TestSubset,ML_Model.Model,1);
 %     compare(TestSubset,ML_Model.Model,1);
 end
-save(matFileName,'ML_Results','testBatch')
+save(matFileName,'ML_Results','testBatch','NameInputs','NameOutputs','trainingTimes','effectiveReactionTime');

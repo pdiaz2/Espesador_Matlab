@@ -13,7 +13,7 @@ wavesTotal = length(waveform);
 [makeTotal ~] = size(makeMatrix);
 % DataSet
 fSelected = 1;
-waveformSelected = 4;
+waveformSelected = 1;
 if waveformSelected == 1
     appendMatFileName = '_sine.mat';
 elseif waveformSelected == 2

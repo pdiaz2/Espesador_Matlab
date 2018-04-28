@@ -5,7 +5,7 @@ clc;
 load('testData_1304.mat'); % Ts equal for all cases
 saveToMatFile = true;
 comparePlots = false;
-matFileName = 'ResultsARMAX_1404';
+matFileName = 'ResultsARMAX_2404';
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 freqsTotal = length(freqs);
@@ -13,7 +13,7 @@ wavesTotal = length(waveform);
 [makeTotal ~] = size(makeMatrix);
 % DataSet
 fSelected = 1;
-waveformSelected = 4;
+waveformSelected = 1;
 if waveformSelected == 1
     appendMatFileName = '_sine.mat';
 elseif waveformSelected == 2
