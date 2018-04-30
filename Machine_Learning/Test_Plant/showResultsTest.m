@@ -3,48 +3,56 @@ clear all;
 close all;
 clc;
 %%
-load('ResultsN4SID_2404_saw.mat');
-J = Evaluate_Performance(ML_Results,'N4SID',NameInputs,NameOutputs);
+load('ResultsRF_2404_saw.mat');
+ml_Type = 'RF';
+%%
+J = Evaluate_Performance(ML_Results,ml_Type,NameInputs,NameOutputs);
+[numOutputs,J_i,garbage] = size(J);
 
-% load('testData.mat');
-% load('RF1.mat');
-% load('RF2.mat');
-% load('RF3.mat');
-% minMSE_Y = -1*ones(3,4);
-% minMSE_Y(:,4) = -minMSE_Y(:,4)*1e6;
-% maxCorr_Y = -2*ones(3,4);
-% minOOBError = minMSE_Y;
-% for n = 1:numSubSets
-%     for dx = 1:backshiftCasesU
-%         for dy = 1:backshiftCasesY
-%             for output = 1:3
-%                 minMSECandidate = ML_Results(n,dx,dy).Results(output).MSE;
-%                 maxCorrCandidate = ML_Results(n,dx,dy).Results(output).Correlation;
-%                 minOOBErrorCandidate = ML_Results(n,dx,dy).Results(output).OOBError(100);
-%                 if minMSECandidate < minMSE_Y(output,4)
-%                     minMSE_Y(output,1:3) = [n dx dy];
-%                     minMSE_Y(output,4) = minMSECandidate;
-%                 else
-%                     
-%                 end
-%                 if maxCorrCandidate > maxCorr_Y(output,4)
-%                     maxCorr_Y(output,1:3) = [n dx dy];
-%                     maxCorr_Y(output,4) = maxCorrCandidate;
-%                 else
-%                     
-%                 end
-%                 if minOOBErrorCandidate < minOOBError(output,4)
-%                     minOOBError(output,1:3) = [n dx dy];
-%                     minOOBError(output,4) = minOOBErrorCandidate;
-%                 else
-%                     
-%                 end
-%             end
-%         end
-%     end
-% end
+if strcmp(ml_Type,'N4SID')
+    fullSize = size(ML_Results.Output(1).MSE);
+    dims = length(fullSize);
+    J_Handy = zeros(numOutputs,dims,J_i);
+    for j_i = 1:J_i
+        for y = 1:numOutputs
+            % It would be ideal to create I_i according to dims, but it
+            % cannot be done
+            [I1,I2,I3] = ind2sub(size(ML_Results.Output(1).MSE),J(y,j_i,1));
+            J_Handy(y,:,j_i) = [I1 I2 I3];
+        end
+    end
+elseif strcmp(ml_Type,'ARMAX')
+    fullSize = size(ML_Results.Output(1).MSE);
+    dims = length(fullSize);
+    J_Handy = zeros(numOutputs,dims,J_i);
+    for j_i = 1:J_i
+        for y = 1:numOutputs
+            % It would be ideal to create I_i according to dims, but it
+            % cannot be done
+            [I1,I2,I3,I4,I5,I6,I7] = ind2sub(size(ML_Results.Output(1).MSE),J(y,j_i,1));
+            J_Handy(y,:,j_i) = [I1 I2 I3 I4 I5 I6 I7];
+        end
+    end
+elseif strcmp(ml_Type,'RF')
+    fullSize = size(ML_Results.Output(1).MSE);
+    dims = length(fullSize);
+    J_Handy = zeros(numOutputs,dims,J_i);
+    for j_i = 1:J_i
+        for y = 1:numOutputs
+            % It would be ideal to create I_i according to dims, but it
+            % cannot be done
+            [I1,I2,I3] = ind2sub(size(ML_Results.Output(1).MSE),J(y,j_i,1));
+            J_Handy(y,:,j_i) = [I1 I2 I3];
+        end
+    end
+end
 
 function [JMatrix] = Evaluate_Performance(Results,typeML,nameInputs,nameOutputs)
+%  Evaluate Performance : Evaluates J-performance of different ML Models
+%  Returns (NumOutputs,Criterions,2) Matrix
+%  (:,:,1) holds the index (in full vector form) of min/max values for each output and each criteria J_i
+%  (:,:,2) hold the actual value of the J_i criteria
+%  Some criteria are global, so there should be a submatrix in ([2:numOutputs],[global:end],1) of just -1
     dimArray = size(Results);
     totalDims = length(dimArray);
     [garbage,numOutputs] = size(nameOutputs);
@@ -92,6 +100,15 @@ function [JMatrix] = Evaluate_Performance(Results,typeML,nameInputs,nameOutputs)
         end
     end
 %     end
+end
+
+function [varargout] = Convert_ToN_D(JMatrix,ML_Type)
+% Pending
+    if strcmp(ML_Type,'RF')
+        
+    elseif strcmp(ML_Type,'N4SID')|| strcmp(ML_Type,'ARMAX')
+        
+    end
 end
 % Y1Predicted = predict(RandomForestY1,InputDataFinalY1);
 % Y2Predicted = predict(RandomForestY2,InputDataFinalY2);
