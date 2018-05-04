@@ -98,7 +98,7 @@ YBackshiftMatrix = [1 1 1;
                     1 1 2;
                     ];
 [backshiftCasesY garbage] = size(YBackshiftMatrix);
-mlParameters = {100,1,'on',10,'on','curvature'};
+mlParameters = {100,1,'on',10,'on','curvature','Ensemble'};
 maxMinLS = 20;
 minLS = optimizableVariable('minLS',[1,maxMinLS],'Type','integer');
 hyperparametersRF = minLS;
@@ -158,22 +158,5 @@ tic;
 ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,bestHyp,mlMethod);
 trainingTimes(experiment,delayUCases,delayYCases) = toc;
 
-% for y = 1:numOutputs
-%     TrainingSubset(y).InputData = [];
-%     TrainingSubset(y).OutputData = [];
-% end
-% % Prepare IO Data for model building
-% % 1 is because only one subset is TestBatch
-% [IOData,delayMaxInTime] = Prepare_IO_Data(1,numInputs,numOutputs,effectiveReactionTime,UPastValues,YPastValues,...
-%                                           TestBigSet,NameInputs,NameOutputs,mlMethod);
 %%
 save(matFileName,'ML_Model','experiment','delayUCases','delayYCases');
-% % Prediction
-% for y = 1:numOutputs
-%    PredictedOutputs = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
-%    ValidationOutputs = TestBigSet.Outputs.TimeSeries(1+delayMaxInTime:end,y);
-%    ML_Results.Output(y).MSE(experiment,delayUCases,delayYCases) = immse(PredictedOutputs,ValidationOutputs);
-%    ML_Results.Output(y).Correlation(experiment,delayUCases,delayYCases) = corr(PredictedOutputs,ValidationOutputs);
-%    OOB = oobError(ML_Model(y).Model);
-%    ML_Results.Output(y).OOBError(experiment,delayUCases,delayYCases) = OOB(end);
-% end

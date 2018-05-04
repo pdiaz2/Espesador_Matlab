@@ -3,7 +3,7 @@ clear all;
 clc;
 close all;
 %% Input Design
-Dt = 0.5; % 5 seconds sampling time
+Dt = 0.5; % 0.5 seconds sampling time
 simTime = 1000;
 % stepsOrSpecial = 'steps';
 matFileName = ['testData_1304.mat'];
