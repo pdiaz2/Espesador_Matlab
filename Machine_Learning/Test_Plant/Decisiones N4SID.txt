@@ -1,7 +1,0 @@
-Focus:
-	- Prediction pareciera ser mejores resultados (habría que entender posteriormente por qué)
-	- 
-I/O Offset:
-	- No lo sé todavía.
-
----> Vamos a dejar que el músculo decida.
