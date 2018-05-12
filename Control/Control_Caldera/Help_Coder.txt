@@ -1,0 +1,10 @@
+Coder License and issues
+1. Licensed?
+
+license('test', 'MATLAB_Coder') % Should return 1
+2. Installed?
+
+ver % Should return MATLAB coder (alphabetical order below MATLAB and Simulink)
+3. Path issue?
+
+which coder -all % Should return one coder.p file in ...\toolbox\coder\coder\coder.p

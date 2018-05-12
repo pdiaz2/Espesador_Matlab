@@ -1,0 +1,15 @@
+Predictor Selection
+- En mi caso, como todas las variables son continuas ( y por el momento no puedo hacer que funcione el categorical) voy a asumir que la importancia de los predictores no está biased.
+- Especifiqué que use curvature test, pero hay que iterar entre CART standard y con curvatura.
+
+Regularization
+- En Matlab se puede hacer de forma muy específica y académica.
+- Yo lo voy a hacer al ojo un poco, viendo cuanto cambia el OOBError al aumentar los árboles y viendo si eso se aplana.
+- Regularización sirve justamente para disminuir el número de árboles.
+- En estricto rigor, tengo que seguir trabajando en esto porque la regularización ayuda harto.
+
+Optimización
+- Voy a optimizar sobre las hojas
+- Optimizar bayesiano el número de árboles Matlab no lo recomienda, porque en general genera bosques grandes. Se debe hacer por regularización o al ojo.
+
+
