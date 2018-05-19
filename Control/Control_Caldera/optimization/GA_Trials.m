@@ -39,3 +39,9 @@ options = optimoptions('patternsearch','UseCompletePoll',true,'UseVectorized',tr
 options = optimoptions('ga','UseVectorized',true);
 [x fval] = ga(@vfun,3,[],[],[],[],[],[],@nlinconst,options)
 % Optimization terminated: maximum number of generations exceeded.
+%%
+clear all;
+options = optimoptions('ga','UseVectorized',true,'Display','off','MaxStallGenerations',500,'PopulationSize',100,'MaxGenerations',100);
+tic;
+[x,fval,exitflag,output] = ga(qrFunction(x),2,[],[],[],[],[],[],@nlinconst_2,options);
+toc;
