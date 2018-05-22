@@ -62,7 +62,10 @@ for y = 1:numOutputs
     uRecSize = max(max(delayUMatrix));
     yRecSize = max(max(delayYMatrix));
 end
-
+% Code will be eliminated afterwards
+na = [delayYMatrix(2,2);delayYMatrix(2,2);delayYMatrix(3,3)];
+nb = delayUMatrix(:,2:end);
+nc = delayUMatrix(:,1);
 %% Initial Conditions
 D0 = 35.7834;
 U0 = [32.9816   46.2282   25.3416];
