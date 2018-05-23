@@ -1,39 +1,27 @@
-function [ yHat ] = mpc_horizon_predict(x, qMatrix, lambdaMatrix, wMatrix,...
-                                      yPastValues, uPastValues, dPastValues,...
+function [ yHat ] = mpc_horizon_predict(x, N_y, yPastValues, uPastValues, dPastValues,...
                                       nTrees, nPredictors, na, nb, nc)
 %MPC_CONSTRAINT_GENERATOR Generates horizon cost of MPC problem
 % This function assigns the non-linear constraints (i.e the model
-% prediction of Random Forests) and handles the slack variables
-% indirectly.
+% prediction of Random Forests)
 % Inputs:
 %   - x: decission variable vector
-%   - qMatrix: n*(N_y-1) positive-definite cost matrix for setpoint tracking
-%   - lambdaMatrix: n*N_y posistive-definite cost matrix for slack variables
-%   - wMatrix: n*N_y setpoint matrix
-%   - yLims: n*N_y*2 matrix with low and high limits for CV in horizon
+%   - N_y: prediction horizon
 %   - yPastValues: n*max(na)*tau_R matrix containing past CV values
 %   - uPastValues: m*max(max(nb))*tau_R matrix containing past MV values
 %   - dPastValues: d*max(nc)*tau_R matrix containing past DV values
 %   - nTrees: n*1 vector with number of trees per output
 %   - nPredictors: n*1 vector with number of predictors per CV
 %   - na: n*1 vector containing order of delays for each CV
-%   - nb: n*m containing order of MV delay for each CV
-%   - nc: n*d containing order of DV delay for each CV
+%   - nb: n*m matrix containing order of MV delay for each CV
+%   - nc: n*d matrix containing order of DV delay for each CV
 % This function:
 %   - Predicts yHat using specified RandomForests for N_y horizon
-%   - Computes sum(||yHat-wMatrix||^2) and assigns it to x(1)
-%   - Calculates on-off Epsilon penalty for CV constraint violation
-%   - Calculates sum(|Epsilon|^2) cost and assigns to x(3)
-%   - Calculates ||y_f-y_sp||^2 terminal cost% 
-%   [ spTrackCost, terminalCost, limBreakCost  ] = mpc_constraint_generator(x,qMatrix,lambdaMatrix,wMatrix,...
-%                                                                           y,yPastValues,uPastValues,...
-%                                                                           nTrees,nPredictors,...
-%                                                                           na,nb,nc)
+% [ yHat ] = mpc_horizon_predict(x, N_y, yPastValues, uPastValues, dPastValues,...
+%                                       nTrees, nPredictors, na, nb, nc)
 
 % coder.extrinsic(CALL_ALL_MEX_FILES) (MAYBE)
 NUM_PSEUDO_COSTS = 0; % Pseudo-costs are F.O. costs that will be handled as constraints;
 %% Size Handling
-[n,N_y] = size(wMatrix);
 [n,maxDelayCV] = size(yPastValues);
 [m,maxDelayMV] = size(uPastValues);
 [d,maxDelayDV] = size(dPastValues);

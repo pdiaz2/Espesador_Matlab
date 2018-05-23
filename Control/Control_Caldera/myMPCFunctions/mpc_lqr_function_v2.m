@@ -21,16 +21,19 @@ function [ z ] = mpc_lqr_function_v2(x, beta, rMatrix, qMatrix, lambdaMatrix, wM
 %   - nc: n*d containing order of DV delay for each CV
 % z = mpc_lqr_function(x)
 NUM_PSEUDO_COSTS = 0;
-%% Calculate Costs
-%   - x(1) : Setpoint tracking cost (||y-w||^2_Q)
-%   - x(2) : Terminal cost (||V_f||^2)
-%   - x(3) : Slack variable cost (constraint violation) (||epsi||^2_Lambda)
-[spTrackingCost, terminalCost, limBreakCost] = mpc_horizon_predict(x,qMatrix,lambdaMatrix,wMatrix,yLims,...
-                                                              yPastValues,uPastValues,dPastValues,...
-                                                              nTrees,nPredictors,...
-                                                              na,nb,nc);
+[n,N_y] = size(wMatrix);
+%% Predict
+[yHat] = mpc_horizon_predict(x,N_y,...
+                              yPastValues,uPastValues,dPastValues,...
+                              nTrees,nPredictors,...
+                              na,nb,nc);
+%% Error vectors
+[ spTrackingError, terminalError, epsilonValues ] = mpc_horizon_error( yHat, wMatrix, yLims );
+%% Costs of prediction 
+[ spTrackingCost, terminalCost, limBreakCost ] = mpc_horizon_cost( spTrackingError, terminalError, epsilonValues, ...
+                                                                        qMatrix,beta,lambdaMatrix);
 %% Compute Objective Funcion Value 
-z = 1/2*spTrackingCost+beta*terminalCost+1/2*limBreakCost+x(:,NUM_PSEUDO_COSTS+1:end).^2*rMatrix(:);
+z = 1/2*spTrackingCost+1/2*terminalCost+1/2*limBreakCost+1/2*x(:,NUM_PSEUDO_COSTS+1:end).^2*rMatrix(:);
 
 
 end

@@ -1,3 +1,7 @@
+clear all;
+clc;
+close all;
+%%
 load('delayParameters.mat');
 for y = 1:numOutputs
     delayUMatrix(y,:) = UBackshiftMatrix(delayU(y),:);
@@ -36,12 +40,18 @@ yLims = cat(3,yLowLims,yHighLims);
 objectiveFunction = @(x)mpc_lqr_function_v2(x,beta,rMatrix, qMatrix, lambdaMatrix, wMatrix, yLims,...
                                       yPastValues, uPastValues, dPastValues,...
                                       nTrees, nPredictors, na, nb, nc);
+outputFcn = @(options,state,flag)mpc_display_output_fcn(options,state,flag,...
+                                                        qMatrix, beta, lambdaMatrix, wMatrix, yLims,...
+                                                        yPastValues, uPastValues, dPastValues,...
+                                                        nTrees, nPredictors, na, nb, nc);
 nVars = numMV*N_u;
 lBounds = [-5*ones(1,numOutputs*N_u)];
 uBounds = [5*ones(1,numOutputs*N_u)];
-options = optimoptions('ga','UseVectorized',true,'Display','off','MaxStallGenerations',500,'PopulationSize',100,'MaxGenerations',100);
+options = optimoptions('ga','UseVectorized',true,'Display','off',...
+                        'MaxStallGenerations',500,'PopulationSize',100,'MaxGenerations',100,...
+                        'OutputFcn',outputFcn);
 tic;
-[caquita,fval,exitflag,output,population,scores] = ga(objectiveFunction,nVars,[],[],[],[],lBounds,uBounds,[],options);
+[x,fval,exitflag,output,population,scores] = ga(objectiveFunction,nVars,[],[],[],[],lBounds,uBounds,[],options);
 toc;
 %%
 % %% GA
