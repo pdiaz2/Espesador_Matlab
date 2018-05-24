@@ -113,7 +113,7 @@ for cv = 1:numCV
     xlabel('Tiempo (s)')
     yLegend = ['$y_' num2str(cv) '$'];
     yHatLegend = ['$\hat{y}_' num2str(cv) '$'];
-    legend({yLegend},{yHatLegend},'Interpreter','latex');
+    legend({yLegend,yHatLegend},'Interpreter','latex');
     grid
 end
 hold off

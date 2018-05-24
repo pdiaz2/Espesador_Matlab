@@ -3,7 +3,7 @@ function [ MVVector ] = compute_MV_value(x,uPastValues,k,m,jAhead,N_u,NUM_PSEUDO
 %   Detailed explanation goes here
 if jAhead <= N_u
     % Always add MV to be determined in t+j instant
-    MVVector(1) = x(NUM_PSEUDO_COSTS+k+m*(jAhead-1))+uPastValues(k,1);
+    MVVector(1) = x(NUM_PSEUDO_COSTS+k+m*(jAhead-1))+uPastValues(k,1); % x(:,!!!!
 else
     % Over N_u horizon, impose deltaMV = 0
     MVVector(1) = uPastValues(k,1);
