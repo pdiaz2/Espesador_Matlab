@@ -74,11 +74,14 @@ numCV = length(Y0);
 numDV = length(D0);
 numMV = length(U0);
 %% Simulation Time
-simTime = 40*80;
+simTime = 80*60;
 demandaVapor.time = demandaVapor.time(1:simTime);
 demandaVapor.signals.dimensions = [1];
 demandaVapor.signals.values = demandaVapor.signals.values(1:simTime);
-
+%
+demandaVapor.signals.values(1:2) = 5:6;
+demandaVapor.signals.values(end) = 10;
+%
 combustible.time = combustible.time(1:simTime);
 combustible.signals.dimensions = [1];
 combustible.signals.values = combustible.signals.values(1:simTime);

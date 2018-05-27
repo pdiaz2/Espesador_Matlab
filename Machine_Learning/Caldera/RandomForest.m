@@ -5,8 +5,8 @@ clc;
 %% Test Plant Specifics
 load('testData_0405.mat');
 saveToMatFile = false;
-matFileName = 'ResultsRF_0405';
-generateOne = true;
+matFileName = 'ResultsRF_2705';
+generateOne = false;
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
 
@@ -20,17 +20,57 @@ numInputs = 4;
 numOutputs = 3;
 NameInputs = {'DmndVap','Combs','Aire','Agua'};
 NameOutputs = {'PressVap','Oxy','WaterLvl'};
-
+dimsSystem = [3 3 1];
 if generateOne
     % Input wave
     waveVector = 3;
-    experiment = 10;
-    delayUCases = 7;
-    delayYCases = 3;
+    experiment = 2;
+    delayUCases = 1;
+    delayYCases = 1;
 else
    waveVector = 1:4;
 end
 
+%% Specify Delay
+UBackshiftMatrix = [1 1 1 1;
+                    2 2 2 2;
+                    2 1 1 1;
+                    2 1 2 1;
+                    1 1 2 2;
+                    2 1 1 2;
+                    3 3 3 3;
+                    4 4 4 4;
+                    5 5 5 5;
+                    ];
+
+[backshiftCasesU garbage] = size(UBackshiftMatrix);
+YBackshiftMatrix = [1 1 1;
+                    2 2 2;
+                    2 1 2;
+                    1 2 1;
+                    1 1 2;
+                    3 3 3;
+                    4 4 4;
+                    ];
+[backshiftCasesY garbage] = size(YBackshiftMatrix);
+%% Raw Data Handling
+tau_R = 5;
+makeSelected = 1:8;
+% Each Subset on it's own (leaves 8 out, because it is test) -> XVal
+% afterwards
+for m = 1:length(makeSelected)-1
+    dataTraining(m).subSetsIndex = [m];
+end
+% Special Combinations
+dataTraining(m+1).subSetsIndex = [1 3 5 7];
+dataTraining(m+2).subSetsIndex = [2 4 6];
+dataTraining(m+3).subSetsIndex = [1 2 3 4 5 6 7];
+[garbage , numSubSets] = size(dataTraining);
+%% Machine Learning Parameters
+mlParameters = {100,1,'on',10,'on','curvature','TBagger'};
+maxMinLS = 20;
+minLS = optimizableVariable('minLS',[1,maxMinLS],'Type','integer');
+hyperparametersRF = minLS;
 for waveformSelected = waveVector
     if waveformSelected == 1
         appendMatFileName = '_sine.mat';
@@ -41,105 +81,31 @@ for waveformSelected = waveVector
     elseif waveformSelected == 4
         appendMatFileName = '_step.mat';
     end
-    matFileName = [matFileName appendMatFileName]; 
-    makeSelected = 1:8;
-
-    %% Training & Testing
-    % effectiveReactionTime = Different from actual sampling time, because it
-    % corresponds to the time that the process actually shows some relevant
-    % change. In other words, its a multiple of the sampling time (required for
-    % simulation or implementation) that produces relevant observations.
-    effectiveReactionTime = 5;
+    matFileName = [matFileName appendMatFileName];
     selectionParameters.p1 = fSelected;
     selectionParameters.p2 = waveformSelected;
-    % Each Subset on it's own (leaves 8 out, because it is test) -> XVal
-    % afterwards
-    for m = 1:length(makeSelected)-1
-        dataTraining(m).subSetsIndex = [m];
-    end
-    % Special Combinations
-    dataTraining(m+1).subSetsIndex = [1 3 5 7];
-    dataTraining(m+2).subSetsIndex = [2 4 6];
-    dataTraining(m+3).subSetsIndex = [1 2 3 4 5 6 7];
-    [garbage , numSubSets] = size(dataTraining);
-    for ns = 1:numSubSets
-        tSets = dataTraining(ns).subSetsIndex;
-        VLADIMIR = [];
-        for cv = 1:numOutputs
-            OutputVLADIMIR = [];
-            for tS = 1:length(tSets)
-                choice = tSets(tS);
-                OutputVLADIMIR = vertcat(OutputVLADIMIR(:),...
-                       results(selectionParameters.p1,selectionParameters.p2,choice).outputs(:,cv));
-            end
-            NameOutputs{cv} = NameOutputs{cv};
-            TrainingBigSet(ns).Outputs.TimeSeries(:,cv)  = OutputVLADIMIR(:);
-            TestBigSet.Outputs.TimeSeries(:,cv) = results(selectionParameters.p1,selectionParameters.p2,testBatch).outputs(:,cv);
-        end
-
-    end
-    for ns = 1:numSubSets
-        tSets = dataTraining(ns).subSetsIndex;
-        VLADIMIR = [];
-        for cv = 1:numInputs
-            OutputVLADIMIR = [];
-            for tS = 1:length(tSets)
-                choice = tSets(tS);
-                OutputVLADIMIR = vertcat(OutputVLADIMIR(:),...
-                       results(selectionParameters.p1,selectionParameters.p2,choice).inputs.signals.values(:,cv));
-            end
-            NameInputs{cv} = NameInputs{cv};
-            TrainingBigSet(ns).Inputs.TimeSeries(:,cv)  = OutputVLADIMIR(:);
-            TestBigSet.Inputs.TimeSeries(:,cv) = results(selectionParameters.p1,selectionParameters.p2,testBatch).inputs.signals.values(:,cv);
-        end
-
-    end
-
-    UBackshiftMatrix = [0 0 0 0;
-                        1 1 1 1;
-                        2 2 2 2;
-                        2 1 1 0;
-                        2 0 1 1;
-                        1 0 2 2;
-                        2 0 0 2;
-                        ];
-
-    [backshiftCasesU garbage] = size(UBackshiftMatrix);
-    YBackshiftMatrix = [1 1 1;
-                        2 2 2;
-                        2 1 2;
-                        1 2 1;
-                        1 1 2;
-                        ];
-    [backshiftCasesY garbage] = size(YBackshiftMatrix);
-    mlParameters = {100,1,'on',10,'on','curvature','TBagger'};
-    maxMinLS = 20;
-    minLS = optimizableVariable('minLS',[1,maxMinLS],'Type','integer');
-    hyperparametersRF = minLS;
-
+    %% Generate Test & Training BigSets
+    TrainingBigSet = struct;
+    TestBigSet = struct;
+    [TrainingBigSet,TestBigSet,NameInputs,NameOutputs] = generate_tT_sets( TrainingBigSet, TestBigSet,...
+                                                        results,dataTraining,NameInputs,NameOutputs,...
+                                                        numSubSets, selectionParameters,testBatch,...
+                                                        dimsSystem);
     seed = rng('default'); % For reproducibility (should look into this after)
     bayOptIterations = 30;
+    %% Specific RF generation
     if generateOne
-        UPastValues = UBackshiftMatrix(delayUCases,:);
-        YPastValues = YBackshiftMatrix(delayYCases,:);
+        %% Training
+        nb = UBackshiftMatrix(delayUCases,:);
+        na = YBackshiftMatrix(delayYCases,:);
         printInConsole = sprintf("Experimento %d para delay en U %d y delay en y %d",experiment,...
                         delayUCases,delayYCases);
         disp(printInConsole)
         pause(1)
-        for y = 1:numOutputs
-            TrainingSubset(y).InputData = [];
-            TrainingSubset(y).OutputData = [];
-            TrainingSubset(y).PredictorNames = {};
-        end
-        % Prepare IO Data for model building
-        [IOData,garbage] = Prepare_IO_Data(experiment,numInputs,numOutputs,effectiveReactionTime,UPastValues,YPastValues,...
-                                                  TrainingBigSet,NameInputs,NameOutputs,mlMethod);
-        for y = 1:numOutputs
-           TrainingSubset(y).InputData = vertcat(TrainingSubset(y).InputData,IOData(y).InputTimeSeries); 
-           TrainingSubset(y).OutputData = vertcat(TrainingSubset(y).OutputData,IOData(y).OutputTimeSeries);
-           TrainingSubset(y).PredictorNames = IOData(y).PredictorNames;
-        end
 
+        [TrainingSubset] = generate_tT_subsets( TrainingBigSet, NameInputs, NameOutputs,...
+                                                experiment, tau_R, dimsSystem,...
+                                                na, nb, mlMethod );
         if (optimizeMLHyperparameters)
         % Optimize HyperParameter LeafSize
             disp('Optimizing')
@@ -166,23 +132,21 @@ for waveformSelected = waveVector
         tic;
         ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,bestHyp,mlMethod);
         trainingTimes(experiment,delayUCases,delayYCases) = toc;
-        % Test Model
-
-        for y = 1:numOutputs
-            TrainingSubset(y).InputData = [];
-            TrainingSubset(y).OutputData = [];
-        end
+        %% Test Model
+        
         % Prepare IO Data for model building
         % 1 is because only one subset is TestBatch
-        [IOData,delayMaxInTime] = Prepare_IO_Data(1,numInputs,numOutputs,effectiveReactionTime,UPastValues,YPastValues,...
-                                                  TestBigSet,NameInputs,NameOutputs,mlMethod);
+        [IOData,delayMaxInTime] = Prepare_IO_Data(1,tau_R,na,nb,...
+                                                TestBigSet,NameInputs,NameOutputs,mlMethod);
 
-        % Prediction
+        %% Prediction and Comparison
         for y = 1:numOutputs
-           PredictedOutputs = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
-           ValidationOutputs = TestBigSet.Outputs.TimeSeries(1+delayMaxInTime:end,y);
-           ML_Results.Output(y).MSE(experiment,delayUCases,delayYCases) = immse(PredictedOutputs,ValidationOutputs);
-           ML_Results.Output(y).Correlation(experiment,delayUCases,delayYCases) = corr(PredictedOutputs,ValidationOutputs);
+            % Predict tau_R ahead prediction
+            PredictedOutputs = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
+            % Validation is tau_R ahead value of actual data
+            ValidationOutputs = TestBigSet.Outputs.TimeSeries(1+delayMaxInTime:end,y);
+            ML_Results.Output(y).MSE(experiment,delayUCases,delayYCases) = immse(PredictedOutputs,ValidationOutputs);
+            ML_Results.Output(y).Correlation(experiment,delayUCases,delayYCases) = corr(PredictedOutputs,ValidationOutputs);
 %            OOB = oobError(ML_Model(y).Model);
 %            ML_Results.Output(y).OOBError(experiment,delayUCases,delayYCases) = OOB(end);
 %                ML_Results.Output(y).OOBPredictorImportance(experiment,delayUCases,delayYCases,:) = ML_Model(y).Model.OOBPermutedPredictorDeltaError;
@@ -192,28 +156,19 @@ for waveformSelected = waveVector
         end
         
     else
-        for experiment = 8:numSubSets%1:numSubSets
+        for experiment = 1:numSubSets%1:numSubSets
             for delayUCases = 1:backshiftCasesU%1:backshiftCasesU
-                UPastValues = UBackshiftMatrix(delayUCases,:);
+                nb = UBackshiftMatrix(delayUCases,:);
                 for delayYCases = 1:backshiftCasesY%1:backshiftCasesY
-                    YPastValues = YBackshiftMatrix(delayYCases,:);
+                    na = YBackshiftMatrix(delayYCases,:);
                     printInConsole = sprintf("Experimento %d para delay en U %d y delay en y %d",experiment,...
-                        delayUCases,delayYCases);
+                                    delayUCases,delayYCases);
                     disp(printInConsole)
                     pause(1)
-                    for y = 1:numOutputs
-                        TrainingSubset(y).InputData = [];
-                        TrainingSubset(y).OutputData = [];
-                        TrainingSubset(y).PredictorNames = {};
-                    end
-                    % Prepare IO Data for model building
-                    [IOData,garbage] = Prepare_IO_Data(experiment,numInputs,numOutputs,effectiveReactionTime,UPastValues,YPastValues,...
-                                                              TrainingBigSet,NameInputs,NameOutputs,mlMethod);
-                    for y = 1:numOutputs
-                       TrainingSubset(y).InputData = vertcat(TrainingSubset(y).InputData,IOData(y).InputTimeSeries); 
-                       TrainingSubset(y).OutputData = vertcat(TrainingSubset(y).OutputData,IOData(y).OutputTimeSeries);
-                       TrainingSubset(y).PredictorNames = IOData(y).PredictorNames;
-                    end
+
+                    [TrainingSubset] = generate_tT_subsets( TrainingBigSet, NameInputs, NameOutputs,...
+                                                            experiment, tau_R, dimsSystem,...
+                                                            na, nb, mlMethod );
 
                     if (optimizeMLHyperparameters)
                     % Optimize HyperParameter LeafSize
@@ -241,21 +196,16 @@ for waveformSelected = waveVector
                     tic;
                     ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,bestHyp,mlMethod);
                     trainingTimes(experiment,delayUCases,delayYCases) = toc;
-                    % Test Model
+                    %% Test Model
 
-                    for y = 1:numOutputs
-                        TrainingSubset(y).InputData = [];
-                        TrainingSubset(y).OutputData = [];
-                    end
                     % Prepare IO Data for model building
                     % 1 is because only one subset is TestBatch
-                    [IOData,delayMaxInTime] = Prepare_IO_Data(1,numInputs,numOutputs,effectiveReactionTime,UPastValues,YPastValues,...
-                                                              TestBigSet,NameInputs,NameOutputs,mlMethod);
-
+                    [IOData,delayMaxInTime] = Prepare_IO_Data(1,tau_R,na,nb,...
+                                                            TestBigSet,NameInputs,NameOutputs,mlMethod);
                     % Prediction
                     for y = 1:numOutputs
                        PredictedOutputs = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
-                       ValidationOutputs = TestBigSet.Outputs.TimeSeries(1+delayMaxInTime:end,y);
+                       ValidationOutputs = TestBigSet(1).Outputs.TimeSeries(1+delayMaxInTime:end,y);
                        ML_Results.Output(y).MSE(experiment,delayUCases,delayYCases) = immse(PredictedOutputs,ValidationOutputs);
                        ML_Results.Output(y).Correlation(experiment,delayUCases,delayYCases) = corr(PredictedOutputs,ValidationOutputs);
                        OOB = oobError(ML_Model(y).Model);

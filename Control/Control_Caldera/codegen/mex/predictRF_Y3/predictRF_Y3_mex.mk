@@ -1,4 +1,4 @@
-START_DIR = C:\Users\Felipe\DOCUME~1\MATLAB\PABLOD~1\Git\ESPESA~1\Control\CONTRO~1
+START_DIR = C:\Users\Felipe\DOCUME~1\MATLAB\PABLOD~1\Git\ESPESA~1\Control\CONTRO~1\MYMEXG~1
 
 MATLAB_ROOT = C:\PROGRA~1\MATLAB\R2017a
 MAKEFILE = predictRF_Y3_mex.mk
@@ -7,7 +7,6 @@ include predictRF_Y3_mex.mki
 
 
 SRC_FILES =  \
-	predictRF_Y3_mexutil.c \
 	predictRF_Y3_data.c \
 	predictRF_Y3_initialize.c \
 	predictRF_Y3_terminate.c \

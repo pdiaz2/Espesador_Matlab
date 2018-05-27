@@ -3,7 +3,7 @@ close all;
 clc;
 %% Test Plant Specifics
 load('testData_1304.mat'); % Ts equal for all cases
-saveToMatFile = true;
+saveToMatFile = false;
 comparePlots = false;
 matFileName = 'ResultsARMAX_0405';
 optimizeMLHyperparameters = false;
@@ -11,6 +11,7 @@ mlMethod = 'ARMAX';
 freqsTotal = length(freqs);
 wavesTotal = length(waveform);
 [makeTotal ~] = size(makeMatrix);
+dimsSystem = [3 3 1];
 % DataSet
 fSelected = 2;
 waveformSelected = 1;
@@ -32,7 +33,7 @@ for waveformSelected = 1:4
     NameOutputs = {'PressVap','Oxy','WaterLvl'};
     testBatch = 2;
     %% Training
-    effectiveReactionTime = 5;
+    tau_R = 5;
     selectionParameters.p1 = fSelected;
     selectionParameters.p2 = waveformSelected;
     % Each Subset on it's own (leaves testBatch out, because it is test) -> XVal
@@ -41,42 +42,16 @@ for waveformSelected = 1:4
         dataTraining(m).subSetsIndex = [m];
     end
     [garbage , numSubSets] = size(dataTraining);
-    for ns = 1:numSubSets
-        tSets = dataTraining(ns).subSetsIndex;
-        VLADIMIR = [];
-        for cv = 1:numOutputs
-            OutputVLADIMIR = [];
-            for tS = 1:length(tSets)
-                choice = tSets(tS);
-                OutputVLADIMIR = vertcat(OutputVLADIMIR(:),...
-                       results(selectionParameters.p1,selectionParameters.p2,choice).outputs(:,cv));
-            end
-            NameOutputs{cv} = NameOutputs{cv};
-            TrainingBigSet(ns).Outputs.TimeSeries(:,cv)  = OutputVLADIMIR(:);
-            TestBigSet.Outputs.TimeSeries(:,cv) = results(selectionParameters.p1,selectionParameters.p2,testBatch).outputs(:,cv);
-        end
-
-    end
-    for ns = 1:numSubSets
-        tSets = dataTraining(ns).subSetsIndex;
-        VLADIMIR = [];
-        for cv = 1:numInputs
-            OutputVLADIMIR = [];
-            for tS = 1:length(tSets)
-                choice = tSets(tS);
-                OutputVLADIMIR = vertcat(OutputVLADIMIR(:),...
-                       results(selectionParameters.p1,selectionParameters.p2,choice).inputs.signals.values(:,cv));
-            end
-            NameInputs{cv} = NameInputs{cv};
-            TrainingBigSet(ns).Inputs.TimeSeries(:,cv)  = OutputVLADIMIR(:);
-            TestBigSet.Inputs.TimeSeries(:,cv) = results(selectionParameters.p1,selectionParameters.p2,testBatch).inputs.signals.values(:,cv);
-        end
-
-    end
+    TrainingBigSet = struct;
+    TestBigSet = struct;
+    [TrainingBigSet,TestBigSet,NameInputs,NameOutputs] = generate_tT_sets( TrainingBigSet, TestBigSet,...
+                                                        results,dataTraining,NameInputs,NameOutputs,...
+                                                        numSubSets, selectionParameters,testBatch,...
+                                                        dimsSystem);
     %%
-    NA = [0:1]*effectiveReactionTime; %Order
-    NB = [1:2]*effectiveReactionTime; % Order of B+1 polinomial 
-    NC = [0:2]*effectiveReactionTime;
+    NA = [0:1]*tau_R; %Order
+    NB = [1:2]*tau_R; % Order of B+1 polinomial 
+    NC = [0:2]*tau_R;
     NK = [0:3]; % IO Delay
     tVector = results(1,1,1).inputs.time;
     mlParameters = {'estimate','I_DC?','O_DC?',false,'off','Focus?',true};
@@ -102,20 +77,16 @@ for waveformSelected = 1:4
                                     ,experiment,offsetChoice,focusChoice,na,nb,nc,nk);
                                 disp(printInConsole)
                                 pause(1)
-                                UPastValues = -1;
-                                YPastValues = Dt; %Should change in next versions
-                                [TrainingSubset,garbage] = Prepare_IO_Data(experiment,numInputs,numOutputs,effectiveReactionTime,...
-                                                                            UPastValues,YPastValues,...
-                                                                            TrainingBigSet,NameInputs,NameOutputs,mlMethod);
+                                [TrainingSubset,garbage] = Prepare_IO_Data(experiment,tau_R,Dt,-1,...
+                                                                        TrainingBigSet,NameInputs,NameOutputs,mlMethod);
                                 tic;
                                 ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,armaxOrder,mlMethod);
                                 trainingTimes(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = toc;
                                 % Test
 
     %                             choice = testBatch;
-                                [TestSubset,garbage] = Prepare_IO_Data(1,numInputs,numOutputs,effectiveReactionTime,...
-                                                        UPastValues,YPastValues,...
-                                                        TestBigSet,NameInputs,NameOutputs,mlMethod);
+                                [TestSubset,garbage] = Prepare_IO_Data(experiment,tau_R,Dt,-1,...
+                                                                        TestBigSet,NameInputs,NameOutputs,mlMethod);
                                 YOffset = zeros(numOutputs,numOutputs);
                                 UOffset = zeros(numInputs,numInputs);
                                 if strcmp(mlParameters{2},'R_I_DC')

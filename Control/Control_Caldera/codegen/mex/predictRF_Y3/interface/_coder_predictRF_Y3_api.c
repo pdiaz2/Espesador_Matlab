@@ -10,12 +10,10 @@
 #include "predictRF_Y3.h"
 #include "_coder_predictRF_Y3_api.h"
 #include "predictRF_Y3_emxutil.h"
-#include "error.h"
-#include "predictRF_Y3_mexutil.h"
 #include "predictRF_Y3_data.h"
 
 /* Variable Definitions */
-static emlrtRTEInfo d_emlrtRTEI = { 1, /* lineNo */
+static emlrtRTEInfo e_emlrtRTEI = { 1, /* lineNo */
   1,                                   /* colNo */
   "_coder_predictRF_Y3_api",           /* fName */
   ""                                   /* pName */
@@ -32,6 +30,7 @@ static void e_emlrt_marshallIn(const emlrtStack *sp, const mxArray *src, const
   emlrtMsgIdentifier *msgId, emxArray_real_T *ret);
 static void emlrt_marshallIn(const emlrtStack *sp, const mxArray *X, const
   char_T *identifier, emxArray_real_T *y);
+static const mxArray *emlrt_marshallOut(const emxArray_real_T *u);
 static real_T f_emlrt_marshallIn(const emlrtStack *sp, const mxArray *src, const
   emlrtMsgIdentifier *msgId);
 
@@ -72,11 +71,11 @@ static void e_emlrt_marshallIn(const emlrtStack *sp, const mxArray *src, const
 
   const boolean_T bv0[2] = { true, false };
 
-  int32_T iv452[2];
+  int32_T iv453[2];
   emlrtCheckVsBuiltInR2012b(sp, msgId, src, "double", false, 2U, dims, &bv0[0],
-    iv452);
-  ret->size[0] = iv452[0];
-  ret->size[1] = iv452[1];
+    iv453);
+  ret->size[0] = iv453[0];
+  ret->size[1] = iv453[1];
   ret->allocatedSize = ret->size[0] * ret->size[1];
   ret->data = (real_T *)mxGetData(src);
   ret->canFreeData = false;
@@ -94,6 +93,20 @@ static void emlrt_marshallIn(const emlrtStack *sp, const mxArray *X, const
   emlrtDestroyArray(&X);
 }
 
+static const mxArray *emlrt_marshallOut(const emxArray_real_T *u)
+{
+  const mxArray *y;
+  const mxArray *m2;
+  static const int32_T iv452[1] = { 0 };
+
+  y = NULL;
+  m2 = emlrtCreateNumericArray(1, iv452, mxDOUBLE_CLASS, mxREAL);
+  mxSetData((mxArray *)m2, (void *)&u->data[0]);
+  emlrtSetDimensions((mxArray *)m2, u->size, 1);
+  emlrtAssign(&y, m2);
+  return y;
+}
+
 static real_T f_emlrt_marshallIn(const emlrtStack *sp, const mxArray *src, const
   emlrtMsgIdentifier *msgId)
 {
@@ -109,6 +122,7 @@ void predictRF_Y3_api(predictRF_Y3StackData *SD, const mxArray * const prhs[3],
                       const mxArray *plhs[1])
 {
   emxArray_real_T *X;
+  emxArray_real_T *Y;
   real_T numTrees;
   real_T numPredictors;
   emlrtStack st = { NULL,              /* site */
@@ -118,7 +132,8 @@ void predictRF_Y3_api(predictRF_Y3StackData *SD, const mxArray * const prhs[3],
 
   st.tls = emlrtRootTLSGlobal;
   emlrtHeapReferenceStackEnterFcnR2012b(&st);
-  emxInit_real_T1(&st, &X, 2, &d_emlrtRTEI, true);
+  emxInit_real_T1(&st, &X, 2, &e_emlrtRTEI, true);
+  emxInit_real_T(&st, &Y, 1, &e_emlrtRTEI, true);
 
   /* Marshall function inputs */
   emlrt_marshallIn(&st, emlrtAlias(prhs[0]), "X", X);
@@ -126,10 +141,12 @@ void predictRF_Y3_api(predictRF_Y3StackData *SD, const mxArray * const prhs[3],
   numPredictors = c_emlrt_marshallIn(&st, emlrtAliasP(prhs[2]), "numPredictors");
 
   /* Invoke the target function */
-  numTrees = predictRF_Y3(SD, &st, X, numTrees, numPredictors);
+  predictRF_Y3(SD, &st, X, numTrees, numPredictors, Y);
 
   /* Marshall function outputs */
-  plhs[0] = emlrt_marshallOut(numTrees);
+  plhs[0] = emlrt_marshallOut(Y);
+  Y->canFreeData = false;
+  emxFree_real_T(&Y);
   X->canFreeData = false;
   emxFree_real_T(&X);
   emlrtHeapReferenceStackLeaveFcnR2012b(&st);

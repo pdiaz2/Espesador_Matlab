@@ -1,97 +1,41 @@
-function [ IOData,delayMaxInTime] = Prepare_IO_Data( choice,numInputs,numOutputs,effectiveReactionTime,...
-                                           UPastValues,YPastValues,...
-                                           BigData,...
-                                           InputNames,OutputNames,...
+function [ PredictorMLStruct,delayMaxInTime] = Prepare_IO_Data( choice,tau_R,...
+                                           na,nb,...
+                                           IOBigSubset,...
+                                           NameInputs,NameOutputs,...
                                            mlMethod)
 %PREP_IO_Data Prepares Training & Testing Sets for MachineLearning
 %   Detailed explanation goes here
+[~,numInputs] = size(IOBigSubset(1).Inputs.TimeSeries);
+[~,n] = size(IOBigSubset(1).Outputs.TimeSeries);
 if (strcmp(mlMethod,'RF'))
     U = [];
     Y = [];
+    % Concatenate sideways U (dv and mv undifferentiated, dv first)
     for u = 1:numInputs
-        U = [U BigData(choice).Inputs.TimeSeries(:,u)];
+        U = [U IOBigSubset(choice).Inputs.TimeSeries(:,u)];
     end
-    for y = 1:numOutputs
-        Y = [Y BigData(choice).Outputs.TimeSeries(:,y)];
+    % Concatenate sideways Y
+    for y = 1:n
+        Y = [Y IOBigSubset(choice).Outputs.TimeSeries(:,y)];
     end
     % I/O Time Series Delay Specification
-    delayMaxInTimeU = max(UPastValues)*effectiveReactionTime;
-    delayMaxInTimeY = max(YPastValues)*effectiveReactionTime;
+    delayMaxInTimeU = max(nb)*tau_R;
+    delayMaxInTimeY = max(na)*tau_R;
     delayMaxInTime = max(delayMaxInTimeY,delayMaxInTimeU);
     % Arrange BigData in useful way
-    [InputDataU,InputDataY,predictorNames] = Arrange_IO_TimeSeries(U,Y,UPastValues,...
-                                             YPastValues,effectiveReactionTime,delayMaxInTime,...
-                                             InputNames,OutputNames);
-
-    for y = 1:numOutputs
-        startIndexY = 0;
-        endIndexY = 0;
-        for k = 0:(y-1)
-            if (k == 0)
-                %
-            else
-                startIndexY = startIndexY+YPastValues(k);
-            end
-            endIndexY = endIndexY+YPastValues(k+1);
-        end
-        IOData(y).InputTimeSeries = [InputDataY(:,1+startIndexY:endIndexY) InputDataU];
-        IOData(y).OutputTimeSeries = Y(1+delayMaxInTime:end,y);
-        IOData(y).PredictorNames = predictorNames{y};
-        IOData(y).startIndexY = startIndexY;
-        IOData(y).endIndexY = endIndexY;
-    end
+    [InputDataU,InputDataY,predictorNames] = Arrange_IO_TimeSeries(U,Y,na,...
+                                             nb,tau_R,delayMaxInTime,...
+                                             NameInputs,NameOutputs);
+    % Build "ARX" prediction set for each cv
+    PredictorMLStruct = build_arx_rf_predSet(InputDataY,InputDataU,Y,...
+                                  delayMaxInTime,na,predictorNames);
 elseif (strcmp(mlMethod,'SS')||strcmp(mlMethod,'ARMAX'))
-    U = BigData(choice).Inputs.TimeSeries(:,:);
-    Y = BigData(choice).Outputs.TimeSeries(:,:);
-    Ts = YPastValues;
-    IOData = iddata(Y,U,Ts,'InputName',InputNames','OutputName',OutputNames');
+    U = IOBigSubset(choice).Inputs.TimeSeries(:,:);
+    Y = IOBigSubset(choice).Outputs.TimeSeries(:,:);
+    Ts = na;
+    PredictorMLStruct = iddata(Y,U,Ts,'InputName',NameInputs','OutputName',NameOutputs');
     delayMaxInTime = -1; %bogey value
 end                                       
                                        
-                                       
-% %PREP_IO_Data Prepares Training & Testing Sets for MachineLearning
-% %   Detailed explanation goes here
-% if (strcmp(mlMethod,'RF'))
-%     U = [];
-%     Y = [];
-%     for u = 1:numInputs
-%         U = [U BigData(selectionParameters.p1,selectionParameters.p2,choice).inputs.signals.values(:,u)];
-%     end
-%     for y = 1:numOutputs
-%         Y = [Y BigData(selectionParameters.p1,selectionParameters.p2,choice).outputs(:,y)];
-%     end
-%     % I/O Time Series Delay Specification
-%     delayMaxInTimeU = max(UPastValues)*effectiveReactionTime;
-%     delayMaxInTimeY = max(YPastValues)*effectiveReactionTime;
-%     delayMaxInTime = max(delayMaxInTimeY,delayMaxInTimeU);
-%     % Arrange BigData in useful way
-%     [InputDataU,InputDataY,predictorNames] = Arrange_IO_TimeSeries(U,Y,UPastValues,...
-%                                              YPastValues,effectiveReactionTime,delayMaxInTime,...
-%                                              InputNames,OutputNames);
-% 
-%     for y = 1:numOutputs
-%         startIndexY = 0;
-%         endIndexY = 0;
-%         for k = 0:(y-1)
-%             if (k == 0)
-%                 %
-%             else
-%                 startIndexY = startIndexY+YPastValues(k);
-%             end
-%             endIndexY = endIndexY+YPastValues(k+1);
-%         end
-%         IOData(y).InputTimeSeries = [InputDataY(:,1+startIndexY:endIndexY) InputDataU];
-%         IOData(y).OutputTimeSeries = Y(1+delayMaxInTime:end,y);
-%         IOData(y).PredictorNames = predictorNames{y};
-%         IOData(y).startIndexY = startIndexY;
-%         IOData(y).endIndexY = endIndexY;
-%     end
-% elseif (strcmp(mlMethod,'SS')||strcmp(mlMethod,'ARMAX'))
-%     U = BigData(selectionParameters.p1,selectionParameters.p2,choice).inputs.signals.values(:,:);
-%     Y = BigData(selectionParameters.p1,selectionParameters.p2,choice).outputs(:,:);
-%     Ts = YPastValues;
-%     IOData = iddata(Y,U,Ts,'InputName',InputNames','OutputName',OutputNames');
-%     delayMaxInTime = -1; %bogey value
-% end
 end
 

@@ -4,17 +4,18 @@ clear;
 
 run parametrosEmpty.m
 
-month = 'Septiembre';
-outputMatFileName = [month '_SimResults_1304'];
-matFileName = ['ThickenerOperation_' month '.mat'];
-saveToMatFile = true;
+month = 'Agosto';
+outputMatFileName = [month '_SimResults_1304_rawData'];
+matFileName = ['ThickenerOperation_' month '_rawData.mat'];
+saveToMatFile = false;
 
 startThickener = 0;
 load(matFileName);
 numVars = length(BigData.varsIndex);
 [numSamples garbage] = size(BigData.RawData');
 Dt = 1;
-simTime = BigData.manual.timeLimit
+simTime = BigData.manual.timeLimit;
+simTime = 1e5;
 % simTime = 1e5;
 % Noise generation
 % Currently with random numbers block, - maybe use band limited for solver

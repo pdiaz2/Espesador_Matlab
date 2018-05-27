@@ -28,8 +28,8 @@ options = optimoptions('ga','UseVectorized',true);
 
 
 options = optimoptions('patternsearch','UseCompletePoll',true,'UseVectorized',true);
-[x fval] = patternsearch(@vfun,[1,1,2],[],[],[],[],[],[],...
-    @nlinconst,options)
+% [x fval] = patternsearch(@vfun,[1,1,2],[],[],[],[],[],[],...
+%     @nlinconst,options)
 % Optimization terminated: mesh size less than options.MeshTolerance
 %  and constraint violation is less than options.ConstraintTolerance.
 % 
@@ -37,11 +37,11 @@ options = optimoptions('patternsearch','UseCompletePoll',true,'UseVectorized',tr
 % Using ga:
 
 options = optimoptions('ga','UseVectorized',true,'Display','iter');
-[x fval] = ga(@vfun,3,[],[],[],[],[],[],@nlinconst,options)
+[x fval] = ga(@vfun,3,[],[],[],[],[],[],[],options)
 % Optimization terminated: maximum number of generations exceeded.
 %%
 % clear all;
 % options = optimoptions('ga','UseVectorized',true,'Display','off','MaxStallGenerations',500,'PopulationSize',100,'MaxGenerations',100);
-% tic;
+% % tic;
 % [x,fval,exitflag,output] = ga(@qrFunction,2,[],[],[],[],[],[],@nlinconst_2,options);
 % toc;

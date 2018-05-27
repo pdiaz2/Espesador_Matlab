@@ -1,8 +1,8 @@
-function [ yHatArray] = mpc_predict_rf(predictorArray,nTrees,nPredictors,na,nb,nc)
+function [ yHatMatrix ] = mpc_predict_rf(predictorArray,nTrees,nPredictors,na,nb,nc)
 %MPC_PREDICT_RF Generate one-step ahead Random Forest prediction
 % Generates Random Forest based prediction using MEX files of RF models
 % Inputs:
-%   - predictorArray: n*max(nPredictors) array of predictor values
+%   - predictorArray: nPopulation*max(nPredictors)*n array of predictor values
 %   - nTrees: n*1 vector with number of trees per output
 %   - nPredictors: n*1 vector with number of predictors per CV
 %   - na: n*1 vector containing order of delays for each CV
@@ -21,16 +21,16 @@ for cv = 1:n
     if nPredictors(cv) ~= p
        error('Number of predictors is %d in hardcoded function. Different from: %d',p,nPredictors(cv)); 
     end
-    X = predictorArray(cv,1:p);
+    X = predictorArray(:,1:p,cv);
     switch cv
         case 1
-            yHat(cv) = predictRF_Y1_mex(X,100,10);
+            yHat(:,cv) = predictRF_Y1_mex(X,100,10);
         case 2
-            yHat(cv) = predictRF_Y2_mex(X,100,10);
+            yHat(:,cv) = predictRF_Y2_mex(X,100,10);
         case 3
-            yHat(cv) = predictRF_Y3_mex(X,100,10);
+            yHat(:,cv) = predictRF_Y3_mex(X,100,10);
     end
 end
-yHatArray = yHat(:);
+yHatMatrix = yHat;
 end
 

@@ -23,7 +23,13 @@ switch flag
         ibest = state.Best(end);
         ibest = find(state.Score == ibest,1,'last');
         bestIndividual = state.Population(ibest,:);
+        [nPopulation,~] = size(bestIndividual);
+        % Replication of yPastValues according to nPopulation
+        yPastValues = permute(repmat(yPastValues,1,1,nPopulation),[3 2 1]);
+        uPastValues = permute(repmat(uPastValues,1,1,nPopulation),[3 2 1]);
+        dPastValues = permute(repmat(dPastValues,1,1,nPopulation),[3 2 1]);
         % Generate prediction with best individual
+        
         [yHat] = mpc_horizon_predict(bestIndividual,N_y,...
                               yPastValues,uPastValues,dPastValues,...
                               nTrees,nPredictors,...

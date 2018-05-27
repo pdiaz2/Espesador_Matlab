@@ -11,13 +11,13 @@ function [ spTrackCost, terminalCost, limBreakCost ] = mpc_horizon_cost( spTrack
 % [ spTrackCost, terminalCost, limBreakCost ] = mpc_horizon_cost( spTrackingError, terminalError, epsilonValues, ...
 %                                                                 qMatrix,beta,lambdaMatrix)
 %% Cost Calculation
-
+% qMatrix = repmat(qMatrix,
 % Setpoint tracking cost
 spTrackCost = spTrackingError.^2*qMatrix(:);
 % Terminal cost
-terminalCost = beta*norm(terminalError)^2;
+terminalCost = beta*sum(terminalError.^2,2);
 % Limit violation cost
-limBreakCost = epsilonValues.^2'*lambdaMatrix(:);
+limBreakCost = epsilonValues.^2*lambdaMatrix(:);
 
 end
 
