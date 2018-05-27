@@ -60,17 +60,3 @@ options = optimoptions('ga','UseVectorized',true,'Display','off',...
 tic;
 [x,fval,exitflag,output,population,scores] = ga(objectiveFunction,nVars,[],[],[],[],lBounds,uBounds,[],options);
 toc;
-%%
-% %% GA
-% objectiveFunction = @(x)mpc_lqr_function(x,beta,rMatrix);
-% nonlinearConstraintsFunction = @(x)mpc_constraint_generator(x,qMatrix,lambdaMatrix,wMatrix,yLims,...
-%                                               yPastValues,uPastValues,dPastValues,...
-%                                               nTrees,nPredictors,...
-%                                               na,nb,nc);
-% nVars = 3+numMV*N_u;
-% lBounds = [0 0 0 -2*ones(1,numOutputs*N_u)];
-% uBounds = [1 1 2 2*ones(1,numOutputs*N_u)];
-% options = optimoptions('ga','UseVectorized',true,'Display','iter','MaxStallGenerations',500,'PopulationSize',100,'MaxGenerations',1);
-% tic;
-% [caquita,fval,exitflag,output,population,scores] = ga(objectiveFunction,nVars,[],[],[],[],lBounds,uBounds,nonlinearConstraintsFunction,options);
-% toc;
