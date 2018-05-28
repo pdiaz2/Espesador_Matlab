@@ -4,7 +4,7 @@ close all;
 clc;
 %% Test Plant Specifics
 load('testData_0405.mat');
-saveToMatFile = false;
+saveToMatFile = true;
 matFileName = 'ResultsRF_2705';
 generateOne = false;
 optimizeMLHyperparameters = false;
@@ -222,7 +222,7 @@ for waveformSelected = waveVector
         end
         %% Save
         if (saveToMatFile)
-            save(matFileName,'ML_Results','effectiveReactionTime','UBackshiftMatrix','YBackshiftMatrix',...
+            save(matFileName,'ML_Results','tau_R','UBackshiftMatrix','YBackshiftMatrix',...
                 'dataTraining','NameInputs','NameOutputs','optimizationTimes','trainingTimes',...
                 'bayOptIterations','optimizeMLHyperparameters','testBatch');
         end
