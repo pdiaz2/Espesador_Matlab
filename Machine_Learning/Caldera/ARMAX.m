@@ -5,7 +5,7 @@ clc;
 load('testData_1304.mat'); % Ts equal for all cases
 saveToMatFile = false;
 comparePlots = false;
-matFileName = 'ResultsARMAX_0405';
+matFileName = 'ResultsARMAX_2705';
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 freqsTotal = length(freqs);
@@ -84,8 +84,7 @@ for waveformSelected = 1:4
                                 trainingTimes(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = toc;
                                 % Test
 
-    %                             choice = testBatch;
-                                [TestSubset,garbage] = Prepare_IO_Data(experiment,tau_R,Dt,-1,...
+                                [TestSubset,garbage] = Prepare_IO_Data(1,tau_R,Dt,-1,...
                                                                         TestBigSet,NameInputs,NameOutputs,mlMethod);
                                 YOffset = zeros(numOutputs,numOutputs);
                                 UOffset = zeros(numInputs,numInputs);
@@ -146,6 +145,6 @@ for waveformSelected = 1:4
             end
         end
     end
-    save(matFileName,'ML_Results','testBatch','NameInputs','NameOutputs','trainingTimes','effectiveReactionTime','-v7.3','-nocompression');
+    save(matFileName,'ML_Results','testBatch','NameInputs','NameOutputs','trainingTimes','tau_R','-v7.3','-nocompression');
 end
     

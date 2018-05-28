@@ -1,4 +1,4 @@
-clear all;
+cleclear all;
 close all;
 clc;
 %% Test Plant Specifics
