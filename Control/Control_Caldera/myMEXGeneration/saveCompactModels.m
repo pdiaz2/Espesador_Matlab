@@ -2,7 +2,7 @@
 numOutputs = 3;
 % In the feature this may vary for each Y
 for y = 1:numOutputs
-    strFile = ['RF_Y' num2str(y) '.mat'];
+    strFile = ['RF_Y' num2str(y) '_2705.mat'];
     load(strFile);
     numTrees(y) = RF.NumTrained;
     p(y) = numel(RF.PredictorNames);

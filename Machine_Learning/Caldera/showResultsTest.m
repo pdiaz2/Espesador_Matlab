@@ -3,8 +3,8 @@ clear all;
 close all;
 clc;
 %%
-load('ResultsARMAX_0405_step.mat');
-ml_Type = 'ARMAX';
+load('ResultsRF_2705_saw.mat');
+ml_Type = 'RF';
 %%
 J = Evaluate_Performance(ML_Results,ml_Type,NameInputs,NameOutputs);
 [numOutputs,J_i,garbage] = size(J);
@@ -47,6 +47,41 @@ elseif strcmp(ml_Type,'RF')
     end
 end
 
+
+%% Building delayParameters Mat File
+delayU = J_Handy(:,2,1);
+delayY = J_Handy(:,3,1);
+numDV = 1;
+numMV = 3;
+numInputs = numDV+numDV;
+save('delayParameters_2705.mat','delayU','delayY','tau_R','numDV','numInputs',...
+     'numOutputs','numMV','UBackshiftMatrix','YBackshiftMatrix');
+%% Plotting
+% Y1Predicted = predict(RandomForestY1,InputDataFinalY1);
+% Y2Predicted = predict(RandomForestY2,InputDataFinalY2);
+% Y3Predicted = predict(RandomForestY3,InputDataFinalY3);
+% figure
+% plot(Y1Predicted)
+% hold on
+% plot(results(1,3,8).outputs(1+6*5:end,1))
+% legend('Presión de Vapor Modelo','Presión de Vapor Random Forest')
+% hold off
+% 
+% 
+% figure
+% plot(Y2Predicted)
+% hold on
+% plot(results(1,3,8).outputs(1+2*5:end,2))
+% legend('Exceso de Oxígeno Modelo','Exceso de Oxígeno Random Forest')
+% hold off
+% 
+% figure
+% plot(Y3Predicted)
+% hold on
+% plot(results(1,3,8).outputs(1+3*5:end,3))
+% legend('Nivel de Agua Modelo','Nivel de Agua Random Forest')
+% hold off
+%% Functions
 function [JMatrix] = Evaluate_Performance(Results,typeML,nameInputs,nameOutputs)
 %  Evaluate Performance : Evaluates J-performance of different ML Models
 %  Returns (NumOutputs,Criterions,2) Matrix
@@ -111,27 +146,3 @@ function [varargout] = Convert_ToN_D(JMatrix,ML_Type)
         
     end
 end
-% Y1Predicted = predict(RandomForestY1,InputDataFinalY1);
-% Y2Predicted = predict(RandomForestY2,InputDataFinalY2);
-% Y3Predicted = predict(RandomForestY3,InputDataFinalY3);
-% figure
-% plot(Y1Predicted)
-% hold on
-% plot(results(1,3,8).outputs(1+6*5:end,1))
-% legend('Presión de Vapor Modelo','Presión de Vapor Random Forest')
-% hold off
-% 
-% 
-% figure
-% plot(Y2Predicted)
-% hold on
-% plot(results(1,3,8).outputs(1+2*5:end,2))
-% legend('Exceso de Oxígeno Modelo','Exceso de Oxígeno Random Forest')
-% hold off
-% 
-% figure
-% plot(Y3Predicted)
-% hold on
-% plot(results(1,3,8).outputs(1+3*5:end,3))
-% legend('Nivel de Agua Modelo','Nivel de Agua Random Forest')
-% hold off

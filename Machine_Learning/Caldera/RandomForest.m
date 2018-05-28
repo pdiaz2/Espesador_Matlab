@@ -4,9 +4,9 @@ close all;
 clc;
 %% Test Plant Specifics
 load('testData_0405.mat');
-saveToMatFile = true;
+saveToMatFile = false;
 matFileName = 'ResultsRF_2705';
-generateOne = false;
+generateOne = true;
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
 
@@ -24,9 +24,9 @@ dimsSystem = [3 3 1];
 if generateOne
     % Input wave
     waveVector = 3;
-    experiment = 2;
-    delayUCases = 1;
-    delayYCases = 1;
+    experiment = 10;
+    delayUCases = 4;
+    delayYCases = 7;
 else
    waveVector = 1:4;
 end
@@ -67,7 +67,7 @@ dataTraining(m+2).subSetsIndex = [2 4 6];
 dataTraining(m+3).subSetsIndex = [1 2 3 4 5 6 7];
 [garbage , numSubSets] = size(dataTraining);
 %% Machine Learning Parameters
-mlParameters = {100,1,'on',10,'on','curvature','TBagger'};
+mlParameters = {100,1,'on',10,'on','curvature','Ensemble'};
 maxMinLS = 20;
 minLS = optimizableVariable('minLS',[1,maxMinLS],'Type','integer');
 hyperparametersRF = minLS;

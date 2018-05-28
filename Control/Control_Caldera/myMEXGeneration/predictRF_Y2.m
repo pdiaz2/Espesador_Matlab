@@ -8,8 +8,8 @@ function [ Y ] = predictRF_Y2( X,numTrees,numPredictors )
 if numTrees ~= 100
    error('Number of trees is %d in hardcoded function. Different from: %d',100,numTrees); 
 end
-if numPredictors ~= 10
-   error('Number of predictors is %d in hardcoded function. Different from: %d',10,numPredictors); 
+if numPredictors ~= 7
+   error('Number of predictors is %d in hardcoded function. Different from: %d',7,numPredictors); 
 end
 %%
 CRTStrArray = { 
