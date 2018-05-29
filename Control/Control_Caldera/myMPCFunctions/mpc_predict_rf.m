@@ -13,8 +13,8 @@ function [ yHatMatrix ] = mpc_predict_rf(predictorArray,nTrees,nPredictors,na,nb
 [n,d] = size(nc);
 for cv = 1:n
     % Predict
-    p = na(cv)+sum(nb(cv,:))+m+nc(cv,:)+d;
-    % p = na(cv)+sum(nb(cv,:)+nb(cv,:);
+%     p = na(cv)+sum(nb(cv,:))+m+nc(cv,:)+d;
+    p = na(cv)+sum(nb(cv,:))+nc(cv,:);
     if nTrees(cv) ~= 100
        error('Number of trees is %d in hardcoded function. Different from: %d',100,nTrees(cv)); 
     end
@@ -24,11 +24,11 @@ for cv = 1:n
     X = predictorArray(:,1:p,cv);
     switch cv
         case 1
-            yHat(:,cv) = predictRF_Y1_mex(X,100,10);
+            yHat(:,cv) = predictRF_Y1_mex(X,nTrees(cv),p);
         case 2
-            yHat(:,cv) = predictRF_Y2_mex(X,100,10);
+            yHat(:,cv) = predictRF_Y2_mex(X,nTrees(cv),p);
         case 3
-            yHat(:,cv) = predictRF_Y3_mex(X,100,10);
+            yHat(:,cv) = predictRF_Y3_mex(X,nTrees(cv),p);
     end
 end
 yHatMatrix = yHat;

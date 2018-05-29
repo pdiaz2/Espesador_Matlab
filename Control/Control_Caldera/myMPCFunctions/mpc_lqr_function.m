@@ -1,6 +1,6 @@
-function [ z ] = mpc_lqr_function(x, beta, rMatrix, qMatrix, lambdaMatrix, wMatrix, yLims,...
-                                      yPastValues, uPastValues, dPastValues,...
-                                      nTrees, nPredictors, na, nb, nc)
+function [ z ] = mpc_lqr_function(x, beta, rMatrix, qMatrix, lambdaMatrix, wMatrix, ...
+                                  yLims, uLims, yPastValues, uPastValues, dPastValues,...
+                                  nTrees, nPredictors, na, nb, nc)
 %MPC_LQR_FUNCTION MPC objective finite LQR function
 % Calculates value of objective function for delta_u
 % Inputs:
@@ -11,6 +11,7 @@ function [ z ] = mpc_lqr_function(x, beta, rMatrix, qMatrix, lambdaMatrix, wMatr
 %   - lambdaMatrix: n*N_y posistive-definite cost matrix for slack variables
 %   - wMatrix: n*N_y setpoint matrix
 %   - yLims: n*N_y*2 matrix with low and high limits for CV in horizon
+%   - uLims: m*N_u*2 matrix with low and high limits for MV in N_u horizon
 %   - yPastValues: n*max(na)*tau_R matrix containing past CV values
 %   - uPastValues: m*max(max(nb))*tau_R matrix containing past MV values
 %   - dPastValues: d*max(nc)*tau_R matrix containing past DV values
@@ -29,7 +30,7 @@ yPastValues = permute(repmat(yPastValues,1,1,nPopulation),[3 2 1]);
 uPastValues = permute(repmat(uPastValues,1,1,nPopulation),[3 2 1]);
 dPastValues = permute(repmat(dPastValues,1,1,nPopulation),[3 2 1]);
 %% Predict
-[yHat] = mpc_horizon_predict(x,N_y,...
+[yHat] = mpc_horizon_predict(x,N_y,uLims,...
                               yPastValues,uPastValues,dPastValues,...
                               nTrees,nPredictors,...
                               na,nb,nc);

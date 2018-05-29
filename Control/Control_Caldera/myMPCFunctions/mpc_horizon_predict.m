@@ -1,10 +1,13 @@
-function [ yHat ] = mpc_horizon_predict(x, N_y, yPastValues, uPastValues, dPastValues,...
-                                      nTrees, nPredictors, na, nb, nc)
+function [ yHat ] = mpc_horizon_predict(x, N_y, uLims,...
+                                        yPastValues, uPastValues, dPastValues,...
+                                        nTrees, nPredictors, na, nb, nc)
 %MPC_CONSTRAINT_GENERATOR Generates horizon cost of MPC problem
 % This function assigns the non-linear constraints (i.e the model
 % prediction of Random Forests)
 % Inputs:
-%   - x: nPopulation*(N_u*m) decission variable matrix
+%   - x: nPopulation*(N_u*m) decission variable matrix (2D)
+%   - N_y: Prediction horizon
+%   - uLims: m*N_u*2 matrix with limits for MV in N_u horizon (3D)
 %   - yPastValues: n*max(na)*tau_R matrix containing past CV values
 %   - uPastValues: m*max(max(nb))*tau_R matrix containing past MV values
 %   - dPastValues: d*max(nc)*tau_R matrix containing past DV values
@@ -38,7 +41,7 @@ computedMV = zeros(nPopulation,m);
 for j = 1:N_y
     
     % Generate predictor array for all CV and j ahead prediction
-    predictorArray = generate_predictor_array(x,j,auxYPastValues,auxUPastValues,auxDPastValues,...
+    predictorArray = generate_predictor_array(x,j,uLims,auxYPastValues,auxUPastValues,auxDPastValues,...
                                                 na,nb,nc,N_u,NUM_PSEUDO_COSTS);
     % Generate Random Forest prediction
     yHat(:,:,j) = mpc_predict_rf(predictorArray,nTrees,nPredictors,na,nb,nc);
@@ -51,7 +54,7 @@ for j = 1:N_y
     auxDPastValues(:,1,:) = auxDPastValues(:,1,:); % If better disturbance model, this can be substituted for prediction
     
     for mv = 1:m
-        computedMV(:,mv) = compute_MV_value(x,auxUPastValues,mv,m,j,N_u,NUM_PSEUDO_COSTS);
+        computedMV(:,mv) = compute_MV_value(x,uLims,auxUPastValues,mv,m,j,N_u,NUM_PSEUDO_COSTS);
     end
     auxUPastValues(:,2:end,:) = auxUPastValues(:,1:end-1,:);
     auxUPastValues(:,1,:) = reshape(computedMV,nPopulation,1,m);

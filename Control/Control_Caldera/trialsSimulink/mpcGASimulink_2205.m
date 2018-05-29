@@ -28,7 +28,7 @@ demandaVapor.time = linspace(0,simTime-Dt,simTime/Dt)';
 demandaVapor.signals.dimensions = [1];
 demandaVapor.signals.values = demandAmplitude*demandaVals;
 %% Random Forest Specifications
-load('delayParameters.mat');
+load('delayParameters_2705.mat');
 for y = 1:numOutputs
     delayUMatrix(y,:) = UBackshiftMatrix(delayU(y),:);
     delayYMatrix(y,:) = YBackshiftMatrix(delayY(y),:);
@@ -36,7 +36,7 @@ for y = 1:numOutputs
     yRecSize = max(max(delayYMatrix));
 end
 % Code will be eliminated afterwards
-na = [delayYMatrix(2,2);delayYMatrix(2,2);delayYMatrix(3,3)];
+na = [delayYMatrix(1,1);delayYMatrix(2,2);delayYMatrix(3,3)];
 nb = delayUMatrix(:,2:end);
 nc = delayUMatrix(:,1);
 maxYDelay = max(na);
@@ -54,18 +54,24 @@ tau_R = 5;
 tau_C = 12*tau_R;
 N_u = 2;
 nTrees = ones(1,3)*100;
-nPredictors = 10*ones(1,3);
+nPredictors = [8 7 10];
 N_y = 3;
 qMatrix = ones(numOutputs,N_y-1);
-wMatrix = 40*ones(numOutputs,N_y);
-lambdaMatrix = 100*ones(numOutputs,N_y);
 rMatrix = ones(numMV,N_u);
 beta = 100;
+wMatrix = repmat([40 28 36]',1,N_y);
+lambdaMatrix = 100*ones(numOutputs,N_y);
 yHighLims = 40*ones(numOutputs,N_y);
 yLowLims = 20*ones(numOutputs,N_y);
 yLims = cat(3,yLowLims,yHighLims);
-nVars = 3+numMV*N_u;
-lBounds = [0 0 0 -2*ones(1,numOutputs*N_u)];
-uBounds = [1 1 2 2*ones(1,numOutputs*N_u)];
+uLowLims = 24*ones(numMV,N_u);
+uHighLims = 30*ones(numMV,N_u);
+uLims = cat(3,uLowLims,uHighLims);
+nVars = numMV*N_u;
+maxGens = 100;
+maxStallGens = 50;
+nPopulation = 20;
+lBounds = [-5*ones(1,numOutputs*N_u)];
+uBounds = [5*ones(1,numOutputs*N_u)];
 %%
 sim('mpc_rf_boiler.slx');
