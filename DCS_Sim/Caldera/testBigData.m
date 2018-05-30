@@ -4,11 +4,11 @@ clc;
 close all;
 %% Input Design
 Dt = 1; % 0.5 seconds sampling time
-simTime = 80*60;
+simTime = 120*60;
 % stepsOrSpecial = 'steps';
 matFileName = ['testData_0405.mat'];
-showGraphs = false;
-saveMatFile = true;
+showGraphs = true;
+saveMatFile = false;
 freqs = [5 10 50]; % numMax cycles in sim: simTime*maxFreq = simTime*0.3*Fs_05;
 waveform = {'Sinusoid'; 'Square' ;'Sawtooth';'Steps'};
 makeMatrix = [1 0 0 0;...
@@ -22,9 +22,9 @@ makeMatrix = [1 0 0 0;...
     ];
 [numMakes ~] = size(makeMatrix);
 stepInitTime = 30;
-for f = 1:length(freqs)
-   for w = 1:length(waveform)
-      for m = 1:numMakes
+for f = 1:1%;1:length(freqs)
+   for w = 3:3%1:length(waveform)
+      for m = 1:4%;numMakes
         numberCycles = freqs(f);
         wave = waveform{w};
         make = makeMatrix(m,:);
@@ -40,10 +40,10 @@ for f = 1:length(freqs)
         Y0 = [41.4120   28.7553   38.6037];
         
         % Amplitudes
-        demandAmplitude = 2;
-        combustibleAmplitude = 2;
-        aguaAmplitude = 2;
-        aireAmplitude = 2;
+        demandAmplitude = 10;
+        combustibleAmplitude = 10;
+        aguaAmplitude = 10;
+        aireAmplitude = 10;
         if (w == 4)
             demandaVals = myStepTest(simTime,Dt,1,simTime,stepInitTime,1,0,0);
             combustibleVals = myStepTest(simTime,Dt,1,simTime,stepInitTime,1,0,0);
