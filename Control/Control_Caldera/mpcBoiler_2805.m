@@ -2,10 +2,10 @@ clear all;
 clc;
 close all;
 %% 
-N_y = 5;
-N_u = 1;
+N_y = 10;
+N_u = 3;
 Dt = 1;
-simTime = 500;
+simTime = 1200;
 tau_R = 5; % 5 s
 tau_C = 12; % 60 s
 stepInDV = false;
