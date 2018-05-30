@@ -20,8 +20,8 @@ switch flag
     case 'iter'
         [n,N_y] = size(wMatrix);
         % Find the best objective function in current generation => Best(end)
-        ibest = state.Best(end);
-        ibest = find(state.Score == ibest,1,'last');
+        bestScore = state.Best(end);
+        ibest = find(state.Score == bestScore,1,'last');
         bestIndividual = state.Population(ibest,:);
         [nPopulation,~] = size(bestIndividual);
         % Replication of yPastValues according to nPopulation
@@ -91,11 +91,18 @@ switch flag
             fprintf('Generation %d\r\n',state.Generation);
             fprintf('Last Improvement Generation %d\r\n',state.LastImprovement)
             fprintf('Delta U(0) is %4.4f\r\n',bestIndividual(1:3))
+            fprintf('F.O.Value Now is %4.2f\r\n',bestScore)
+            fprintf('Total Function Evaluations %d\r\n',state.FunEval)
             pause()
         end
         
     case 'done'
-        
+        clear bestMeanTrackingError bestMeanTerminalError bestMeanLimBreakError
+        clear bestMaxTrackingError bestMaxTerminalError bestMaxLimBreakError
+        clear bestMinTrackingError bestMinTerminalError bestMinLimBreakError
+        clear bestTrackingCost bestTerminalCost bestLimBreakCost
+        clear h1 h2
+        close all
 end
 
 

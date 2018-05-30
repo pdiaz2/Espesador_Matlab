@@ -1,13 +1,14 @@
-clear;
+clear all;
 clc;
 close all;
 %% 
-N_y = 12;
-N_u = 3;
+N_y = 5;
+N_u = 1;
 Dt = 1;
-simTime = 7200;
+simTime = 500;
 tau_R = 5; % 5 s
 tau_C = 12; % 60 s
+stepInDV = false;
 dateMatFileStr = '2805';
 %%
 delayParametersFile = ['delayParameters_' dateMatFileStr '.mat'];
@@ -16,7 +17,7 @@ designParametersFileName = ['mpc_design_parameters_' dateMatFileStr '.mat'];
 parametersFileArray = {delayParametersFile,fixedParametersFileName,designParametersFileName};
 %%
 % Fixed parameters
-mpc_generate_fixed_parameters(dateMatFileStr);
+mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime);
 % Design parameters
 mpc_generate_design_parameters(dateMatFileStr,N_y,N_u);
 %%
@@ -25,6 +26,7 @@ for strFile = 1:3
 end
 
 %%
+rng(120938103);
 tic;
 sim('mpc_rf_boiler.slx');
 toc;
