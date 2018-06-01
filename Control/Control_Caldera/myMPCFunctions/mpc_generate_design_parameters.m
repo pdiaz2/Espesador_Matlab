@@ -6,6 +6,7 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
     %% MPC Design Parameters
     % Weight Matrices (Design)
     qMatrix = 1*ones(numCV,N_y-1);
+    qMatrix(1,:) = zeros(1,N_y-1);
 %     qMatrix(2,:) = zeros(1,N_y-1);
 %     qMatrix(3,:) = zeros(1,N_y-1);
     rMatrix = 1*ones(numMV,N_u);
