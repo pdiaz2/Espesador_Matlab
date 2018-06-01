@@ -4,14 +4,17 @@ function [ arxRFSet] = build_arx_rf_predSet( YPastSequence, UPastSequence, Y,...
 %BUILD_ARX_RF_PREDSET Builds "ARX" prediction set from past Y and U Values
 %   Detailed explanation goes here
 [~,n] = size(Y);
-for y = 1:n
+for cv = 1:n
     % Generate correct indices for picking out Y
-    [startIndexY,endIndexY] = pick_correct_Y(y,na);
-    arxRFSet(y).InputTimeSeries = [YPastSequence(:,1+startIndexY:endIndexY) UPastSequence];
-    arxRFSet(y).OutputTimeSeries = Y(1+delayMaxInTime:end,y);
-    arxRFSet(y).PredictorNames = predictorNames{y};
-    arxRFSet(y).startIndexY = startIndexY;
-    arxRFSet(y).endIndexY = endIndexY;
+    [startIndexY,endIndexY] = pick_correct_Y(cv,na);
+    % Select regressors for cv(t) (constructed from t-k*tau_R, k>=1 at
+    % least)
+    arxRFSet(cv).InputTimeSeries = [YPastSequence(:,1+startIndexY:endIndexY) UPastSequence];
+    % Select cv(t) for validation (tau_R ahead prediction)
+    arxRFSet(cv).OutputTimeSeries = Y(1+delayMaxInTime:end,cv);
+    arxRFSet(cv).PredictorNames = predictorNames{cv};
+    arxRFSet(cv).startIndexY = startIndexY;
+    arxRFSet(cv).endIndexY = endIndexY;
 end
 
 end

@@ -8,24 +8,17 @@ function [ PredictorDataU,PredictorDataY,predictorNames ] = Arrange_IO_TimeSerie
 PredictorDataU = [];
 PredictorDataY = [];
 predictorNamesU = {};
-for u = 1:numInputs
-    d = nb(u);
-    predictorNamesUBogey = {};
-    for shifts = 1:d
-       PredictorDataU = horzcat(PredictorDataU,U(1+delayMaxInTime-shifts*tau_R...
-                            :numSamples-shifts*tau_R,u));
-       predictorNamesUBogey{u,shifts} = [NameInputs{u} '_' num2str(shifts)]; 
-    end
-    predictorNamesU = [predictorNamesU predictorNamesUBogey{u,:}];
-end
-for y = 1:numOutputs
-    d = na(y);
-    for shifts = 1:d % Y does not regress on itself with no backward shift
-       PredictorDataY = horzcat(PredictorDataY,Y(1+delayMaxInTime-shifts*tau_R...
-                                :numSamples-shifts*tau_R,y));
-       predictorNamesY{y,shifts} = [NameOutputs{y} '_' num2str(shifts)];
-    end
-    predictorNames{y} = [predictorNamesY{y,:} predictorNamesU];
-end
+% Arrange and shift time series of U accordingly
+[PredictorDataU,predictorNamesU] = shift_time_series(numInputs, nb, U,...
+                                                    delayMaxInTime, NameInputs,...
+                                                    tau_R,numSamples);
+% Arrange and shift time series of Y accordingly
+[PredictorDataY,predictorNamesY] = shift_time_series(numOutputs, na, Y,...
+                                                    delayMaxInTime, NameOutputs,...
+                                                    tau_R,numSamples);
+% Generate predictor names
+predictorNames = generate_predictorNames(predictorNamesU,predictorNamesY,...
+                                         na,nb);
+
 end
 

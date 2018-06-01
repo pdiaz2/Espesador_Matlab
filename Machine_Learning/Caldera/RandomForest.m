@@ -9,10 +9,11 @@ matFileName = 'ResultsRF_2705';
 generateOne = true;
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
-
+MVToApply = makeMatrix;
+[simTime,~] = size(results(1,1,1).inputs.time);
 freqsTotal = length(freqs);
 wavesTotal = length(waveform);
-[makeTotal ~] = size(makeMatrix);
+[nOpenLoopExps ~] = size(MVToApply);
 % DataSet
 fSelected = 2;
 testBatch = 8;
@@ -24,9 +25,9 @@ dimsSystem = [3 3 1];
 if generateOne
     % Input wave
     waveVector = 3;
-    experiment = 10;
+    experiment = 1;
     delayUCases = 4;
-    delayYCases = 7;
+    delayYCases = 3;
 else
    waveVector = 1:4;
 end
@@ -44,6 +45,7 @@ UBackshiftMatrix = [1 1 1 1;
                     ];
 
 [backshiftCasesU garbage] = size(UBackshiftMatrix);
+% Change, completely reiterative
 YBackshiftMatrix = [1 1 1;
                     2 2 2;
                     2 1 2;
@@ -56,16 +58,8 @@ YBackshiftMatrix = [1 1 1;
 %% Raw Data Handling
 tau_R = 5;
 makeSelected = 1:8;
-% Each Subset on it's own (leaves 8 out, because it is test) -> XVal
-% afterwards
-for m = 1:length(makeSelected)-1
-    dataTraining(m).subSetsIndex = [m];
-end
-% Special Combinations
-dataTraining(m+1).subSetsIndex = [1 3 5 7];
-dataTraining(m+2).subSetsIndex = [2 4 6];
-dataTraining(m+3).subSetsIndex = [1 2 3 4 5 6 7];
-[garbage , numSubSets] = size(dataTraining);
+OLExpStruct = generate_ol_array_index(makeSelected);
+[garbage , numExpGroups] = size(OLExpStruct);
 %% Machine Learning Parameters
 mlParameters = {100,1,'on',10,'on','curvature','Ensemble'};
 maxMinLS = 20;
@@ -88,8 +82,8 @@ for waveformSelected = waveVector
     TrainingBigSet = struct;
     TestBigSet = struct;
     [TrainingBigSet,TestBigSet,NameInputs,NameOutputs] = generate_tT_sets( TrainingBigSet, TestBigSet,...
-                                                        results,dataTraining,NameInputs,NameOutputs,...
-                                                        numSubSets, selectionParameters,testBatch,...
+                                                        results,OLExpStruct,NameInputs,NameOutputs,...
+                                                        numExpGroups, selectionParameters,testBatch,...
                                                         dimsSystem);
     seed = rng('default'); % For reproducibility (should look into this after)
     bayOptIterations = 30;
@@ -145,6 +139,9 @@ for waveformSelected = waveVector
             PredictedOutputs = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
             % Validation is tau_R ahead value of actual data
             ValidationOutputs = TestBigSet.Outputs.TimeSeries(1+delayMaxInTime:end,y);
+            MSECTM = predict_N_ahead( ML_Model(y).Model, IOData(y).InputTimeSeries, ValidationOutputs,...
+                                            3,tau_R,na(y));
+            ML_Results.Output(y).MSE(experiment,delayUCases,delayYCases) = immse(PredictedOutputs,ValidationOutputs);
             ML_Results.Output(y).MSE(experiment,delayUCases,delayYCases) = immse(PredictedOutputs,ValidationOutputs);
             ML_Results.Output(y).Correlation(experiment,delayUCases,delayYCases) = corr(PredictedOutputs,ValidationOutputs);
 %            OOB = oobError(ML_Model(y).Model);
@@ -156,7 +153,7 @@ for waveformSelected = waveVector
         end
         
     else
-        for experiment = 1:numSubSets%1:numSubSets
+        for experiment = 1:numExpGroups%1:numSubSets
             for delayUCases = 1:backshiftCasesU%1:backshiftCasesU
                 nb = UBackshiftMatrix(delayUCases,:);
                 for delayYCases = 1:backshiftCasesY%1:backshiftCasesY
