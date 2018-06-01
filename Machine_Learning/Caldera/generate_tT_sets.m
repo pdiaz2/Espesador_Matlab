@@ -13,6 +13,8 @@ for ns = 1:numExpGroups
     % Accumulate cv for all subsets combinations
     for cv = 1:n
         cumOLData = [];
+        TrainSetStruct(ns).NumberOfOLExps = length(OLExps);
+        TestSetStruct(1).NumberOfOLExps = 1;
         for tS = 1:length(OLExps)
             OLExpChosen = OLExps(tS);
             cumOLData = vertcat(cumOLData(:),...

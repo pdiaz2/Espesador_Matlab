@@ -6,14 +6,15 @@ clc;
 load('testData_0405.mat');
 saveToMatFile = false;
 matFileName = 'ResultsRF_2705';
-generateOne = true;
+generateOne = false;
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
 MVToApply = makeMatrix;
-[simTime,~] = size(results(1,1,1).inputs.time);
+[numSamplesPerExp,~] = size(results(1,1,1).inputs.time);
 freqsTotal = length(freqs);
 wavesTotal = length(waveform);
 [nOpenLoopExps ~] = size(MVToApply);
+N_y = 20;
 % DataSet
 fSelected = 2;
 testBatch = 8;
@@ -25,7 +26,7 @@ dimsSystem = [3 3 1];
 if generateOne
     % Input wave
     waveVector = 3;
-    experiment = 1;
+    experiment = 9;
     delayUCases = 4;
     delayYCases = 3;
 else
@@ -44,24 +45,21 @@ UBackshiftMatrix = [1 1 1 1;
                     5 5 5 5;
                     ];
 
-[backshiftCasesU garbage] = size(UBackshiftMatrix);
-% Change, completely reiterative
+[backshiftCasesU, ~] = size(UBackshiftMatrix);
+
 YBackshiftMatrix = [1 1 1;
                     2 2 2;
-                    2 1 2;
-                    1 2 1;
-                    1 1 2;
                     3 3 3;
-                    4 4 4;
+                    4 4 4
                     ];
-[backshiftCasesY garbage] = size(YBackshiftMatrix);
+[backshiftCasesY, ~] = size(YBackshiftMatrix);
 %% Raw Data Handling
 tau_R = 5;
 makeSelected = 1:8;
 OLExpStruct = generate_ol_array_index(makeSelected);
 [garbage , numExpGroups] = size(OLExpStruct);
 %% Machine Learning Parameters
-mlParameters = {100,1,'on',10,'on','curvature','Ensemble'};
+mlParameters = {100,1,'on',10,'on','curvature','TBagger'};
 maxMinLS = 20;
 minLS = optimizableVariable('minLS',[1,maxMinLS],'Type','integer');
 hyperparametersRF = minLS;
@@ -98,7 +96,7 @@ for waveformSelected = waveVector
         pause(1)
 
         [TrainingSubset] = generate_tT_subsets( TrainingBigSet, NameInputs, NameOutputs,...
-                                                experiment, tau_R, dimsSystem,...
+                                                experiment, tau_R, numSamplesPerExp, dimsSystem,...
                                                 na, nb, mlMethod );
         if (optimizeMLHyperparameters)
         % Optimize HyperParameter LeafSize
@@ -130,20 +128,22 @@ for waveformSelected = waveVector
         
         % Prepare IO Data for model building
         % 1 is because only one subset is TestBatch
-        [IOData,delayMaxInTime] = Prepare_IO_Data(1,tau_R,na,nb,...
-                                                TestBigSet,NameInputs,NameOutputs,mlMethod);
-
+        [IOData,delayMaxInTime] = Prepare_IO_Data(TestBigSet,...
+                                                NameInputs, NameOutputs,...
+                                                1, tau_R, numSamplesPerExp,...
+                                                na, nb,...
+                                                mlMethod);
         %% Prediction and Comparison
         for y = 1:numOutputs
-            % Predict tau_R ahead prediction
-            PredictedOutputs = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
+            % One step ahead prediction "out of the box"
+            OneStepAheadPrediction = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
             % Validation is tau_R ahead value of actual data
-            ValidationOutputs = TestBigSet.Outputs.TimeSeries(1+delayMaxInTime:end,y);
-            MSECTM = predict_N_ahead( ML_Model(y).Model, IOData(y).InputTimeSeries, ValidationOutputs,...
-                                            3,tau_R,na(y));
-            ML_Results.Output(y).MSE(experiment,delayUCases,delayYCases) = immse(PredictedOutputs,ValidationOutputs);
-            ML_Results.Output(y).MSE(experiment,delayUCases,delayYCases) = immse(PredictedOutputs,ValidationOutputs);
-            ML_Results.Output(y).Correlation(experiment,delayUCases,delayYCases) = corr(PredictedOutputs,ValidationOutputs);
+            ValidationOutputs = TestBigSet(1).Outputs.TimeSeries(1+delayMaxInTime:end,y);
+            MSE_Ny = predict_N_ahead( ML_Model(y).Model, IOData(y).InputTimeSeries, ValidationOutputs,...
+                                            N_y,tau_R,na(y));
+            ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).MSE = MSE_Ny;
+            ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).Correlation = ...
+                                                                corr(OneStepAheadPrediction,ValidationOutputs);
 %            OOB = oobError(ML_Model(y).Model);
 %            ML_Results.Output(y).OOBError(experiment,delayUCases,delayYCases) = OOB(end);
 %                ML_Results.Output(y).OOBPredictorImportance(experiment,delayUCases,delayYCases,:) = ML_Model(y).Model.OOBPermutedPredictorDeltaError;
@@ -164,8 +164,8 @@ for waveformSelected = waveVector
                     pause(1)
 
                     [TrainingSubset] = generate_tT_subsets( TrainingBigSet, NameInputs, NameOutputs,...
-                                                            experiment, tau_R, dimsSystem,...
-                                                            na, nb, mlMethod );
+                                                experiment, tau_R, numSamplesPerExp, dimsSystem,...
+                                                na, nb, mlMethod );
 
                     if (optimizeMLHyperparameters)
                     % Optimize HyperParameter LeafSize
@@ -197,19 +197,27 @@ for waveformSelected = waveVector
 
                     % Prepare IO Data for model building
                     % 1 is because only one subset is TestBatch
-                    [IOData,delayMaxInTime] = Prepare_IO_Data(1,tau_R,na,nb,...
-                                                            TestBigSet,NameInputs,NameOutputs,mlMethod);
-                    % Prediction
+                    [IOData,delayMaxInTime] = Prepare_IO_Data(TestBigSet,...
+                                                NameInputs, NameOutputs,...
+                                                1, tau_R, numSamplesPerExp,...
+                                                na, nb,...
+                                                mlMethod);
+                    %% Prediction and Comparison
                     for y = 1:numOutputs
-                       PredictedOutputs = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
-                       ValidationOutputs = TestBigSet(1).Outputs.TimeSeries(1+delayMaxInTime:end,y);
-                       ML_Results.Output(y).MSE(experiment,delayUCases,delayYCases) = immse(PredictedOutputs,ValidationOutputs);
-                       ML_Results.Output(y).Correlation(experiment,delayUCases,delayYCases) = corr(PredictedOutputs,ValidationOutputs);
-                       OOB = oobError(ML_Model(y).Model);
-                       ML_Results.Output(y).OOBError(experiment,delayUCases,delayYCases) = OOB(end);
-        %                ML_Results.Output(y).OOBPredictorImportance(experiment,delayUCases,delayYCases,:) = ML_Model(y).Model.OOBPermutedPredictorDeltaError;
-        %                ML_Results(experiment,delayUCases,delayYCases).Results(y).NumPredictorSplit = ML_Model(y).Model.NumPredictorSplit;
-        %                ML_Results(experiment,delayUCases,delayYCases).Results(y).MinLeafSize = ML_Model(y).Model.MinLeafSize;
+                        % One step ahead prediction "out of the box"
+                        OneStepAheadPrediction = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
+                        ValidationOutputs = TestBigSet(1).Outputs.TimeSeries(1+delayMaxInTime:end,y);
+
+                        MSE_Ny = predict_N_ahead( ML_Model(y).Model, IOData(y).InputTimeSeries, ValidationOutputs,...
+                                            N_y,tau_R,na(y));
+                        ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).MSE = MSE_Ny;
+                        ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).Correlation = ...
+                                                                    corr(OneStepAheadPrediction,ValidationOutputs);
+                        OOB = oobError(ML_Model(y).Model);
+                        ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).OOBError = OOB(end);
+                        %                ML_Results.Output(y).OOBPredictorImportance(experiment,delayUCases,delayYCases,:) = ML_Model(y).Model.OOBPermutedPredictorDeltaError;
+                        %                ML_Results(experiment,delayUCases,delayYCases).Results(y).NumPredictorSplit = ML_Model(y).Model.NumPredictorSplit;
+                        %                ML_Results(experiment,delayUCases,delayYCases).Results(y).MinLeafSize = ML_Model(y).Model.MinLeafSize;
 
                     end
 

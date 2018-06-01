@@ -1,4 +1,4 @@
-function [ MSE_N_y ] = predict_N_ahead( RandomForest, InputTimeSeries, ValidationOutputs,...
+function [ MSE_Ny ] = predict_N_ahead( RandomForest, InputTimeSeries, ValidationOutputs,...
                                             N_y,tau_R,na_y)
 %PREDICT_N_AHEAD Summary of this function goes here
 % Obtains predictions for N_y ahead steps using InputTimeSeries
@@ -17,11 +17,14 @@ yHat(:,1) = predict(RandomForest,InputTimeSeries);
 % We need to "leave room" to predict the next N_y-1 steps; this means that
 % we have to cut the predictor/validation time series in (N_y-1)*tau_R from
 % the end and backwards.
-MSE = -1*ones(1,N_y);
+MSE_Ny = -1*ones(1,N_y);
 auxYHat = yHat(1:end-(N_y-1)*tau_R);
 auxInputTimeSeries = InputTimeSeries(1:end-(N_y-1)*tau_R,:);
 [predictionWindow,~] = size(auxInputTimeSeries);
-MSE(1) = immse(auxYHat,ValidationOutputs(1:end-(N_y-1)*tau_R));
+MSE_Ny(1) = immse(auxYHat,ValidationOutputs(1:end-(N_y-1)*tau_R));
+
+% Since our testBatch is experiment 8, the data set doesn't suffer from
+% contamination. Therefore, we can "shift" time series with no caution.
 for j = 2:N_y
     % Rearrange AR part of predictor inputs
     % Shift right
@@ -36,7 +39,7 @@ for j = 2:N_y
                                         predictionWindow+(j-1)*tau_R,...
                                         (1+na_y):end);
     auxYHat(:,j) = predict(RandomForest,auxInputTimeSeries);
-    MSE(j) = immse(auxYHat(:,j),ValidationOutputs(1+(j-1)*tau_R:...
+    MSE_Ny(j) = immse(auxYHat(:,j),ValidationOutputs(1+(j-1)*tau_R:...
                                             predictionWindow+(j-1)*tau_R));
 end
 
