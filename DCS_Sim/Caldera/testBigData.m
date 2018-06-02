@@ -6,7 +6,7 @@ close all;
 Dt = 1; % 0.5 seconds sampling time
 simTime = 80*60;
 % stepsOrSpecial = 'steps';
-matFileName = ['testData_0106.mat'];
+matFileName = ['testData_0206.mat'];
 showGraphs = true;
 saveMatFile = false;
 freqs = [5 10 50]; % numMax cycles in sim: simTime*maxFreq = simTime*0.3*Fs_05;
@@ -23,7 +23,7 @@ makeMatrix = [1 0 0 0;...
 [numMakes ~] = size(makeMatrix);
 stepInitTime = 60;
 for f = 1:length(freqs)%;1:length(freqs)
-   for w = 4:length(waveform)%1:length(waveform)
+   for w = 1:length(waveform)%1:length(waveform)
       for m = 1:numMakes%;numMakes
         numberCycles = freqs(f);
         wave = waveform{w};
@@ -40,15 +40,15 @@ for f = 1:length(freqs)%;1:length(freqs)
         Y0 = [41.4120   28.7553   38.6037];
         
         % Amplitudes
-        demandAmplitude = 8;
-        combustibleAmplitude = 8;
-        aguaAmplitude = 8;
-        aireAmplitude = 8;
+        demandAmplitude = 10;
+        combustibleAmplitude = 10;
+        aguaAmplitude = 10;
+        aireAmplitude = 10;
         if (w == 4)
-            demandaVals = myStepTest(simTime,Dt,1,simTime,stepInitTime,1,0,0);
-            combustibleVals = myStepTest(simTime,Dt,1,simTime,stepInitTime,1,0,0);
-            aireVals = myStepTest(simTime,Dt,1,simTime,stepInitTime,1,0,0);
-            aguaVals = myStepTest(simTime,Dt,1,simTime,stepInitTime,1,0,0);
+            demandaVals = myStepTest(simTime,Dt,1/2,simTime/3,stepInitTime,1,0,simTime/4);
+            combustibleVals = myStepTest(simTime,Dt,1/2,simTime/3,stepInitTime,1,0,simTime/4);
+            aireVals = myStepTest(simTime,Dt,1/2,simTime/3,stepInitTime,1,0,simTime/4);
+            aguaVals = myStepTest(simTime,Dt,1/2,simTime/3,stepInitTime,1,0,simTime/4);
             demandaVals = demandaVals.signals.values;
             combustibleVals = combustibleVals.signals.values;
             aireVals = aireVals.signals.values;
@@ -86,7 +86,7 @@ for f = 1:length(freqs)%;1:length(freqs)
 %         results(f,w,m).outputs = [y1.signals.values y2.signals.values y3.signals.values];
         results(f,w,m).outputs = y.signals.values;
         resultsSmooth(f,w,m).inputs = inputs;
-        smooth = smoothdata(y.signals.values,1,'gaussian',10);
+        smooth = smoothdata(y.signals.values,1,'gaussian',20);
         resultsSmooth(f,w,m).outputs = smooth;
         t = inputs.time;
         titlesCV = {'Presión de vapor y consigna (%)','Oxígeno en exceso y consigna (%)',...
