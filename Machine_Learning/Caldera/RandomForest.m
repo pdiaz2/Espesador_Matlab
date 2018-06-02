@@ -3,19 +3,27 @@ clear all;
 close all;
 clc;
 %% Test Plant Specifics
-load('testData_0405.mat');
-saveToMatFile = false;
-matFileName = 'ResultsRF_2705';
+load('testData_0106.mat');
+saveToMatFile = true;
+matFileName = 'ResultsRF_Noisy_0106';
 generateOne = false;
 optimizeMLHyperparameters = false;
+useNoisy = true;
+if useNoisy
+    PlantData = results;
+else
+    PlantData = resultsSmooth; 
+end
+%%
+seed = rng(1513);
 mlMethod = 'RF';
 MVToApply = makeMatrix;
-[numSamplesPerExp,~] = size(results(1,1,1).inputs.time);
+[numSamplesPerExp,~] = size(PlantData(1,1,1).inputs.time);
 freqsTotal = length(freqs);
 wavesTotal = length(waveform);
 [nOpenLoopExps ~] = size(MVToApply);
 N_y = 20;
-% DataSet
+%% DataSet
 fSelected = 2;
 testBatch = 8;
 numInputs = 4;
@@ -80,10 +88,10 @@ for waveformSelected = waveVector
     TrainingBigSet = struct;
     TestBigSet = struct;
     [TrainingBigSet,TestBigSet,NameInputs,NameOutputs] = generate_tT_sets( TrainingBigSet, TestBigSet,...
-                                                        results,OLExpStruct,NameInputs,NameOutputs,...
+                                                        PlantData,OLExpStruct,NameInputs,NameOutputs,...
                                                         numExpGroups, selectionParameters,testBatch,...
                                                         dimsSystem);
-    seed = rng('default'); % For reproducibility (should look into this after)
+     % For reproducibility (should look into this after)
     bayOptIterations = 30;
     %% Specific RF generation
     if generateOne
@@ -228,7 +236,7 @@ for waveformSelected = waveVector
         %% Save
         if (saveToMatFile)
             save(matFileName,'ML_Results','tau_R','UBackshiftMatrix','YBackshiftMatrix',...
-                'dataTraining','NameInputs','NameOutputs','optimizationTimes','trainingTimes',...
+                'OLExpStruct','NameInputs','NameOutputs','optimizationTimes','trainingTimes',...
                 'bayOptIterations','optimizeMLHyperparameters','testBatch');
         end
         clearvars ML_Results

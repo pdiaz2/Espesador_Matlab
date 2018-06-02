@@ -2,19 +2,37 @@ clear all;
 close all;
 clc;
 %% Test Plant Specifics
-load('testData_1304.mat'); % Ts equal for all cases
+load('testData_0106.mat'); % Ts equal for all cases
 saveToMatFile = false;
 comparePlots = false;
-matFileName = 'ResultsARMAX_2705';
+useNoisy = true;
+%%
+matFileName = 'ResultsARMAX_Noisy_0106';
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
+
+
+if useNoisy
+    PlantData = results;
+else
+    PlantData = resultsSmooth; 
+end
+
+MVToApply = makeMatrix;
+[numSamplesPerExp,~] = size(PlantData(1,1,1).inputs.time);
+
 freqsTotal = length(freqs);
 wavesTotal = length(waveform);
-[makeTotal ~] = size(makeMatrix);
+[nOpenLoopExps ~] = size(MVToApply);
 dimsSystem = [3 3 1];
-% DataSet
+%% DataSet
 fSelected = 2;
 waveformSelected = 1;
+N_y = 20;
+
+%%
+seed = rng(1513);
+%%
 for waveformSelected = 1:4
     if waveformSelected == 1
         appendMatFileName = '_sine.mat';
@@ -31,29 +49,27 @@ for waveformSelected = 1:4
     numOutputs = 3;
     NameInputs = {'DmndVap','Combs','Aire','Agua'};
     NameOutputs = {'PressVap','Oxy','WaterLvl'};
-    testBatch = 2;
+    testBatch = 8;
     %% Training
     tau_R = 5;
     selectionParameters.p1 = fSelected;
     selectionParameters.p2 = waveformSelected;
     % Each Subset on it's own (leaves testBatch out, because it is test) -> XVal
     % afterwards
-    for m = 1:length(makeSelected)
-        dataTraining(m).subSetsIndex = [m];
-    end
-    [garbage , numSubSets] = size(dataTraining);
+    OLExpStruct = generate_ol_array_index(makeSelected);
+    [garbage , numExpGroups] = size(OLExpStruct);
     TrainingBigSet = struct;
     TestBigSet = struct;
     [TrainingBigSet,TestBigSet,NameInputs,NameOutputs] = generate_tT_sets( TrainingBigSet, TestBigSet,...
-                                                        results,dataTraining,NameInputs,NameOutputs,...
-                                                        numSubSets, selectionParameters,testBatch,...
+                                                        PlantData,OLExpStruct,NameInputs,NameOutputs,...
+                                                        numExpGroups, selectionParameters,testBatch,...
                                                         dimsSystem);
     %%
     NA = [0:1]*tau_R; %Order
     NB = [1:2]*tau_R; % Order of B+1 polinomial 
     NC = [0:2]*tau_R;
     NK = [0:3]; % IO Delay
-    tVector = results(1,1,1).inputs.time;
+    tVector = PlantData(1,1,1).inputs.time;
     mlParameters = {'estimate','I_DC?','O_DC?',false,'off','Focus?',true};
     offsetOptions = {'NA','R_I_DC';'NA','R_O_DC'};
     focusOptions = {'prediction','simulation'};
@@ -61,7 +77,7 @@ for waveformSelected = 1:4
     bayOptIterations = 30;
     bestHyp = -1; % Bogey
     %%
-    for experiment = 1:numSubSets%1:numSubSets
+    for experiment = 1:numExpGroups%1:numExpGroups
         for offsetChoice = 1:2
             for focusChoice = 1:2
                 for na = 1:length(NA)
@@ -77,15 +93,22 @@ for waveformSelected = 1:4
                                     ,experiment,offsetChoice,focusChoice,na,nb,nc,nk);
                                 disp(printInConsole)
                                 pause(1)
-                                [TrainingSubset,garbage] = Prepare_IO_Data(experiment,tau_R,Dt,-1,...
-                                                                        TrainingBigSet,NameInputs,NameOutputs,mlMethod);
+                                [TrainingSubset,garbage] = Prepare_IO_Data(TrainingBigSet,...
+                                                                NameInputs, NameOutputs,...
+                                                                experiment, tau_R, numSamplesPerExp,...
+                                                                Dt, -1,...
+                                                                mlMethod);
                                 tic;
                                 ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,armaxOrder,mlMethod);
                                 trainingTimes(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = toc;
                                 % Test
 
-                                [TestSubset,garbage] = Prepare_IO_Data(1,tau_R,Dt,-1,...
-                                                                        TestBigSet,NameInputs,NameOutputs,mlMethod);
+                                [TestSubset,garbage] = Prepare_IO_Data(TestBigSet,...
+                                                            NameInputs, NameOutputs,...
+                                                            experiment, tau_R, numSamplesPerExp,...
+                                                            Dt, -1,...
+                                                            mlMethod);
+                                                        
                                 YOffset = zeros(numOutputs,numOutputs);
                                 UOffset = zeros(numInputs,numInputs);
                                 if strcmp(mlParameters{2},'R_I_DC')

@@ -3,45 +3,46 @@ clear all;
 close all;
 clc;
 %%
-load('ResultsRF_2705_saw.mat');
+load('ResultsRF_Noisy_0106_saw.mat');
 ml_Type = 'RF';
 %%
-J = Evaluate_Performance(ML_Results,ml_Type,NameInputs,NameOutputs);
+ResultsStupidFix = fix_stupid_me(ML_Results,ml_Type,NameOutputs);
+J = Evaluate_Performance(ResultsStupidFix,ml_Type,NameInputs,NameOutputs);
 [numOutputs,J_i,garbage] = size(J);
 
 if strcmp(ml_Type,'N4SID')
-    fullSize = size(ML_Results.Output(1).MSE);
+    fullSize = size(ResultsStupidFix.Output(1).MSE);
     dims = length(fullSize);
     J_Handy = zeros(numOutputs,dims,J_i);
     for j_i = 1:J_i
         for y = 1:numOutputs
             % It would be ideal to create I_i according to dims, but it
             % cannot be done
-            [I1,I2,I3] = ind2sub(size(ML_Results.Output(1).MSE),J(y,j_i,1));
+            [I1,I2,I3] = ind2sub(size(ResultsStupidFix.Output(1).MSE),J(y,j_i,1));
             J_Handy(y,:,j_i) = [I1 I2 I3];
         end
     end
 elseif strcmp(ml_Type,'ARMAX')
-    fullSize = size(ML_Results.Output(1).MSE);
+    fullSize = size(ResultsStupidFix.Output(1).MSE);
     dims = length(fullSize);
     J_Handy = zeros(numOutputs,dims,J_i);
     for j_i = 1:J_i
         for y = 1:numOutputs
             % It would be ideal to create I_i according to dims, but it
             % cannot be done
-            [I1,I2,I3,I4,I5,I6,I7] = ind2sub(size(ML_Results.Output(1).MSE),J(y,j_i,1));
+            [I1,I2,I3,I4,I5,I6,I7] = ind2sub(size(ResultsStupidFix.Output(1).MSE),J(y,j_i,1));
             J_Handy(y,:,j_i) = [I1 I2 I3 I4 I5 I6 I7];
         end
     end
 elseif strcmp(ml_Type,'RF')
-    fullSize = size(ML_Results.Output(1).MSE);
+    fullSize = size(ResultsStupidFix.Output(1).MSE);
     dims = length(fullSize);
     J_Handy = zeros(numOutputs,dims,J_i);
     for j_i = 1:J_i
         for y = 1:numOutputs
             % It would be ideal to create I_i according to dims, but it
             % cannot be done
-            [I1,I2,I3] = ind2sub(size(ML_Results.Output(1).MSE),J(y,j_i,1));
+            [I1,I2,I3] = ind2sub(size(ResultsStupidFix.Output(1).MSE),J(y,j_i,1));
             J_Handy(y,:,j_i) = [I1 I2 I3];
         end
     end
@@ -144,5 +145,28 @@ function [varargout] = Convert_ToN_D(JMatrix,ML_Type)
         
     elseif strcmp(ML_Type,'N4SID')|| strcmp(ML_Type,'ARMAX')
         
+    end
+end
+
+function [ResultsFixedStruct] = fix_stupid_me(ML_Results,typeML,nameOutputs)
+    [garbage,numOutputs] = size(nameOutputs);
+    [exp,dU,dY] = size(ML_Results.Output(1).Performance);
+    if strcmp(typeML,'RF')
+        for y = 1:numOutputs
+            for e = 1:exp
+                for du = 1:dU
+                    for dy = 1:dY
+                        ResultsFixedStruct.Output(y).MSE(e,du,dy) = ...
+                                ML_Results.Output(y).Performance(e,du,dy).MSE(1);
+                        ResultsFixedStruct.Output(y).Correlation(e,du,dy) =...
+                                ML_Results.Output(y).Performance(e,du,dy).Correlation(1);
+                        ResultsFixedStruct.Output(y).OOBError(e,du,dy) = ...
+                                ML_Results.Output(y).Performance(e,du,dy).OOBError(1);
+                    end
+                end
+            end
+        end
+    else
+        ResultsFixedStruct = ML_Results;
     end
 end

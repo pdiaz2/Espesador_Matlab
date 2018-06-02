@@ -6,7 +6,7 @@ close all;
 Dt = 1; % 0.5 seconds sampling time
 simTime = 80*60;
 % stepsOrSpecial = 'steps';
-matFileName = ['testData_3005.mat'];
+matFileName = ['testData_0106.mat'];
 showGraphs = false;
 saveMatFile = true;
 freqs = [5 10 50]; % numMax cycles in sim: simTime*maxFreq = simTime*0.3*Fs_05;
@@ -21,7 +21,7 @@ makeMatrix = [1 0 0 0;...
               1 1 0 1;...
              ];
 [numMakes ~] = size(makeMatrix);
-stepInitTime = 30;
+stepInitTime = 60;
 for f = 1:length(freqs)%;1:length(freqs)
    for w = 1:length(waveform)%1:length(waveform)
       for m = 1:numMakes%;numMakes
@@ -40,10 +40,10 @@ for f = 1:length(freqs)%;1:length(freqs)
         Y0 = [41.4120   28.7553   38.6037];
         
         % Amplitudes
-        demandAmplitude = 6;
-        combustibleAmplitude = 6;
-        aguaAmplitude = 6;
-        aireAmplitude = 6;
+        demandAmplitude = 8;
+        combustibleAmplitude = 8;
+        aguaAmplitude = 8;
+        aireAmplitude = 8;
         if (w == 4)
             demandaVals = myStepTest(simTime,Dt,1,simTime,stepInitTime,1,0,0);
             combustibleVals = myStepTest(simTime,Dt,1,simTime,stepInitTime,1,0,0);
@@ -83,15 +83,30 @@ for f = 1:length(freqs)%;1:length(freqs)
         %% Simulate
         sim('openLoopBoiler.slx');
         results(f,w,m).inputs = inputs;
-        results(f,w,m).outputs = [y1.signals.values y2.signals.values y3.signals.values];
+%         results(f,w,m).outputs = [y1.signals.values y2.signals.values y3.signals.values];
+        results(f,w,m).outputs = y.signals.values;
+        resultsSmooth(f,w,m).inputs = inputs;
+        smooth = smoothdata(y.signals.values,1,'gaussian',10);
+        resultsSmooth(f,w,m).outputs = smooth;
+        t = inputs.time;
+        titlesCV = {'Presión de vapor y consigna (%)','Oxígeno en exceso y consigna (%)',...
+                'Nivel de agua y consigna (%)'};
+        numCV = 3;
         if (showGraphs)
-            figure
-            plot(y1.signals.values)
-            hold on
-            plot(y2.signals.values)
-            plot(y3.signals.values)
-            legend('y1','y2','y3')
-            hold off
+            
+            for cv = 1:numCV
+                subplot(numCV,1,cv)
+                plot(t,y.signals.values(:,cv),'LineWidth',1)
+                hold on
+                title(titlesCV{cv})
+                plot(t,smooth(:,cv),'r','LineWidth',1);
+                xlabel('Tiempo (s)')
+                yLegend = ['$y_' num2str(cv) '$'];
+                wLegend = ['$w_' num2str(cv) '$'];
+                legend({yLegend,wLegend},'Interpreter','latex');
+                grid on
+                hold off
+            end
             
             figure
             plot(inputs.signals.values(:,1))
@@ -108,5 +123,5 @@ for f = 1:length(freqs)%;1:length(freqs)
    end
 end
 if (saveMatFile)
-    save(matFileName,'results','waveform','makeMatrix','freqs','Dt');
+    save(matFileName,'results','resultsSmooth','waveform','makeMatrix','freqs','Dt');
 end

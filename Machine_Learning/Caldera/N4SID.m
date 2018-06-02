@@ -2,18 +2,33 @@ clear all;
 close all;
 clc;
 %% Test Plant Specifics
-load('testData_1304.mat'); % Ts equal for all cases
+load('testData_0106.mat');
 saveToMatFile = true;
-comparePlots = false;
-matFileName = 'ResultsN4SID_0405';
+matFileName = 'ResultsN4SID_Noisy_0106';
+generateOne = false;
 optimizeMLHyperparameters = false;
+comparePlots = false;
+useNoisy = true;
+if useNoisy
+    PlantData = results;
+else
+    PlantData = resultsSmooth; 
+end
+%%
+seed = rng(1513);
 mlMethod = 'SS';
+MVToApply = makeMatrix;
+[numSamplesPerExp,~] = size(PlantData(1,1,1).inputs.time);
 freqsTotal = length(freqs);
 wavesTotal = length(waveform);
-[makeTotal ~] = size(makeMatrix);
+[nOpenLoopExps ~] = size(MVToApply);
+dimsSystem = [3 3 1];
 % DataSet
-fSelected = 1;
+fSelected = 2;
 waveformSelected = 1;
+N_y = 20;
+
+%%
 for waveformSelected = 1:4
     if waveformSelected == 1
         appendMatFileName = '_sine.mat';
@@ -30,79 +45,55 @@ for waveformSelected = 1:4
     numOutputs = 3;
     NameInputs = {'DmndVap','Combs','Aire','Agua'};
     NameOutputs = {'PressVap','Oxy','WaterLvl'};
-    testBatch = 2;
+    testBatch = 8;
     %% Training & Testing
-    effectiveReactionTime = 5;
+    tau_R = 5;
     selectionParameters.p1 = fSelected;
     selectionParameters.p2 = waveformSelected;
-    % Each Subset on it's own (leaves testBatch out, because it is test) -> XVal
-    % afterwards
-    for m = 1:length(makeSelected)
-        dataTraining(m).subSetsIndex = [m];
-    end
-    [garbage , numSubSets] = size(dataTraining);
+    makeSelected = 1:8;
+    OLExpStruct = generate_ol_array_index(makeSelected);
+    [garbage , numExpGroups] = size(OLExpStruct);
 
-    for ns = 1:numSubSets
-        tSets = dataTraining(ns).subSetsIndex;
-        VLADIMIR = [];
-        for cv = 1:numOutputs
-            OutputVLADIMIR = [];
-            for tS = 1:length(tSets)
-                choice = tSets(tS);
-                OutputVLADIMIR = vertcat(OutputVLADIMIR(:),...
-                       results(selectionParameters.p1,selectionParameters.p2,choice).outputs(:,cv));
-            end
-            NameOutputs{cv} = NameOutputs{cv};
-            TrainingBigSet(ns).Outputs.TimeSeries(:,cv)  = OutputVLADIMIR(:);
-            TestBigSet.Outputs.TimeSeries(:,cv) = results(selectionParameters.p1,selectionParameters.p2,testBatch).outputs(:,cv);
-        end
-
-    end
-    for ns = 1:numSubSets
-        tSets = dataTraining(ns).subSetsIndex;
-        VLADIMIR = [];
-        for cv = 1:numInputs
-            OutputVLADIMIR = [];
-            for tS = 1:length(tSets)
-                choice = tSets(tS);
-                OutputVLADIMIR = vertcat(OutputVLADIMIR(:),...
-                       results(selectionParameters.p1,selectionParameters.p2,choice).inputs.signals.values(:,cv));
-            end
-            NameInputs{cv} = NameInputs{cv};
-            TrainingBigSet(ns).Inputs.TimeSeries(:,cv)  = OutputVLADIMIR(:);
-            TestBigSet.Inputs.TimeSeries(:,cv) = results(selectionParameters.p1,selectionParameters.p2,testBatch).inputs.signals.values(:,cv);
-        end
-
-    end
+    TrainingBigSet = struct;
+    TestBigSet = struct;
+    [TrainingBigSet,TestBigSet,NameInputs,NameOutputs] = generate_tT_sets( TrainingBigSet, TestBigSet,...
+                                                        PlantData,OLExpStruct,NameInputs,NameOutputs,...
+                                                        numExpGroups, selectionParameters,testBatch,...
+                                                        dimsSystem);
     %%
     mlParameters = {'best','I_DC?','O_DC?','auto',false,'off','prediction'};
     offsetOptions = {'NA','R_I_DC';'NA','R_O_DC'};
     focusOptions = {'prediction','simulation'};
-    tVector = results(1,1,1).inputs.time;
-
-    seed = rng('default'); % For reproducibility (should look into this after)
+    tVector = PlantData(1,1,1).inputs.time;
+    
     bayOptIterations = 30;
     bestHyp = -1; % Bogey
-    for experiment = 1:numSubSets%1:numSubSets
+    for experiment = 1:numExpGroups%1:numSubSets
         for offsetChoice = 1:2
             for focusChoice = 1:2
                 mlParameters{2} = offsetOptions{1,offsetChoice};
                 mlParameters{3} = offsetOptions{2,offsetChoice};
                 mlParameters{7} = focusOptions{focusChoice};
-                % Bogey: backward compatibility
-                UPastValues = -1;
-                YPastValues = Dt; %Should change in next versions
-                [TrainingSubset,garbage] = Prepare_IO_Data(experiment,numInputs,numOutputs,effectiveReactionTime,UPastValues,YPastValues,...
-                                                      TrainingBigSet,NameInputs,NameOutputs,mlMethod);
-
+                
+                %
+                [TrainingSubset,garbage] = Prepare_IO_Data(TrainingBigSet,...
+                                                                NameInputs, NameOutputs,...
+                                                                experiment, tau_R, numSamplesPerExp,...
+                                                                Dt, -1,...
+                                                                mlMethod);
+                tic;
                 ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,bestHyp,mlMethod);
+                trainingTimes(experiment,offsetChoice,focusChoice) = toc;
                 % Test
 
                 choice = testBatch;
-                tic;
-                [TestSubset,garbage] = Prepare_IO_Data(1,numInputs,numOutputs,effectiveReactionTime,UPastValues,YPastValues,...
-                                                      TestBigSet,NameInputs,NameOutputs,mlMethod);
-                trainingTimes(experiment,offsetChoice,focusChoice) = toc;
+                
+                [TestSubset,garbage] = Prepare_IO_Data(TestBigSet,...
+                                            NameInputs, NameOutputs,...
+                                            experiment, tau_R, numSamplesPerExp,...
+                                            Dt, -1,...
+                                            mlMethod);
+                
                 YOffset = zeros(numOutputs,numOutputs);
                 UOffset = zeros(numInputs,numInputs);
                 if strcmp(mlParameters{2},'R_I_DC')
@@ -164,5 +155,5 @@ for waveformSelected = 1:4
     %     [~,ML_Results(experiment).Fit,~] = compare(TestSubset,ML_Model.Model,1);
     %     compare(TestSubset,ML_Model.Model,1);
     end
-    save(matFileName,'ML_Results','testBatch','NameInputs','NameOutputs','trainingTimes','effectiveReactionTime');
+    save(matFileName,'ML_Results','testBatch','NameInputs','NameOutputs','trainingTimes','tau_R');
 end
