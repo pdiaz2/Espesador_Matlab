@@ -5,9 +5,9 @@ clc;
 load('testData_0106.mat'); % Ts equal for all cases
 saveToMatFile = false;
 comparePlots = false;
-useNoisy = true;
+useNoisy = false;
 %%
-matFileName = 'ResultsARMAX_Noisy_0106';
+matFileName = 'ResultsARMAX_NoNoise_0106';
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 
@@ -105,7 +105,7 @@ for waveformSelected = 1:4
 
                                 [TestSubset,garbage] = Prepare_IO_Data(TestBigSet,...
                                                             NameInputs, NameOutputs,...
-                                                            experiment, tau_R, numSamplesPerExp,...
+                                                            1, tau_R, numSamplesPerExp,...
                                                             Dt, -1,...
                                                             mlMethod);
                                                         

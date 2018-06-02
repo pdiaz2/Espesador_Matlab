@@ -2,7 +2,7 @@ function [ optimalMV,fval,exitflag,population,scores ] = mpc_wrapper_ga(yPastVal
                                           qMatrix,rMatrix,lambdaMatrix,beta,wMatrix,...
                                           yLims,uLims,lBounds,uBounds,...
                                           nTrees,nPredictors,na,nb,nc,...
-                                          GAParameters,counter_RPast)
+                                          GAParameters)
 %MPC_WRAPPER_GA Wrapper for GA optimization in Simulink
 %   Detailed explanation goes here
 %% GA Solver
@@ -23,7 +23,6 @@ options = optimoptions('ga','UseVectorized',true,'Display','off',...
                        );
 [x,fval,exitflag,output,population,scores] = ga(objectiveFunction,GAParameters(6),[],[],[],[],lBounds,uBounds,[],options);
 %% Saturation of MV
-counter_RPast
 [m,~] = size(rMatrix);
 % Saturation of MV
 uLowLims = uLims(:,1,1);

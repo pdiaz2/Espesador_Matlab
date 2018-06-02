@@ -4,9 +4,9 @@ close all;
 clc;
 %% Test Plant Specifics
 load('testData_0106.mat');
-saveToMatFile = true;
+saveToMatFile = false;
 matFileName = 'ResultsRF_Noisy_0106';
-generateOne = false;
+generateOne = true;
 optimizeMLHyperparameters = false;
 useNoisy = true;
 if useNoisy
@@ -34,9 +34,9 @@ dimsSystem = [3 3 1];
 if generateOne
     % Input wave
     waveVector = 3;
-    experiment = 9;
-    delayUCases = 4;
-    delayYCases = 3;
+    experiment = 10;
+    delayUCases = 1;
+    delayYCases = 4;
 else
    waveVector = 1:4;
 end
