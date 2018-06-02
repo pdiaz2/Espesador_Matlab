@@ -4,11 +4,11 @@ clc;
 %% Test Plant Specifics
 load('testData_0106.mat');
 saveToMatFile = true;
-matFileName = 'ResultsN4SID_Noisy_0106';
+matFileName = 'ResultsN4SID_NoNoise_0106';
 generateOne = false;
 optimizeMLHyperparameters = false;
 comparePlots = false;
-useNoisy = true;
+useNoisy = false;
 if useNoisy
     PlantData = results;
 else
@@ -90,7 +90,7 @@ for waveformSelected = 1:4
                 
                 [TestSubset,garbage] = Prepare_IO_Data(TestBigSet,...
                                             NameInputs, NameOutputs,...
-                                            experiment, tau_R, numSamplesPerExp,...
+                                            1, tau_R, numSamplesPerExp,...
                                             Dt, -1,...
                                             mlMethod);
                 

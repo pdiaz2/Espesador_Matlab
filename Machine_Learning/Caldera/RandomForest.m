@@ -5,10 +5,10 @@ clc;
 %% Test Plant Specifics
 load('testData_0106.mat');
 saveToMatFile = true;
-matFileName = 'ResultsRF_Noisy_0106';
+matFileName = 'ResultsRF_NoNoise_0106';
 generateOne = false;
 optimizeMLHyperparameters = false;
-useNoisy = true;
+useNoisy = false;
 if useNoisy
     PlantData = results;
 else
@@ -54,12 +54,14 @@ UBackshiftMatrix = [1 1 1 1;
                     ];
 
 [backshiftCasesU, ~] = size(UBackshiftMatrix);
-
-YBackshiftMatrix = [1 1 1;
-                    2 2 2;
-                    3 3 3;
-                    4 4 4
-                    ];
+% Experience has shown that models are very AR
+% YBackshiftMatrix = [1 1 1;
+%                     2 2 2;
+%                     3 3 3;
+%                     4 4 4
+%                     ];
+YBackshiftMatrix = [2 2 2;
+                    4 4 4];
 [backshiftCasesY, ~] = size(YBackshiftMatrix);
 %% Raw Data Handling
 tau_R = 5;
