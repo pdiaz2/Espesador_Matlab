@@ -3,9 +3,9 @@ clear all;
 close all;
 clc;
 %% Test Plant Specifics
-load('testData_0106.mat');
+load('testData_0206.mat');
 saveToMatFile = true;
-matFileName = 'ResultsRF_NoNoise_0106';
+matFileName = 'ResultsRF_NoNoise_0206';
 generateOne = false;
 optimizeMLHyperparameters = false;
 useNoisy = false;
@@ -43,14 +43,10 @@ end
 
 %% Specify Delay
 UBackshiftMatrix = [1 1 1 1;
-                    2 2 2 2;
-                    2 1 1 1;
-                    2 1 2 1;
                     1 1 2 2;
-                    2 1 1 2;
+                    2 1 2 2;
                     3 3 3 3;
                     4 4 4 4;
-                    5 5 5 5;
                     ];
 
 [backshiftCasesU, ~] = size(UBackshiftMatrix);
@@ -128,7 +124,7 @@ for waveformSelected = waveVector
             end
             optimizationTimes(experiment,delayUCases,delayYCases) = NaN;
         end
-        pause(2)
+        pause(1)
         disp('Generating Machine Learning Model')
 
         tic;
@@ -197,7 +193,7 @@ for waveformSelected = waveVector
                         end
                         optimizationTimes(experiment,delayUCases,delayYCases) = NaN;
                     end
-                    pause(2)
+                    pause(1)
                     disp('Generating Machine Learning Model')
 
                     tic;
