@@ -66,9 +66,9 @@ for waveformSelected = 1:4
                                                         dimsSystem);
     %%
     NA = [1 3 5]; %Order
-    NB = [1:4]; % Order of B+1 polinomial 
+    NB = [1:2]; % Order of B+1 polinomial 
     NC = [0:2];
-    NK = [0:4]; % IO Delay
+    NK = [0:3]; % IO Delay
     tVector = PlantData(1,1,1).inputs.time;
     mlParameters = {'estimate','I_DC?','O_DC?',false,'off','Focus?',true};
     offsetOptions = {'NA','R_DC';'NA','R_DC'};

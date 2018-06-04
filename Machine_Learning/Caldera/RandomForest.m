@@ -5,10 +5,10 @@ clc;
 %% Test Plant Specifics
 load('testData_0206.mat');
 saveToMatFile = true;
-matFileName = 'ResultsRF_NoNoise_0206';
+matFileName = 'ResultsRF_Noise_0206';
 optimizeMLHyperparameters = false;
 
-useNoisy = false;
+useNoisy = true;
 if useNoisy
     PlantData = results;
 else
@@ -74,7 +74,7 @@ testBatch = 8;
 OLExpStruct = generate_ol_array_index(makeSelected);
 [garbage , numExpGroups] = size(OLExpStruct);
 %% Machine Learning Parameters
-mlParameters = {100,1,'on',10,'on','curvature','Ensemble'};
+mlParameters = {100,1,'on',10,'on','curvature','TBagger'};
 maxMinLS = 20;
 
 % Optimization Hyperparameters

@@ -4,11 +4,11 @@ clc;
 %% Test Plant Specifics
 load('testData_0206.mat');
 saveToMatFile = true;
-matFileName = 'ResultsN4SID_Noise_0206';
+matFileName = 'ResultsN4SID_NoNoise_0206';
 generateOne = false;
 optimizeMLHyperparameters = false;
 comparePlots = false;
-useNoisy = true;
+useNoisy = false;
 if useNoisy
     PlantData = results;
 else
