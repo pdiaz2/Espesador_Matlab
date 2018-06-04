@@ -23,13 +23,13 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
     maxDDelay = maxDelay(3);
     % Always print to check; MEX functions throw error anyway
     nTrees = ones(1,numCV)*100
-    nPredictors = [8 7 10]
+    nPredictors = [8 8 12]
     %% MPC Fixed Parameters
 
     % Constraints (Fixed by CIC2017)
     % On MV (1 pps => 5 pp5s)
-    deltaULowLim = -15;
-    deltaUHighLim = 15;
+    deltaULowLim = -5;
+    deltaUHighLim = 5;
 
     % Restriction only on y2: 0.95*Y0(2)<= y <= 1.05*Y0(2)
     yLowLims = 0*ones(numCV,1);

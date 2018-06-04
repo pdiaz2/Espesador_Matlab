@@ -15,7 +15,7 @@ function [ spTrackCost, terminalCost, limBreakCost ] = mpc_horizon_cost( spTrack
 % Setpoint tracking cost
 spTrackCost = spTrackingError.^2*qMatrix(:);
 % Terminal cost
-terminalCost = beta*sum(terminalError.^2,2);
+terminalCost = terminalError.^2*beta;
 % Limit violation cost
 limBreakCost = epsilonValues.^2*lambdaMatrix(:);
 

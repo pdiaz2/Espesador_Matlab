@@ -6,12 +6,12 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
     %% MPC Design Parameters
     % Weight Matrices (Design)
     qMatrix = 1*ones(numCV,N_y-1);
-    qMatrix(1,:) = zeros(1,N_y-1);
+%     qMatrix(1,:) = zeros(1,N_y-1);
 %     qMatrix(2,:) = zeros(1,N_y-1);
 %     qMatrix(3,:) = zeros(1,N_y-1);
-    rMatrix = 0.001*ones(numMV,N_u);
-    beta = 1;
-    lambdaMatrix = 0*ones(numCV,N_y);
+    rMatrix = 1*ones(numMV,N_u);
+    beta = 1*ones(numCV,1);
+    lambdaMatrix = 1*ones(numCV,N_y);
 
     % Delta U bounds (decission variables)
     lBounds = deltaULowLim*ones(1,numMV*N_u);
@@ -29,8 +29,8 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
     
     
     %% MPC GA Parameters
-    GAParameters = [10; % nPopulation 
-                    10; % maxGens
+    GAParameters = [100; % nPopulation 
+                    100; % maxGens
                     70; % maxStallGens
                     1e-6; % functionTolerance
                     3;    % fitnessLimit
