@@ -7,11 +7,6 @@ numOutputs = dimsSystem(1);
 m = dimsSystem(2);
 d = dimsSystem(3);
 numInputs = d+m;
-% for y = 1:numOutputs
-%     IOSubset(y).InputData = [];
-%     IOSubset(y).OutputData = [];
-%     IOSubset(y).PredictorNames = {};
-% end
 % Prepare IO Data for model building
 [PredictorMLStruct,garbage] = Prepare_IO_Data(IOBigSet,NameInputs,NameOutputs,...
                                              experiment,tau_R,numSamplesPerExp,...

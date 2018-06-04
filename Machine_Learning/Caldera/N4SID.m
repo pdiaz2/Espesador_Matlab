@@ -2,9 +2,9 @@ clear all;
 close all;
 clc;
 %% Test Plant Specifics
-load('testData_0106.mat');
+load('testData_0206.mat');
 saveToMatFile = true;
-matFileName = 'ResultsN4SID_NoNoise_0106';
+matFileName = 'ResultsN4SID_NoNoise_0206';
 generateOne = false;
 optimizeMLHyperparameters = false;
 comparePlots = false;
@@ -43,8 +43,8 @@ for waveformSelected = 1:4
     makeSelected = 1:8;
     numInputs = 4;
     numOutputs = 3;
-    NameInputs = {'DmndVap','Combs','Aire','Agua'};
-    NameOutputs = {'PressVap','Oxy','WaterLvl'};
+    nameInputs = {'DmndVap','Combs','Aire','Agua'};
+    nameOutputs = {'PressVap','Oxy','WaterLvl'};
     testBatch = 8;
     %% Training & Testing
     tau_R = 5;
@@ -54,15 +54,15 @@ for waveformSelected = 1:4
     OLExpStruct = generate_ol_array_index(makeSelected);
     [garbage , numExpGroups] = size(OLExpStruct);
 
-    TrainingBigSet = struct;
-    TestBigSet = struct;
-    [TrainingBigSet,TestBigSet,NameInputs,NameOutputs] = generate_tT_sets( TrainingBigSet, TestBigSet,...
-                                                        PlantData,OLExpStruct,NameInputs,NameOutputs,...
+    trainingBigSet = struct;
+    testBigSet = struct;
+    [trainingBigSet,testBigSet,nameInputs,nameOutputs] = generate_tT_sets( trainingBigSet, testBigSet,...
+                                                        PlantData,OLExpStruct,nameInputs,nameOutputs,...
                                                         numExpGroups, selectionParameters,testBatch,...
                                                         dimsSystem);
     %%
     mlParameters = {'best','I_DC?','O_DC?','auto',false,'off','prediction'};
-    offsetOptions = {'NA','R_I_DC';'NA','R_O_DC'};
+    offsetOptions = {'NA','R_DC';'NA','R_DC'};
     focusOptions = {'prediction','simulation'};
     tVector = PlantData(1,1,1).inputs.time;
     
@@ -75,52 +75,41 @@ for waveformSelected = 1:4
                 mlParameters{3} = offsetOptions{2,offsetChoice};
                 mlParameters{7} = focusOptions{focusChoice};
                 
-                %
-                [TrainingSubset,garbage] = Prepare_IO_Data(TrainingBigSet,...
-                                                                NameInputs, NameOutputs,...
-                                                                experiment, tau_R, numSamplesPerExp,...
-                                                                Dt, -1,...
-                                                                mlMethod);
+                [trainingSubset,~] = ml_prepare_IO_data(trainingBigSet,...
+                                                        nameInputs, nameOutputs,...
+                                                        experiment, tau_R, numSamplesPerExp,...
+                                                        Dt, -1,...
+                                                        mlMethod);
                 tic;
-                ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,bestHyp,mlMethod);
+                ML_Model = Generate_ML_Model(numOutputs,trainingSubset,mlParameters,bestHyp,mlMethod);
                 trainingTimes(experiment,offsetChoice,focusChoice) = toc;
                 % Test
 
                 choice = testBatch;
                 
-                [TestSubset,garbage] = Prepare_IO_Data(TestBigSet,...
-                                            NameInputs, NameOutputs,...
+                [testSubset,garbage] = ml_prepare_IO_data(testBigSet,...
+                                            nameInputs, nameOutputs,...
                                             1, tau_R, numSamplesPerExp,...
                                             Dt, -1,...
                                             mlMethod);
                 
-                YOffset = zeros(numOutputs,numOutputs);
-                UOffset = zeros(numInputs,numInputs);
-                if strcmp(mlParameters{2},'R_I_DC')
-                    UDC = mean(TrainingSubset.InputData)';
-                    for a = 1:numInputs
-                        for aa = 1:numInputs
-                            if (a == aa)
-                               UOffset(a,aa) = UDC(a); 
-                            end
-                        end
-                    end  
-                end
-                if strcmp(mlParameters{3},'R_O_DC')
-                    YDC = mean(TrainingSubset.OutputData)';
-                    for a = 1:numOutputs
-                        for aa = 1:numOutputs
-                            if (a == aa)
-                               YOffset(a,aa) = YDC(a); 
-                            end
-                        end
-                    end
-                end
-                PredictedOutputs = lsim(ML_Model.Model,TestSubset.InputData-ones(length(tVector),numInputs)*...
-                    UOffset,tVector,ML_Model.Model.x0);
-                PredictedOutputs = PredictedOutputs+ones(length(tVector),numOutputs)*YOffset;
-                ValidationOutputs = TestSubset.OutputData;
-                if comparePlots
+                UDC = mean(trainingSubset.InputData)';
+                YDC = mean(trainingSubset.OutputData)';
+
+                [UOffset] = ml_remove_offset(mlParameters{2},UDC,numInputs);
+                [YOffset] = ml_remove_offset(mlParameters{3},YDC,numOutputs);
+                
+                pOptions = ml_generate_pOptions(ML_Model.Model,...
+                                                testSubset.InputData,...
+                                                testSubset.OutputData,...
+                                                UOffset,YOffset);
+                                                            
+                [MSE_Ny,yHat_Ny] = predict_N_ahead(ML_Model.Model,...
+                            testSubset.InputData,...
+                            testSubset.OutputData,...
+                            N_y,tau_R,-1,...
+                            mlMethod,pOptions);
+                if comparePlots % Won't work
                    for y = 1:numOutputs
                       figure
                       plot(PredictedOutputs(:,y));
@@ -130,18 +119,27 @@ for waveformSelected = 1:4
                       legend(['Pred' num2str(y)],['Val' num2str(y)])
                    end
                 end
-                for y = 1:length(TestSubset.OutputData(1,:))
+                for y = 1:length(testSubset.OutputData(1,:))
                     % Backward Compatibility
                     if experiment == testBatch
-                        ML_Results.Output(y).MSE(experiment,offsetChoice,focusChoice) = 1e14;
-                        ML_Results.Output(y).Correlation(experiment,offsetChoice,focusChoice) = NaN;
+                        ML_Results.Output(y).Performance(experiment,offsetChoice,focusChoice).MSE =...
+                                                                                            1e14*ones(N_y,1);
+                        ML_Results.Output(y).Performance(experiment,offsetChoice,focusChoice).Correlation =...
+                                                                                            NaN*ones(N_y,1);
+                        ML_Results.Output(y).MSE_1(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = 1e14;
+                        ML_Results.Output(y).Correlation(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = NaN;
                         ML_Results.Fit.FPE(experiment,offsetChoice,focusChoice) = 1e14;
                         ML_Results.Fit.AIC(experiment,offsetChoice,focusChoice) = 1e14;
                         ML_Results.Fit.MSE(experiment,offsetChoice,focusChoice) = 1e14;
                         ML_Results.Horizon(experiment,offsetChoice,focusChoice,:) = [-1 -1 -1];
                     else
-                        ML_Results.Output(y).MSE(experiment,offsetChoice,focusChoice) = immse(PredictedOutputs(:,y),ValidationOutputs(:,y));
-                        ML_Results.Output(y).Correlation(experiment,offsetChoice,focusChoice) = corr(PredictedOutputs(:,y),ValidationOutputs(:,y));
+                        ML_Results.Output(y).Performance(experiment,offsetChoice,focusChoice).MSE =...
+                                                                                                MSE_Ny(:,y);
+                        ML_Results.Output(y).Performance(experiment,offsetChoice,focusChoice).Correlation =...
+                                                            corr(yHat_Ny(:,y,1),testSubset.OutputData(:,y));
+                        ML_Results.Output(y).MSE_1(experiment,offsetChoice,focusChoice) = MSE_Ny(1,y);
+                        ML_Results.Output(y).Correlation(experiment,offsetChoice,focusChoice) =...
+                                                        corr(yHat_Ny(:,y,1),testSubset.OutputData(:,y));
                         ML_Results.Fit.FPE(experiment,offsetChoice,focusChoice) = ML_Model.Model.Report.Fit.FPE;
                         ML_Results.Fit.AIC(experiment,offsetChoice,focusChoice) = ML_Model.Model.Report.Fit.AIC;
                         ML_Results.Fit.MSE(experiment,offsetChoice,focusChoice) = ML_Model.Model.Report.Fit.MSE;
@@ -155,5 +153,5 @@ for waveformSelected = 1:4
     %     [~,ML_Results(experiment).Fit,~] = compare(TestSubset,ML_Model.Model,1);
     %     compare(TestSubset,ML_Model.Model,1);
     end
-    save(matFileName,'ML_Results','testBatch','NameInputs','NameOutputs','trainingTimes','tau_R');
+    save(matFileName,'ML_Results','testBatch','nameInputs','nameOutputs','trainingTimes','tau_R');
 end

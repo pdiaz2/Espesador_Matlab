@@ -1,4 +1,4 @@
-function [ arxRFSet] = build_arx_rf_predSet( UPastSequence, YPastSequence, Y,...
+function [ arxRFSet] = ml_build_arx_rf_predSet( UPastSequence, YPastSequence, Y,...
                                             predictorNames,...
                                             delayMaxInTime, na,...
                                             numOLExps, numSamplesPerExp)
@@ -15,9 +15,9 @@ function [ arxRFSet] = build_arx_rf_predSet( UPastSequence, YPastSequence, Y,...
         [startIndexY,endIndexY] = pick_correct_Y(cv,na);
         % Select regressors for cv(t) (constructed from t-k*tau_R, k>=1 at
         % least)
-        arxRFSet(cv).InputTimeSeries = [YPastSequence(:,1+startIndexY:endIndexY) UPastSequence];
+        arxRFSet(cv).InputData = [YPastSequence(:,1+startIndexY:endIndexY) UPastSequence];
         % Select cv(t) for validation (tau_R ahead prediction)
-        arxRFSet(cv).OutputTimeSeries = OutputTimeSeries(:,cv);
+        arxRFSet(cv).OutputData = OutputTimeSeries(:,cv);
         arxRFSet(cv).PredictorNames = predictorNames{cv};
         arxRFSet(cv).startIndexY = startIndexY;
         arxRFSet(cv).endIndexY = endIndexY;

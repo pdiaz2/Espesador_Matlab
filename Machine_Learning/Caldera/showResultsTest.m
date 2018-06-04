@@ -3,50 +3,15 @@ clear all;
 close all;
 clc;
 %%
-load('ResultsRF_NoNoise_0106_step.mat');
+load('ResultsRF_NoNoise_0206_step.mat');
 ml_Type = 'RF';
 %%
 ResultsStupidFix = fix_stupid_me(ML_Results,ml_Type,NameOutputs);
 J = Evaluate_Performance(ResultsStupidFix,ml_Type,NameInputs,NameOutputs);
 [numOutputs,J_i,garbage] = size(J);
 
-if strcmp(ml_Type,'N4SID')
-    fullSize = size(ResultsStupidFix.Output(1).MSE);
-    dims = length(fullSize);
-    J_Handy = zeros(numOutputs,dims,J_i);
-    for j_i = 1:J_i
-        for y = 1:numOutputs
-            % It would be ideal to create I_i according to dims, but it
-            % cannot be done
-            [I1,I2,I3] = ind2sub(size(ResultsStupidFix.Output(1).MSE),J(y,j_i,1));
-            J_Handy(y,:,j_i) = [I1 I2 I3];
-        end
-    end
-elseif strcmp(ml_Type,'ARMAX')
-    fullSize = size(ResultsStupidFix.Output(1).MSE);
-    dims = length(fullSize);
-    J_Handy = zeros(numOutputs,dims,J_i);
-    for j_i = 1:J_i
-        for y = 1:numOutputs
-            % It would be ideal to create I_i according to dims, but it
-            % cannot be done
-            [I1,I2,I3,I4,I5,I6,I7] = ind2sub(size(ResultsStupidFix.Output(1).MSE),J(y,j_i,1));
-            J_Handy(y,:,j_i) = [I1 I2 I3 I4 I5 I6 I7];
-        end
-    end
-elseif strcmp(ml_Type,'RF')
-    fullSize = size(ResultsStupidFix.Output(1).MSE);
-    dims = length(fullSize);
-    J_Handy = zeros(numOutputs,dims,J_i);
-    for j_i = 1:J_i
-        for y = 1:numOutputs
-            % It would be ideal to create I_i according to dims, but it
-            % cannot be done
-            [I1,I2,I3] = ind2sub(size(ResultsStupidFix.Output(1).MSE),J(y,j_i,1));
-            J_Handy(y,:,j_i) = [I1 I2 I3];
-        end
-    end
-end
+J_Handy = build_j_handy(ResultsStupidFix,ml_Type,J,numOutputs,J_i);
+
 
 for cv = 1:numOutputs
     fprintf("Best coeffs for variable %d: ",cv)
@@ -131,7 +96,7 @@ function [JMatrix] = Evaluate_Performance(Results,typeML,nameInputs,nameOutputs)
             for dim = 1:JDimensions
                 switch dim
                     case 1
-                        [JMatrix(y,dim,2),JMatrix(y,dim,1)] = min(Results.Output(y).MSE(:));
+                        [JMatrix(y,dim,2),JMatrix(y,dim,1)] = min(Results.Output(y).MSE_1(:));
                     case 2
                         [JMatrix(y,dim,2),JMatrix(y,dim,1)] = max(abs(Results.Output(y).Correlation(:)));
                         JMatrix(y,dim,2) = JMatrix(y,dim,2)*sign(Results.Output(y).Correlation(JMatrix(y,dim,1)));
@@ -148,6 +113,45 @@ function [JMatrix] = Evaluate_Performance(Results,typeML,nameInputs,nameOutputs)
 %     end
 end
 
+function [J_Handy] = build_j_handy(Results,ml_Type,J,numOutputs,J_i)
+    if strcmp(ml_Type,'N4SID')
+        fullSize = size(Results.Output(1).MSE);
+        dims = length(fullSize);
+        J_Handy = zeros(numOutputs,dims,J_i);
+        for j_i = 1:J_i
+            for y = 1:numOutputs
+                % It would be ideal to create I_i according to dims, but it
+                % cannot be done
+                [I1,I2,I3] = ind2sub(size(Results.Output(1).MSE),J(y,j_i,1));
+                J_Handy(y,:,j_i) = [I1 I2 I3];
+            end
+        end
+    elseif strcmp(ml_Type,'ARMAX')
+        fullSize = size(Results.Output(1).MSE);
+        dims = length(fullSize);
+        J_Handy = zeros(numOutputs,dims,J_i);
+        for j_i = 1:J_i
+            for y = 1:numOutputs
+                % It would be ideal to create I_i according to dims, but it
+                % cannot be done
+                [I1,I2,I3,I4,I5,I6,I7] = ind2sub(size(Results.Output(1).MSE),J(y,j_i,1));
+                J_Handy(y,:,j_i) = [I1 I2 I3 I4 I5 I6 I7];
+            end
+        end
+    elseif strcmp(ml_Type,'RF')
+        fullSize = size(Results.Output(1).MSE);
+        dims = length(fullSize);
+        J_Handy = zeros(numOutputs,dims,J_i);
+        for j_i = 1:J_i
+            for y = 1:numOutputs
+                % It would be ideal to create I_i according to dims, but it
+                % cannot be done
+                [I1,I2,I3] = ind2sub(size(Results.Output(1).MSE),J(y,j_i,1));
+                J_Handy(y,:,j_i) = [I1 I2 I3];
+            end
+        end
+    end
+end
 function [varargout] = Convert_ToN_D(JMatrix,ML_Type)
 % Pending
     if strcmp(ML_Type,'RF')

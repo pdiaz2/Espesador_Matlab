@@ -28,8 +28,8 @@ fSelected = 2;
 testBatch = 8;
 numInputs = 4;
 numOutputs = 3;
-NameInputs = {'DmndVap','Combs','Aire','Agua'};
-NameOutputs = {'PressVap','Oxy','WaterLvl'};
+nameInputs = {'DmndVap','Combs','Aire','Agua'};
+nameOutputs = {'PressVap','Oxy','WaterLvl'};
 dimsSystem = [3 3 1];
 if generateOne
     % Input wave
@@ -83,10 +83,10 @@ for waveformSelected = waveVector
     selectionParameters.p1 = fSelected;
     selectionParameters.p2 = waveformSelected;
     %% Generate Test & Training BigSets
-    TrainingBigSet = struct;
-    TestBigSet = struct;
-    [TrainingBigSet,TestBigSet,NameInputs,NameOutputs] = generate_tT_sets( TrainingBigSet, TestBigSet,...
-                                                        PlantData,OLExpStruct,NameInputs,NameOutputs,...
+    trainingBigSet = struct;
+    testBigSet = struct;
+    [trainingBigSet,testBigSet,nameInputs,nameOutputs] = generate_tT_sets( trainingBigSet, testBigSet,...
+                                                        PlantData,OLExpStruct,nameInputs,nameOutputs,...
                                                         numExpGroups, selectionParameters,testBatch,...
                                                         dimsSystem);
      % For reproducibility (should look into this after)
@@ -101,8 +101,8 @@ for waveformSelected = waveVector
         disp(printInConsole)
         pause(1)
 
-        [TrainingSubset] = generate_tT_subsets( TrainingBigSet, NameInputs, NameOutputs,...
-                                                experiment, tau_R, numSamplesPerExp, dimsSystem,...
+        [trainingSubset] = ml_prepare_IO_data( trainingBigSet, nameInputs, nameOutputs,...
+                                                experiment, tau_R, numSamplesPerExp,...
                                                 na, nb, mlMethod );
         if (optimizeMLHyperparameters)
         % Optimize HyperParameter LeafSize
@@ -110,7 +110,7 @@ for waveformSelected = waveVector
             pause(2)
             tic;
             for y = 1:numOutputs
-                BayOptResults = bayesopt(@(params)oobErrorRF(params,TrainingSubset(y).InputData,TrainingSubset(y).OutputData,...
+                BayOptResults = bayesopt(@(params)oobErrorRF(params,trainingSubset(y).InputData,trainingSubset(y).OutputData,...
                     mlParameters),hyperparametersRF,'AcquisitionFunctionName','expected-improvement-plus','Verbose',0,...
                     'PlotFcn',[],'MaxObjectiveEvaluations',bayOptIterations);
                 bestHyp(y) = BayOptResults.XAtMinObjective{1,1};
@@ -128,28 +128,28 @@ for waveformSelected = waveVector
         disp('Generating Machine Learning Model')
 
         tic;
-        ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,bestHyp,mlMethod);
+        ML_Model = Generate_ML_Model(numOutputs,trainingSubset,mlParameters,bestHyp,mlMethod);
         trainingTimes(experiment,delayUCases,delayYCases) = toc;
         %% Test Model
         
         % Prepare IO Data for model building
         % 1 is because only one subset is TestBatch
-        [IOData,delayMaxInTime] = Prepare_IO_Data(TestBigSet,...
-                                                NameInputs, NameOutputs,...
+        [testData,delayMaxInTime] = ml_prepare_IO_data(testBigSet,...
+                                                nameInputs, nameOutputs,...
                                                 1, tau_R, numSamplesPerExp,...
                                                 na, nb,...
                                                 mlMethod);
         %% Prediction and Comparison
         for y = 1:numOutputs
             % One step ahead prediction "out of the box"
-            OneStepAheadPrediction = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
+            oneStepAheadPrediction = predict(ML_Model(y).Model,testData(y).InputTimeSeries);
             % Validation is tau_R ahead value of actual data
-            ValidationOutputs = TestBigSet(1).Outputs.TimeSeries(1+delayMaxInTime:end,y);
-            MSE_Ny = predict_N_ahead( ML_Model(y).Model, IOData(y).InputTimeSeries, ValidationOutputs,...
-                                            N_y,tau_R,na(y));
+            validationOutputs = testBigSet(1).Outputs.TimeSeries(1+delayMaxInTime:end,y);
+            MSE_Ny = predict_N_ahead( ML_Model(y).Model, testData(y).InputTimeSeries, validationOutputs,...
+                                            N_y,tau_R,na(y),mlMethod,-1);
             ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).MSE = MSE_Ny;
             ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).Correlation = ...
-                                                                corr(OneStepAheadPrediction,ValidationOutputs);
+                                                                corr(oneStepAheadPrediction,validationOutputs);
 %            OOB = oobError(ML_Model(y).Model);
 %            ML_Results.Output(y).OOBError(experiment,delayUCases,delayYCases) = OOB(end);
 %                ML_Results.Output(y).OOBPredictorImportance(experiment,delayUCases,delayYCases,:) = ML_Model(y).Model.OOBPermutedPredictorDeltaError;
@@ -169,9 +169,9 @@ for waveformSelected = waveVector
                     disp(printInConsole)
                     pause(1)
 
-                    [TrainingSubset] = generate_tT_subsets( TrainingBigSet, NameInputs, NameOutputs,...
-                                                experiment, tau_R, numSamplesPerExp, dimsSystem,...
-                                                na, nb, mlMethod );
+                    [trainingSubset] = ml_prepare_IO_data( trainingBigSet, nameInputs, nameOutputs,...
+                                                            experiment, tau_R, numSamplesPerExp,...
+                                                            na, nb, mlMethod );
 
                     if (optimizeMLHyperparameters)
                     % Optimize HyperParameter LeafSize
@@ -179,7 +179,7 @@ for waveformSelected = waveVector
                         pause(2)
                         tic;
                         for y = 1:numOutputs
-                            BayOptResults = bayesopt(@(params)oobErrorRF(params,TrainingSubset(y).InputData,TrainingSubset(y).OutputData,...
+                            BayOptResults = bayesopt(@(params)oobErrorRF(params,trainingSubset(y).InputData,trainingSubset(y).OutputData,...
                                 mlParameters),hyperparametersRF,'AcquisitionFunctionName','expected-improvement-plus','Verbose',0,...
                                 'PlotFcn',[],'MaxObjectiveEvaluations',bayOptIterations);
                             bestHyp(y) = BayOptResults.XAtMinObjective{1,1};
@@ -197,28 +197,28 @@ for waveformSelected = waveVector
                     disp('Generating Machine Learning Model')
 
                     tic;
-                    ML_Model = Generate_ML_Model(numOutputs,TrainingSubset,mlParameters,bestHyp,mlMethod);
+                    ML_Model = Generate_ML_Model(numOutputs,trainingSubset,mlParameters,bestHyp,mlMethod);
                     trainingTimes(experiment,delayUCases,delayYCases) = toc;
                     %% Test Model
 
                     % Prepare IO Data for model building
                     % 1 is because only one subset is TestBatch
-                    [IOData,delayMaxInTime] = Prepare_IO_Data(TestBigSet,...
-                                                NameInputs, NameOutputs,...
+                    [testData,delayMaxInTime] = ml_prepare_IO_data(testBigSet,...
+                                                nameInputs, nameOutputs,...
                                                 1, tau_R, numSamplesPerExp,...
                                                 na, nb,...
                                                 mlMethod);
                     %% Prediction and Comparison
                     for y = 1:numOutputs
                         % One step ahead prediction "out of the box"
-                        OneStepAheadPrediction = predict(ML_Model(y).Model,IOData(y).InputTimeSeries);
-                        ValidationOutputs = TestBigSet(1).Outputs.TimeSeries(1+delayMaxInTime:end,y);
+%                         oneStepAheadPrediction = predict(ML_Model(y).Model,testData(y).InputTimeSeries);
+                        validationOutputs = testBigSet(1).Outputs.TimeSeries(1+delayMaxInTime:end,y);
 
-                        MSE_Ny = predict_N_ahead( ML_Model(y).Model, IOData(y).InputTimeSeries, ValidationOutputs,...
-                                            N_y,tau_R,na(y));
+                        [MSE_Ny,yHat_1] = predict_N_ahead( ML_Model(y).Model, testData(y).InputTimeSeries, validationOutputs,...
+                                            N_y,tau_R,na(y),mlMethod,-1);
                         ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).MSE = MSE_Ny;
                         ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).Correlation = ...
-                                                                    corr(OneStepAheadPrediction,ValidationOutputs);
+                                                                    corr(yHat_1,validationOutputs);
                         OOB = oobError(ML_Model(y).Model);
                         ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).OOBError = OOB(end);
                         %                ML_Results.Output(y).OOBPredictorImportance(experiment,delayUCases,delayYCases,:) = ML_Model(y).Model.OOBPermutedPredictorDeltaError;
@@ -234,7 +234,7 @@ for waveformSelected = waveVector
         %% Save
         if (saveToMatFile)
             save(matFileName,'ML_Results','tau_R','UBackshiftMatrix','YBackshiftMatrix',...
-                'OLExpStruct','NameInputs','NameOutputs','optimizationTimes','trainingTimes',...
+                'OLExpStruct','nameInputs','nameOutputs','optimizationTimes','trainingTimes',...
                 'bayOptIterations','optimizeMLHyperparameters','testBatch');
         end
         clearvars ML_Results
