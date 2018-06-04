@@ -3,7 +3,7 @@ function [ OLExpArray ] = generate_ol_array_index( makeSelected )
 %   Detailed explanation goes here
 % Each Subset on it's own (leaves 8 out, because it is test) -> XVal
 % afterwards
-for m = 1:length(makeSelected)-1
+for m = 1:length(makeSelected)
     OLExpArray(m).OLExps = [m];
 end
 % Special Combinations

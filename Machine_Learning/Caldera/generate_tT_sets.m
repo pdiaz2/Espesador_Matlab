@@ -49,7 +49,7 @@ for ns = 1:numExpGroups
         NameInputs{mv+d} = NameInputs{mv+d}; % Remove after possibly
         TrainSetStruct(ns).Inputs.TimeSeries(:,mv+d)  = cumOLData(:);
         TestSetStruct(1).Inputs.TimeSeries(:,mv+d) = RawDataStruct(selectionParametersStruct.p1,...
-                                             selectionParametersStruct.p2,testBatch).inputs.signals.values(:,mv);
+                                             selectionParametersStruct.p2,testBatch).inputs.signals.values(:,mv+d);
     end
 end
 

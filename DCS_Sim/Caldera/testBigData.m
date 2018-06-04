@@ -7,7 +7,7 @@ Dt = 1; % 0.5 seconds sampling time
 simTime = 80*60;
 % stepsOrSpecial = 'steps';
 matFileName = ['testData_0206.mat'];
-showGraphs = false;
+showGraphs = true;
 saveMatFile = true;
 freqs = [5 10 50]; % numMax cycles in sim: simTime*maxFreq = simTime*0.3*Fs_05;
 waveform = {'Sinusoid'; 'Square' ;'Sawtooth';'Steps'};

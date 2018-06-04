@@ -2,12 +2,12 @@ clear all;
 close all;
 clc;
 %% Test Plant Specifics
-load('testData_0106.mat'); % Ts equal for all cases
+load('testData_0206.mat'); % Ts equal for all cases
 saveToMatFile = false;
 comparePlots = false;
 useNoisy = false;
 %%
-matFileName = 'ResultsARMAX_NoNoise_0106';
+matFileName = 'ResultsARMAX_NoNoise_0206';
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 
@@ -65,10 +65,10 @@ for waveformSelected = 1:4
                                                         numExpGroups, selectionParameters,testBatch,...
                                                         dimsSystem);
     %%
-    NA = [0:1]; %Order
-    NB = [1:2]; % Order of B+1 polinomial 
+    NA = [1 3 5]; %Order
+    NB = [1:4]; % Order of B+1 polinomial 
     NC = [0:2];
-    NK = [0:3]; % IO Delay
+    NK = [0:4]; % IO Delay
     tVector = PlantData(1,1,1).inputs.time;
     mlParameters = {'estimate','I_DC?','O_DC?',false,'off','Focus?',true};
     offsetOptions = {'NA','R_DC';'NA','R_DC'};

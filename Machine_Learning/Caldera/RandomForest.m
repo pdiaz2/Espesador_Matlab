@@ -4,16 +4,31 @@ close all;
 clc;
 %% Test Plant Specifics
 load('testData_0206.mat');
-saveToMatFile = true;
+saveToMatFile = false;
 matFileName = 'ResultsRF_NoNoise_0206';
-generateOne = false;
 optimizeMLHyperparameters = false;
+
 useNoisy = false;
 if useNoisy
     PlantData = results;
 else
     PlantData = resultsSmooth; 
 end
+
+generateOne = true;
+
+if generateOne
+    % Input wave
+    waveVector = 3;
+    experiment = 10;
+    delayUCases = 1;
+    delayYCases = 2;
+else
+   waveVector = 1:4;
+end
+
+
+
 %%
 seed = rng(1513);
 mlMethod = 'RF';
@@ -25,30 +40,23 @@ wavesTotal = length(waveform);
 N_y = 20;
 %% DataSet
 fSelected = 2;
-testBatch = 8;
+
 numInputs = 4;
 numOutputs = 3;
 nameInputs = {'DmndVap','Combs','Aire','Agua'};
 nameOutputs = {'PressVap','Oxy','WaterLvl'};
 dimsSystem = [3 3 1];
-if generateOne
-    % Input wave
-    waveVector = 3;
-    experiment = 10;
-    delayUCases = 1;
-    delayYCases = 4;
-else
-   waveVector = 1:4;
-end
+
 
 %% Specify Delay
+% UBackshiftMatrix = [1 1 1 1;
+%                     1 1 2 2;
+%                     2 1 2 2;
+%                     3 3 3 3;
+%                     4 4 4 4;
+%                     ];
 UBackshiftMatrix = [1 1 1 1;
-                    1 1 2 2;
-                    2 1 2 2;
-                    3 3 3 3;
-                    4 4 4 4;
-                    ];
-
+                    2 2 2 2];
 [backshiftCasesU, ~] = size(UBackshiftMatrix);
 % Experience has shown that models are very AR
 % YBackshiftMatrix = [1 1 1;
@@ -61,14 +69,18 @@ YBackshiftMatrix = [2 2 2;
 [backshiftCasesY, ~] = size(YBackshiftMatrix);
 %% Raw Data Handling
 tau_R = 5;
-makeSelected = 1:8;
+makeSelected = 1:7;
+testBatch = 8;
 OLExpStruct = generate_ol_array_index(makeSelected);
 [garbage , numExpGroups] = size(OLExpStruct);
 %% Machine Learning Parameters
 mlParameters = {100,1,'on',10,'on','curvature','TBagger'};
 maxMinLS = 20;
+
+% Optimization Hyperparameters
 minLS = optimizableVariable('minLS',[1,maxMinLS],'Type','integer');
 hyperparametersRF = minLS;
+bayOptIterations = 30;
 for waveformSelected = waveVector
     if waveformSelected == 1
         appendMatFileName = '_sine.mat';
@@ -90,7 +102,7 @@ for waveformSelected = waveVector
                                                         numExpGroups, selectionParameters,testBatch,...
                                                         dimsSystem);
      % For reproducibility (should look into this after)
-    bayOptIterations = 30;
+
     %% Specific RF generation
     if generateOne
         %% Training
@@ -104,27 +116,10 @@ for waveformSelected = waveVector
         [trainingSubset] = ml_prepare_IO_data( trainingBigSet, nameInputs, nameOutputs,...
                                                 experiment, tau_R, numSamplesPerExp,...
                                                 na, nb, mlMethod );
-        if (optimizeMLHyperparameters)
-        % Optimize HyperParameter LeafSize
-            disp('Optimizing')
-            pause(2)
-            tic;
-            for y = 1:numOutputs
-                BayOptResults = bayesopt(@(params)oobErrorRF(params,trainingSubset(y).InputData,trainingSubset(y).OutputData,...
-                    mlParameters),hyperparametersRF,'AcquisitionFunctionName','expected-improvement-plus','Verbose',0,...
-                    'PlotFcn',[],'MaxObjectiveEvaluations',bayOptIterations);
-                bestHyp(y) = BayOptResults.XAtMinObjective{1,1};
-%                 close all;
-            end
-            optimizationTimes(experiment,delayUCases,delayYCases) = toc;
-            clear BayOptResults
-        else
-            for y = 1:numOutputs
-                bestHyp(y) = mlParameters{4};
-            end
-            optimizationTimes(experiment,delayUCases,delayYCases) = NaN;
-        end
-        pause(1)
+        bestHyp = ml_optimize_hyperParams(trainingSubset,...
+                                numOutputs,mlParameters,...
+                                hyperparametersRF,...
+                                optimizeMLHyperparameters);
         disp('Generating Machine Learning Model')
 
         tic;
@@ -140,24 +135,15 @@ for waveformSelected = waveVector
                                                 na, nb,...
                                                 mlMethod);
         %% Prediction and Comparison
-        for y = 1:numOutputs
-            % One step ahead prediction "out of the box"
-            oneStepAheadPrediction = predict(ML_Model(y).Model,testData(y).InputTimeSeries);
-            % Validation is tau_R ahead value of actual data
-            validationOutputs = testBigSet(1).Outputs.TimeSeries(1+delayMaxInTime:end,y);
-            MSE_Ny = predict_N_ahead( ML_Model(y).Model, testData(y).InputTimeSeries, validationOutputs,...
-                                            N_y,tau_R,na(y),mlMethod,-1);
-            ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).MSE = MSE_Ny;
-            ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).Correlation = ...
-                                                                corr(oneStepAheadPrediction,validationOutputs);
-%            OOB = oobError(ML_Model(y).Model);
-%            ML_Results.Output(y).OOBError(experiment,delayUCases,delayYCases) = OOB(end);
-%                ML_Results.Output(y).OOBPredictorImportance(experiment,delayUCases,delayYCases,:) = ML_Model(y).Model.OOBPermutedPredictorDeltaError;
-%                ML_Results(experiment,delayUCases,delayYCases).Results(y).NumPredictorSplit = ML_Model(y).Model.NumPredictorSplit;
-%                ML_Results(experiment,delayUCases,delayYCases).Results(y).MinLeafSize = ML_Model(y).Model.MinLeafSize;
+        Results = ml_validate_model(testData,ML_Model,numOutputs,N_y,...
+                                    delayMaxInTime,tau_R,na,mlMethod,generateOne);
 
+        for y = 1:numOutputs
+            ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).MSE = ...
+                                            Results(y).MSE;
+            ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).Correlation = ...
+                                            Results(y).Correlation;
         end
-        
     else
         for experiment = 1:numExpGroups%1:numSubSets
             for delayUCases = 1:backshiftCasesU%1:backshiftCasesU
@@ -172,28 +158,10 @@ for waveformSelected = waveVector
                     [trainingSubset] = ml_prepare_IO_data( trainingBigSet, nameInputs, nameOutputs,...
                                                             experiment, tau_R, numSamplesPerExp,...
                                                             na, nb, mlMethod );
-
-                    if (optimizeMLHyperparameters)
-                    % Optimize HyperParameter LeafSize
-                        disp('Optimizing')
-                        pause(2)
-                        tic;
-                        for y = 1:numOutputs
-                            BayOptResults = bayesopt(@(params)oobErrorRF(params,trainingSubset(y).InputData,trainingSubset(y).OutputData,...
-                                mlParameters),hyperparametersRF,'AcquisitionFunctionName','expected-improvement-plus','Verbose',0,...
-                                'PlotFcn',[],'MaxObjectiveEvaluations',bayOptIterations);
-                            bestHyp(y) = BayOptResults.XAtMinObjective{1,1};
-            %                 close all;
-                        end
-                        optimizationTimes(experiment,delayUCases,delayYCases) = toc;
-                        clear BayOptResults
-                    else
-                        for y = 1:numOutputs
-                            bestHyp(y) = mlParameters{4};
-                        end
-                        optimizationTimes(experiment,delayUCases,delayYCases) = NaN;
-                    end
-                    pause(1)
+                    bestHyp = ml_optimize_hyperParams(trainingSubset,...
+                                                    numOutputs,mlParameters,...
+                                                    hyperparametersRF,...
+                                                    optimizeMLHyperparameters);
                     disp('Generating Machine Learning Model')
 
                     tic;
@@ -209,32 +177,24 @@ for waveformSelected = waveVector
                                                 na, nb,...
                                                 mlMethod);
                     %% Prediction and Comparison
+                    Results = ml_validate_model(testData,ML_Model,numOutputs,N_y,...
+                            delayMaxInTime,tau_R,na,mlMethod,generateOne);
                     for y = 1:numOutputs
-                        % One step ahead prediction "out of the box"
-%                         oneStepAheadPrediction = predict(ML_Model(y).Model,testData(y).InputTimeSeries);
-                        validationOutputs = testBigSet(1).Outputs.TimeSeries(1+delayMaxInTime:end,y);
-
-                        [MSE_Ny,yHat_1] = predict_N_ahead( ML_Model(y).Model, testData(y).InputTimeSeries, validationOutputs,...
-                                            N_y,tau_R,na(y),mlMethod,-1);
-                        ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).MSE = MSE_Ny;
+                        ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).MSE = ...
+                                                        Results(y).MSE;
                         ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).Correlation = ...
-                                                                    corr(yHat_1,validationOutputs);
-                        OOB = oobError(ML_Model(y).Model);
-                        ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).OOBError = OOB(end);
-                        %                ML_Results.Output(y).OOBPredictorImportance(experiment,delayUCases,delayYCases,:) = ML_Model(y).Model.OOBPermutedPredictorDeltaError;
-                        %                ML_Results(experiment,delayUCases,delayYCases).Results(y).NumPredictorSplit = ML_Model(y).Model.NumPredictorSplit;
-                        %                ML_Results(experiment,delayUCases,delayYCases).Results(y).MinLeafSize = ML_Model(y).Model.MinLeafSize;
-
+                                                        Results(y).Correlation;
+                        ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).OOBError = ...
+                                                        Results(y).OOBError;
                     end
-
-                    clearvars IOData delayMaxInTime ML_Model BayOptResults
+                    clearvars IOData delayMaxInTime ML_Model
                 end
             end
         end
         %% Save
         if (saveToMatFile)
             save(matFileName,'ML_Results','tau_R','UBackshiftMatrix','YBackshiftMatrix',...
-                'OLExpStruct','nameInputs','nameOutputs','optimizationTimes','trainingTimes',...
+                'OLExpStruct','nameInputs','nameOutputs','trainingTimes',...
                 'bayOptIterations','optimizeMLHyperparameters','testBatch');
         end
         clearvars ML_Results

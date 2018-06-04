@@ -4,11 +4,11 @@ clc;
 %% Test Plant Specifics
 load('testData_0206.mat');
 saveToMatFile = true;
-matFileName = 'ResultsN4SID_NoNoise_0206';
+matFileName = 'ResultsN4SID_Noise_0206';
 generateOne = false;
 optimizeMLHyperparameters = false;
 comparePlots = false;
-useNoisy = false;
+useNoisy = true;
 if useNoisy
     PlantData = results;
 else
@@ -126,8 +126,8 @@ for waveformSelected = 1:4
                                                                                             1e14*ones(N_y,1);
                         ML_Results.Output(y).Performance(experiment,offsetChoice,focusChoice).Correlation =...
                                                                                             NaN*ones(N_y,1);
-                        ML_Results.Output(y).MSE_1(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = 1e14;
-                        ML_Results.Output(y).Correlation(experiment,offsetChoice,focusChoice,na,nb,nc,nk) = NaN;
+                        ML_Results.Output(y).MSE_1(experiment,offsetChoice,focusChoice) = 1e14;
+                        ML_Results.Output(y).Correlation(experiment,offsetChoice,focusChoice) = NaN;
                         ML_Results.Fit.FPE(experiment,offsetChoice,focusChoice) = 1e14;
                         ML_Results.Fit.AIC(experiment,offsetChoice,focusChoice) = 1e14;
                         ML_Results.Fit.MSE(experiment,offsetChoice,focusChoice) = 1e14;
