@@ -123,7 +123,7 @@ for waveformSelected = waveVector
         disp('Generating Machine Learning Model')
 
         tic;
-        ML_Model = Generate_ML_Model(numOutputs,trainingSubset,mlParameters,bestHyp,mlMethod);
+        ML_Model = ml_generate_model(numOutputs,trainingSubset,mlParameters,bestHyp,mlMethod);
         trainingTimes(experiment,delayUCases,delayYCases) = toc;
         %% Test Model
         
