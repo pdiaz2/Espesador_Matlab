@@ -4,7 +4,7 @@ close all;
 clc;
 %% Test Plant Specifics
 load('testData_0206.mat');
-saveToMatFile = false;
+saveToMatFile = true;
 matFileName = 'ResultsRF_NoNoise_0206';
 optimizeMLHyperparameters = false;
 
@@ -15,7 +15,7 @@ else
     PlantData = resultsSmooth; 
 end
 
-generateOne = true;
+generateOne = false;
 
 if generateOne
     % Input wave
