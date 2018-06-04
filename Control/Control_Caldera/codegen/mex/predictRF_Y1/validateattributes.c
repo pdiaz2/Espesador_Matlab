@@ -406,6 +406,11 @@ boolean_T eo_all(void)
   return true;
 }
 
+boolean_T ep_all(void)
+{
+  return true;
+}
+
 boolean_T f_all(void)
 {
   return true;
@@ -477,6 +482,11 @@ boolean_T fn_all(void)
 }
 
 boolean_T fo_all(void)
+{
+  return true;
+}
+
+boolean_T fp_all(void)
 {
   return true;
 }
@@ -556,6 +566,11 @@ boolean_T go_all(void)
   return true;
 }
 
+boolean_T gp_all(void)
+{
+  return true;
+}
+
 boolean_T h_all(void)
 {
   return true;
@@ -627,6 +642,11 @@ boolean_T hn_all(void)
 }
 
 boolean_T ho_all(void)
+{
+  return true;
+}
+
+boolean_T hp_all(void)
 {
   return true;
 }
@@ -706,6 +726,11 @@ boolean_T io_all(void)
   return true;
 }
 
+boolean_T ip_all(void)
+{
+  return true;
+}
+
 boolean_T j_all(void)
 {
   return true;
@@ -777,6 +802,11 @@ boolean_T jn_all(void)
 }
 
 boolean_T jo_all(void)
+{
+  return true;
+}
+
+boolean_T jp_all(void)
 {
   return true;
 }
@@ -856,6 +886,11 @@ boolean_T ko_all(void)
   return true;
 }
 
+boolean_T kp_all(void)
+{
+  return true;
+}
+
 boolean_T l_all(void)
 {
   return true;
@@ -927,6 +962,11 @@ boolean_T ln_all(void)
 }
 
 boolean_T lo_all(void)
+{
+  return true;
+}
+
+boolean_T lp_all(void)
 {
   return true;
 }
@@ -1006,6 +1046,11 @@ boolean_T mo_all(void)
   return true;
 }
 
+boolean_T mp_all(void)
+{
+  return true;
+}
+
 boolean_T n_all(void)
 {
   return true;
@@ -1077,6 +1122,11 @@ boolean_T nn_all(void)
 }
 
 boolean_T no_all(void)
+{
+  return true;
+}
+
+boolean_T np_all(void)
 {
   return true;
 }
@@ -1156,6 +1206,11 @@ boolean_T oo_all(void)
   return true;
 }
 
+boolean_T op_all(void)
+{
+  return true;
+}
+
 boolean_T p_all(void)
 {
   return true;
@@ -1227,6 +1282,11 @@ boolean_T pn_all(void)
 }
 
 boolean_T po_all(void)
+{
+  return true;
+}
+
+boolean_T pp_all(void)
 {
   return true;
 }
@@ -1306,6 +1366,11 @@ boolean_T qo_all(void)
   return true;
 }
 
+boolean_T qp_all(void)
+{
+  return true;
+}
+
 boolean_T r_all(void)
 {
   return true;
@@ -1377,6 +1442,11 @@ boolean_T rn_all(void)
 }
 
 boolean_T ro_all(void)
+{
+  return true;
+}
+
+boolean_T rp_all(void)
 {
   return true;
 }
@@ -1456,6 +1526,11 @@ boolean_T so_all(void)
   return true;
 }
 
+boolean_T sp_all(void)
+{
+  return true;
+}
+
 boolean_T t_all(void)
 {
   return true;
@@ -1527,6 +1602,11 @@ boolean_T tn_all(void)
 }
 
 boolean_T to_all(void)
+{
+  return true;
+}
+
+boolean_T tp_all(void)
 {
   return true;
 }
@@ -1606,6 +1686,11 @@ boolean_T uo_all(void)
   return true;
 }
 
+boolean_T up_all(void)
+{
+  return true;
+}
+
 boolean_T v_all(void)
 {
   return true;
@@ -1677,6 +1762,11 @@ boolean_T vn_all(void)
 }
 
 boolean_T vo_all(void)
+{
+  return true;
+}
+
+boolean_T vp_all(void)
 {
   return true;
 }

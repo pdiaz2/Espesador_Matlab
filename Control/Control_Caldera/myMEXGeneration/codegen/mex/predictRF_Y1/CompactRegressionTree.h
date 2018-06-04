@@ -22,160 +22,188 @@
 
 /* Function Declarations */
 extern void CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2941], const real_T obj_Children[5882], const real_T obj_CutPoint
-  [2941], const real_T obj_NodeMean[2941], const emxArray_real_T *X,
+  obj_CutVar[2637], const real_T obj_Children[5274], const real_T obj_CutPoint
+  [2637], const real_T obj_NodeMean[2637], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void ab_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2957], const real_T obj_Children[5914], const real_T obj_CutPoint
-  [2957], const real_T obj_NodeMean[2957], const emxArray_real_T *X,
+  obj_CutVar[2651], const real_T obj_Children[5302], const real_T obj_CutPoint
+  [2651], const real_T obj_NodeMean[2651], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void b_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2903], const real_T obj_Children[5806], const real_T obj_CutPoint
-  [2903], const real_T obj_NodeMean[2903], const emxArray_real_T *X,
+  obj_CutVar[2641], const real_T obj_Children[5282], const real_T obj_CutPoint
+  [2641], const real_T obj_NodeMean[2641], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void bb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2909], const real_T obj_Children[5818], const real_T obj_CutPoint
-  [2909], const real_T obj_NodeMean[2909], const emxArray_real_T *X,
+  obj_CutVar[2639], const real_T obj_Children[5278], const real_T obj_CutPoint
+  [2639], const real_T obj_NodeMean[2639], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void c_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2931], const real_T obj_Children[5862], const real_T obj_CutPoint
-  [2931], const real_T obj_NodeMean[2931], const emxArray_real_T *X,
+  obj_CutVar[2595], const real_T obj_Children[5190], const real_T obj_CutPoint
+  [2595], const real_T obj_NodeMean[2595], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void cb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2899], const real_T obj_Children[5798], const real_T obj_CutPoint
-  [2899], const real_T obj_NodeMean[2899], const emxArray_real_T *X,
+  obj_CutVar[2579], const real_T obj_Children[5158], const real_T obj_CutPoint
+  [2579], const real_T obj_NodeMean[2579], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void d_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2895], const real_T obj_Children[5790], const real_T obj_CutPoint
-  [2895], const real_T obj_NodeMean[2895], const emxArray_real_T *X,
+  obj_CutVar[2607], const real_T obj_Children[5214], const real_T obj_CutPoint
+  [2607], const real_T obj_NodeMean[2607], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void db_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2947], const real_T obj_Children[5894], const real_T obj_CutPoint
-  [2947], const real_T obj_NodeMean[2947], const emxArray_real_T *X,
+  obj_CutVar[2627], const real_T obj_Children[5254], const real_T obj_CutPoint
+  [2627], const real_T obj_NodeMean[2627], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void e_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2929], const real_T obj_Children[5858], const real_T obj_CutPoint
-  [2929], const real_T obj_NodeMean[2929], const emxArray_real_T *X,
+  obj_CutVar[2635], const real_T obj_Children[5270], const real_T obj_CutPoint
+  [2635], const real_T obj_NodeMean[2635], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void eb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2951], const real_T obj_Children[5902], const real_T obj_CutPoint
-  [2951], const real_T obj_NodeMean[2951], const emxArray_real_T *X,
+  obj_CutVar[2669], const real_T obj_Children[5338], const real_T obj_CutPoint
+  [2669], const real_T obj_NodeMean[2669], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void f_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2913], const real_T obj_Children[5826], const real_T obj_CutPoint
-  [2913], const real_T obj_NodeMean[2913], const emxArray_real_T *X,
+  obj_CutVar[2601], const real_T obj_Children[5202], const real_T obj_CutPoint
+  [2601], const real_T obj_NodeMean[2601], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void fb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2877], const real_T obj_Children[5754], const real_T obj_CutPoint
-  [2877], const real_T obj_NodeMean[2877], const emxArray_real_T *X,
+  obj_CutVar[2663], const real_T obj_Children[5326], const real_T obj_CutPoint
+  [2663], const real_T obj_NodeMean[2663], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void g_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2917], const real_T obj_Children[5834], const real_T obj_CutPoint
-  [2917], const real_T obj_NodeMean[2917], const emxArray_real_T *X,
+  obj_CutVar[2597], const real_T obj_Children[5194], const real_T obj_CutPoint
+  [2597], const real_T obj_NodeMean[2597], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void gb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2959], const real_T obj_Children[5918], const real_T obj_CutPoint
-  [2959], const real_T obj_NodeMean[2959], const emxArray_real_T *X,
+  obj_CutVar[2591], const real_T obj_Children[5182], const real_T obj_CutPoint
+  [2591], const real_T obj_NodeMean[2591], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void h_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2961], const real_T obj_Children[5922], const real_T obj_CutPoint
-  [2961], const real_T obj_NodeMean[2961], const emxArray_real_T *X,
+  obj_CutVar[2625], const real_T obj_Children[5250], const real_T obj_CutPoint
+  [2625], const real_T obj_NodeMean[2625], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void hb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2935], const real_T obj_Children[5870], const real_T obj_CutPoint
-  [2935], const real_T obj_NodeMean[2935], const emxArray_real_T *X,
+  obj_CutVar[2615], const real_T obj_Children[5230], const real_T obj_CutPoint
+  [2615], const real_T obj_NodeMean[2615], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void i_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2939], const real_T obj_Children[5878], const real_T obj_CutPoint
-  [2939], const real_T obj_NodeMean[2939], const emxArray_real_T *X,
+  obj_CutVar[2603], const real_T obj_Children[5206], const real_T obj_CutPoint
+  [2603], const real_T obj_NodeMean[2603], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void ib_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2901], const real_T obj_Children[5802], const real_T obj_CutPoint
-  [2901], const real_T obj_NodeMean[2901], const emxArray_real_T *X,
+  obj_CutVar[2613], const real_T obj_Children[5226], const real_T obj_CutPoint
+  [2613], const real_T obj_NodeMean[2613], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void j_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2905], const real_T obj_Children[5810], const real_T obj_CutPoint
-  [2905], const real_T obj_NodeMean[2905], const emxArray_real_T *X,
+  obj_CutVar[2645], const real_T obj_Children[5290], const real_T obj_CutPoint
+  [2645], const real_T obj_NodeMean[2645], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void jb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2945], const real_T obj_Children[5890], const real_T obj_CutPoint
-  [2945], const real_T obj_NodeMean[2945], const emxArray_real_T *X,
+  obj_CutVar[2665], const real_T obj_Children[5330], const real_T obj_CutPoint
+  [2665], const real_T obj_NodeMean[2665], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void k_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2915], const real_T obj_Children[5830], const real_T obj_CutPoint
-  [2915], const real_T obj_NodeMean[2915], const emxArray_real_T *X,
+  obj_CutVar[2567], const real_T obj_Children[5134], const real_T obj_CutPoint
+  [2567], const real_T obj_NodeMean[2567], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void kb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2893], const real_T obj_Children[5786], const real_T obj_CutPoint
-  [2893], const real_T obj_NodeMean[2893], const emxArray_real_T *X,
+  obj_CutVar[2671], const real_T obj_Children[5342], const real_T obj_CutPoint
+  [2671], const real_T obj_NodeMean[2671], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void l_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2955], const real_T obj_Children[5910], const real_T obj_CutPoint
-  [2955], const real_T obj_NodeMean[2955], const emxArray_real_T *X,
+  obj_CutVar[2643], const real_T obj_Children[5286], const real_T obj_CutPoint
+  [2643], const real_T obj_NodeMean[2643], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void lb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2923], const real_T obj_Children[5846], const real_T obj_CutPoint
-  [2923], const real_T obj_NodeMean[2923], const emxArray_real_T *X,
+  obj_CutVar[2619], const real_T obj_Children[5238], const real_T obj_CutPoint
+  [2619], const real_T obj_NodeMean[2619], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void m_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2949], const real_T obj_Children[5898], const real_T obj_CutPoint
-  [2949], const real_T obj_NodeMean[2949], const emxArray_real_T *X,
+  obj_CutVar[2573], const real_T obj_Children[5146], const real_T obj_CutPoint
+  [2573], const real_T obj_NodeMean[2573], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void mb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2879], const real_T obj_Children[5758], const real_T obj_CutPoint
-  [2879], const real_T obj_NodeMean[2879], const emxArray_real_T *X,
+  obj_CutVar[2657], const real_T obj_Children[5314], const real_T obj_CutPoint
+  [2657], const real_T obj_NodeMean[2657], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void n_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2927], const real_T obj_Children[5854], const real_T obj_CutPoint
-  [2927], const real_T obj_NodeMean[2927], const emxArray_real_T *X,
+  obj_CutVar[2587], const real_T obj_Children[5174], const real_T obj_CutPoint
+  [2587], const real_T obj_NodeMean[2587], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void nb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[2963], const real_T obj_Children[5926], const real_T obj_CutPoint
-  [2963], const real_T obj_NodeMean[2963], const emxArray_real_T *X,
+  obj_CutVar[2633], const real_T obj_Children[5266], const real_T obj_CutPoint
+  [2633], const real_T obj_NodeMean[2633], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void o_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2925], const real_T obj_Children[5850], const real_T obj_CutPoint
-  [2925], const real_T obj_NodeMean[2925], const emxArray_real_T *X,
+  obj_CutVar[2679], const real_T obj_Children[5358], const real_T obj_CutPoint
+  [2679], const real_T obj_NodeMean[2679], const emxArray_real_T *X,
+  emxArray_real_T *Yfit);
+extern void ob_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[2593], const real_T obj_Children[5186], const real_T obj_CutPoint
+  [2593], const real_T obj_NodeMean[2593], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void p_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2853], const real_T obj_Children[5706], const real_T obj_CutPoint
-  [2853], const real_T obj_NodeMean[2853], const emxArray_real_T *X,
+  obj_CutVar[2611], const real_T obj_Children[5222], const real_T obj_CutPoint
+  [2611], const real_T obj_NodeMean[2611], const emxArray_real_T *X,
+  emxArray_real_T *Yfit);
+extern void pb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[2685], const real_T obj_Children[5370], const real_T obj_CutPoint
+  [2685], const real_T obj_NodeMean[2685], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void q_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2965], const real_T obj_Children[5930], const real_T obj_CutPoint
-  [2965], const real_T obj_NodeMean[2965], const emxArray_real_T *X,
+  obj_CutVar[2631], const real_T obj_Children[5262], const real_T obj_CutPoint
+  [2631], const real_T obj_NodeMean[2631], const emxArray_real_T *X,
+  emxArray_real_T *Yfit);
+extern void qb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[2605], const real_T obj_Children[5210], const real_T obj_CutPoint
+  [2605], const real_T obj_NodeMean[2605], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void r_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2937], const real_T obj_Children[5874], const real_T obj_CutPoint
-  [2937], const real_T obj_NodeMean[2937], const emxArray_real_T *X,
+  obj_CutVar[2617], const real_T obj_Children[5234], const real_T obj_CutPoint
+  [2617], const real_T obj_NodeMean[2617], const emxArray_real_T *X,
+  emxArray_real_T *Yfit);
+extern void rb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[2609], const real_T obj_Children[5218], const real_T obj_CutPoint
+  [2609], const real_T obj_NodeMean[2609], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void s_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2907], const real_T obj_Children[5814], const real_T obj_CutPoint
-  [2907], const real_T obj_NodeMean[2907], const emxArray_real_T *X,
+  obj_CutVar[2589], const real_T obj_Children[5178], const real_T obj_CutPoint
+  [2589], const real_T obj_NodeMean[2589], const emxArray_real_T *X,
+  emxArray_real_T *Yfit);
+extern void sb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[2649], const real_T obj_Children[5298], const real_T obj_CutPoint
+  [2649], const real_T obj_NodeMean[2649], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void t_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2919], const real_T obj_Children[5838], const real_T obj_CutPoint
-  [2919], const real_T obj_NodeMean[2919], const emxArray_real_T *X,
+  obj_CutVar[2675], const real_T obj_Children[5350], const real_T obj_CutPoint
+  [2675], const real_T obj_NodeMean[2675], const emxArray_real_T *X,
+  emxArray_real_T *Yfit);
+extern void tb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[2623], const real_T obj_Children[5246], const real_T obj_CutPoint
+  [2623], const real_T obj_NodeMean[2623], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void u_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2953], const real_T obj_Children[5906], const real_T obj_CutPoint
-  [2953], const real_T obj_NodeMean[2953], const emxArray_real_T *X,
+  obj_CutVar[2575], const real_T obj_Children[5150], const real_T obj_CutPoint
+  [2575], const real_T obj_NodeMean[2575], const emxArray_real_T *X,
+  emxArray_real_T *Yfit);
+extern void ub_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[2655], const real_T obj_Children[5310], const real_T obj_CutPoint
+  [2655], const real_T obj_NodeMean[2655], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void v_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2943], const real_T obj_Children[5886], const real_T obj_CutPoint
-  [2943], const real_T obj_NodeMean[2943], const emxArray_real_T *X,
+  obj_CutVar[2621], const real_T obj_Children[5242], const real_T obj_CutPoint
+  [2621], const real_T obj_NodeMean[2621], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void w_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2875], const real_T obj_Children[5750], const real_T obj_CutPoint
-  [2875], const real_T obj_NodeMean[2875], const emxArray_real_T *X,
+  obj_CutVar[2697], const real_T obj_Children[5394], const real_T obj_CutPoint
+  [2697], const real_T obj_NodeMean[2697], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void x_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2921], const real_T obj_Children[5842], const real_T obj_CutPoint
-  [2921], const real_T obj_NodeMean[2921], const emxArray_real_T *X,
+  obj_CutVar[2571], const real_T obj_Children[5142], const real_T obj_CutPoint
+  [2571], const real_T obj_NodeMean[2571], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 extern void y_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[2933], const real_T obj_Children[5866], const real_T obj_CutPoint
-  [2933], const real_T obj_NodeMean[2933], const emxArray_real_T *X,
+  obj_CutVar[2629], const real_T obj_Children[5258], const real_T obj_CutPoint
+  [2629], const real_T obj_NodeMean[2629], const emxArray_real_T *X,
   emxArray_real_T *Yfit);
 
 #endif

@@ -30,7 +30,7 @@ numDV = 1;
 numMV = 3;
 numInputs = numDV+numDV;
 save('delayParameters_2705.mat','delayU','delayY','tau_R','numDV','numInputs',...
-     'numOutputs','numMV','UBackshiftMatrix','YBackshiftMatrix');
+     'numOutputs','numMV','UBackshiftMatrix','YBackshiftMatrix')
 %% Plotting
 % Y1Predicted = predict(RandomForestY1,InputDataFinalY1);
 % Y2Predicted = predict(RandomForestY2,InputDataFinalY2);

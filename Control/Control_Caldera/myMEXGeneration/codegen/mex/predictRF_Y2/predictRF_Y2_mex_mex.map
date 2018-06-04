@@ -6,10 +6,8 @@ MEX {
 		predictRF_Y2;
 		emxEnsureCapacity;
 		emxFree_int32_T;
-		emxFree_int8_T;
 		emxFree_real_T;
 		emxInit_int32_T;
-		emxInit_int8_T;
 		emxInit_real_T;
 		emxInit_real_T1;
 		predictRF_Y2_initialize;

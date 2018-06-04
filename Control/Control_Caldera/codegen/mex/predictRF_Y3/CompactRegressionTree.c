@@ -12,12 +12,12 @@
 #include "predictRF_Y3_emxutil.h"
 
 /* Variable Definitions */
-static emlrtRSInfo k_emlrtRSI = { 146, /* lineNo */
+static emlrtRSInfo j_emlrtRSI = { 146, /* lineNo */
   "CompactRegressionTree",             /* fcnName */
   "C:\\Program Files\\MATLAB\\R2017a\\toolbox\\stats\\classreg\\+classreg\\+learning\\+coder\\CompactRegressionTree.m"/* pathName */
 };
 
-static emlrtRSInfo l_emlrtRSI = { 189, /* lineNo */
+static emlrtRSInfo k_emlrtRSI = { 189, /* lineNo */
   "CompactRegressionTree",             /* fcnName */
   "C:\\Program Files\\MATLAB\\R2017a\\toolbox\\stats\\classreg\\+classreg\\+learning\\+coder\\CompactRegressionTree.m"/* pathName */
 };
@@ -42,7 +42,7 @@ static emlrtECInfo b_emlrtECI = { -1,  /* nDims */
 };
 
 static emlrtBCInfo emlrtBCI = { 1,     /* iFirst */
-  10,                                  /* iLast */
+  12,                                  /* iLast */
   38,                                  /* lineNo */
   22,                                  /* colNo */
   "",                                  /* aName */
@@ -52,7 +52,7 @@ static emlrtBCInfo emlrtBCI = { 1,     /* iFirst */
 };
 
 static emlrtBCInfo b_emlrtBCI = { 1,   /* iFirst */
-  10,                                  /* iLast */
+  12,                                  /* iLast */
   35,                                  /* lineNo */
   24,                                  /* colNo */
   "",                                  /* aName */
@@ -72,7 +72,7 @@ static emlrtBCInfo c_emlrtBCI = { -1,  /* iFirst */
 };
 
 static emlrtBCInfo d_emlrtBCI = { 1,   /* iFirst */
-  5147,                                /* iLast */
+  967,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -92,7 +92,7 @@ static emlrtBCInfo e_emlrtBCI = { -1,  /* iFirst */
 };
 
 static emlrtBCInfo f_emlrtBCI = { 1,   /* iFirst */
-  5099,                                /* iLast */
+  965,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -102,7 +102,7 @@ static emlrtBCInfo f_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo g_emlrtBCI = { 1,   /* iFirst */
-  5187,                                /* iLast */
+  1023,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -112,7 +112,7 @@ static emlrtBCInfo g_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo h_emlrtBCI = { 1,   /* iFirst */
-  5061,                                /* iLast */
+  1025,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -122,7 +122,7 @@ static emlrtBCInfo h_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo i_emlrtBCI = { 1,   /* iFirst */
-  5083,                                /* iLast */
+  1001,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -132,7 +132,7 @@ static emlrtBCInfo i_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo j_emlrtBCI = { 1,   /* iFirst */
-  5165,                                /* iLast */
+  971,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -142,7 +142,7 @@ static emlrtBCInfo j_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo k_emlrtBCI = { 1,   /* iFirst */
-  5105,                                /* iLast */
+  1039,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -152,7 +152,7 @@ static emlrtBCInfo k_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo l_emlrtBCI = { 1,   /* iFirst */
-  5185,                                /* iLast */
+  1077,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -162,7 +162,7 @@ static emlrtBCInfo l_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo m_emlrtBCI = { 1,   /* iFirst */
-  5155,                                /* iLast */
+  999,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -172,7 +172,7 @@ static emlrtBCInfo m_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo n_emlrtBCI = { 1,   /* iFirst */
-  5117,                                /* iLast */
+  987,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -182,7 +182,7 @@ static emlrtBCInfo n_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo o_emlrtBCI = { 1,   /* iFirst */
-  5129,                                /* iLast */
+  1015,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -192,7 +192,7 @@ static emlrtBCInfo o_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo p_emlrtBCI = { 1,   /* iFirst */
-  5135,                                /* iLast */
+  1021,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -202,7 +202,7 @@ static emlrtBCInfo p_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo q_emlrtBCI = { 1,   /* iFirst */
-  5119,                                /* iLast */
+  985,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -212,7 +212,7 @@ static emlrtBCInfo q_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo r_emlrtBCI = { 1,   /* iFirst */
-  5151,                                /* iLast */
+  997,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -222,7 +222,7 @@ static emlrtBCInfo r_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo s_emlrtBCI = { 1,   /* iFirst */
-  5139,                                /* iLast */
+  943,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -232,7 +232,7 @@ static emlrtBCInfo s_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo t_emlrtBCI = { 1,   /* iFirst */
-  5145,                                /* iLast */
+  1037,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -242,7 +242,7 @@ static emlrtBCInfo t_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo u_emlrtBCI = { 1,   /* iFirst */
-  5111,                                /* iLast */
+  1059,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -252,7 +252,7 @@ static emlrtBCInfo u_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo v_emlrtBCI = { 1,   /* iFirst */
-  5127,                                /* iLast */
+  923,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -262,7 +262,7 @@ static emlrtBCInfo v_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo w_emlrtBCI = { 1,   /* iFirst */
-  5157,                                /* iLast */
+  921,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -272,7 +272,7 @@ static emlrtBCInfo w_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo x_emlrtBCI = { 1,   /* iFirst */
-  5121,                                /* iLast */
+  963,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -282,7 +282,7 @@ static emlrtBCInfo x_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo y_emlrtBCI = { 1,   /* iFirst */
-  5137,                                /* iLast */
+  1011,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -292,7 +292,7 @@ static emlrtBCInfo y_emlrtBCI = { 1,   /* iFirst */
 };
 
 static emlrtBCInfo ab_emlrtBCI = { 1,  /* iFirst */
-  5123,                                /* iLast */
+  1051,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -302,7 +302,7 @@ static emlrtBCInfo ab_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo bb_emlrtBCI = { 1,  /* iFirst */
-  5163,                                /* iLast */
+  1007,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -312,7 +312,7 @@ static emlrtBCInfo bb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo cb_emlrtBCI = { 1,  /* iFirst */
-  5143,                                /* iLast */
+  1071,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -322,7 +322,7 @@ static emlrtBCInfo cb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo db_emlrtBCI = { 1,  /* iFirst */
-  5077,                                /* iLast */
+  1017,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -332,7 +332,7 @@ static emlrtBCInfo db_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo eb_emlrtBCI = { 1,  /* iFirst */
-  5131,                                /* iLast */
+  1043,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -342,7 +342,7 @@ static emlrtBCInfo eb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo fb_emlrtBCI = { 1,  /* iFirst */
-  5141,                                /* iLast */
+  995,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -352,7 +352,7 @@ static emlrtBCInfo fb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo gb_emlrtBCI = { 1,  /* iFirst */
-  5125,                                /* iLast */
+  957,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -362,7 +362,7 @@ static emlrtBCInfo gb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo hb_emlrtBCI = { 1,  /* iFirst */
-  4959,                                /* iLast */
+  1029,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -372,7 +372,7 @@ static emlrtBCInfo hb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo ib_emlrtBCI = { 1,  /* iFirst */
-  5153,                                /* iLast */
+  1019,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -382,7 +382,7 @@ static emlrtBCInfo ib_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo jb_emlrtBCI = { 1,  /* iFirst */
-  5149,                                /* iLast */
+  919,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -392,7 +392,7 @@ static emlrtBCInfo jb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo kb_emlrtBCI = { 1,  /* iFirst */
-  5113,                                /* iLast */
+  1033,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -402,7 +402,7 @@ static emlrtBCInfo kb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo lb_emlrtBCI = { 1,  /* iFirst */
-  5095,                                /* iLast */
+  1041,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -412,7 +412,7 @@ static emlrtBCInfo lb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo mb_emlrtBCI = { 1,  /* iFirst */
-  5159,                                /* iLast */
+  1035,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -422,7 +422,7 @@ static emlrtBCInfo mb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo nb_emlrtBCI = { 1,  /* iFirst */
-  5103,                                /* iLast */
+  959,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -432,7 +432,7 @@ static emlrtBCInfo nb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo ob_emlrtBCI = { 1,  /* iFirst */
-  5115,                                /* iLast */
+  1031,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -442,7 +442,7 @@ static emlrtBCInfo ob_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo pb_emlrtBCI = { 1,  /* iFirst */
-  5177,                                /* iLast */
+  969,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -452,7 +452,7 @@ static emlrtBCInfo pb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo qb_emlrtBCI = { 1,  /* iFirst */
-  5107,                                /* iLast */
+  1003,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -462,7 +462,7 @@ static emlrtBCInfo qb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo rb_emlrtBCI = { 1,  /* iFirst */
-  5079,                                /* iLast */
+  1057,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -472,7 +472,7 @@ static emlrtBCInfo rb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo sb_emlrtBCI = { 1,  /* iFirst */
-  5167,                                /* iLast */
+  1005,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -482,7 +482,7 @@ static emlrtBCInfo sb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo tb_emlrtBCI = { 1,  /* iFirst */
-  5081,                                /* iLast */
+  927,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -492,7 +492,7 @@ static emlrtBCInfo tb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo ub_emlrtBCI = { 1,  /* iFirst */
-  4763,                                /* iLast */
+  1061,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -502,7 +502,7 @@ static emlrtBCInfo ub_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo vb_emlrtBCI = { 1,  /* iFirst */
-  5173,                                /* iLast */
+  989,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -512,7 +512,7 @@ static emlrtBCInfo vb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo wb_emlrtBCI = { 1,  /* iFirst */
-  5087,                                /* iLast */
+  953,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -522,7 +522,7 @@ static emlrtBCInfo wb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo xb_emlrtBCI = { 1,  /* iFirst */
-  5093,                                /* iLast */
+  925,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -532,7 +532,7 @@ static emlrtBCInfo xb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo yb_emlrtBCI = { 1,  /* iFirst */
-  5075,                                /* iLast */
+  1093,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -542,7 +542,7 @@ static emlrtBCInfo yb_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo ac_emlrtBCI = { 1,  /* iFirst */
-  5179,                                /* iLast */
+  1047,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -552,7 +552,7 @@ static emlrtBCInfo ac_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo bc_emlrtBCI = { 1,  /* iFirst */
-  5133,                                /* iLast */
+  1053,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -562,7 +562,7 @@ static emlrtBCInfo bc_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo cc_emlrtBCI = { 1,  /* iFirst */
-  4965,                                /* iLast */
+  981,                                 /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -572,7 +572,87 @@ static emlrtBCInfo cc_emlrtBCI = { 1,  /* iFirst */
 };
 
 static emlrtBCInfo dc_emlrtBCI = { 1,  /* iFirst */
-  5109,                                /* iLast */
+  975,                                 /* iLast */
+  28,                                  /* lineNo */
+  27,                                  /* colNo */
+  "",                                  /* aName */
+  "findNode",                          /* fName */
+  "C:\\Program Files\\MATLAB\\R2017a\\toolbox\\stats\\classreg\\+classreg\\+learning\\+coder\\+treeutils\\findNode.m",/* pName */
+  0                                    /* checkKind */
+};
+
+static emlrtBCInfo ec_emlrtBCI = { 1,  /* iFirst */
+  993,                                 /* iLast */
+  28,                                  /* lineNo */
+  27,                                  /* colNo */
+  "",                                  /* aName */
+  "findNode",                          /* fName */
+  "C:\\Program Files\\MATLAB\\R2017a\\toolbox\\stats\\classreg\\+classreg\\+learning\\+coder\\+treeutils\\findNode.m",/* pName */
+  0                                    /* checkKind */
+};
+
+static emlrtBCInfo fc_emlrtBCI = { 1,  /* iFirst */
+  1027,                                /* iLast */
+  28,                                  /* lineNo */
+  27,                                  /* colNo */
+  "",                                  /* aName */
+  "findNode",                          /* fName */
+  "C:\\Program Files\\MATLAB\\R2017a\\toolbox\\stats\\classreg\\+classreg\\+learning\\+coder\\+treeutils\\findNode.m",/* pName */
+  0                                    /* checkKind */
+};
+
+static emlrtBCInfo gc_emlrtBCI = { 1,  /* iFirst */
+  1009,                                /* iLast */
+  28,                                  /* lineNo */
+  27,                                  /* colNo */
+  "",                                  /* aName */
+  "findNode",                          /* fName */
+  "C:\\Program Files\\MATLAB\\R2017a\\toolbox\\stats\\classreg\\+classreg\\+learning\\+coder\\+treeutils\\findNode.m",/* pName */
+  0                                    /* checkKind */
+};
+
+static emlrtBCInfo hc_emlrtBCI = { 1,  /* iFirst */
+  915,                                 /* iLast */
+  28,                                  /* lineNo */
+  27,                                  /* colNo */
+  "",                                  /* aName */
+  "findNode",                          /* fName */
+  "C:\\Program Files\\MATLAB\\R2017a\\toolbox\\stats\\classreg\\+classreg\\+learning\\+coder\\+treeutils\\findNode.m",/* pName */
+  0                                    /* checkKind */
+};
+
+static emlrtBCInfo ic_emlrtBCI = { 1,  /* iFirst */
+  839,                                 /* iLast */
+  28,                                  /* lineNo */
+  27,                                  /* colNo */
+  "",                                  /* aName */
+  "findNode",                          /* fName */
+  "C:\\Program Files\\MATLAB\\R2017a\\toolbox\\stats\\classreg\\+classreg\\+learning\\+coder\\+treeutils\\findNode.m",/* pName */
+  0                                    /* checkKind */
+};
+
+static emlrtBCInfo jc_emlrtBCI = { 1,  /* iFirst */
+  979,                                 /* iLast */
+  28,                                  /* lineNo */
+  27,                                  /* colNo */
+  "",                                  /* aName */
+  "findNode",                          /* fName */
+  "C:\\Program Files\\MATLAB\\R2017a\\toolbox\\stats\\classreg\\+classreg\\+learning\\+coder\\+treeutils\\findNode.m",/* pName */
+  0                                    /* checkKind */
+};
+
+static emlrtBCInfo kc_emlrtBCI = { 1,  /* iFirst */
+  973,                                 /* iLast */
+  28,                                  /* lineNo */
+  27,                                  /* colNo */
+  "",                                  /* aName */
+  "findNode",                          /* fName */
+  "C:\\Program Files\\MATLAB\\R2017a\\toolbox\\stats\\classreg\\+classreg\\+learning\\+coder\\+treeutils\\findNode.m",/* pName */
+  0                                    /* checkKind */
+};
+
+static emlrtBCInfo lc_emlrtBCI = { 1,  /* iFirst */
+  1079,                                /* iLast */
   28,                                  /* lineNo */
   27,                                  /* colNo */
   "",                                  /* aName */
@@ -583,8 +663,8 @@ static emlrtBCInfo dc_emlrtBCI = { 1,  /* iFirst */
 
 /* Function Definitions */
 void CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5147], const real_T obj_Children[10294], const real_T obj_CutPoint
-  [5147], const real_T obj_NodeMean[5147], const emxArray_real_T *X,
+  obj_CutVar[967], const real_T obj_Children[1934], const real_T obj_CutPoint
+  [967], const real_T obj_NodeMean[967], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -611,8 +691,8 @@ void CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i1 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i1, sizeof(real_T),
@@ -633,16 +713,16 @@ void CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i1 = (int32_T)m;
-        if (!((i1 >= 1) && (i1 <= 5147))) {
-          emlrtDynamicBoundsCheckR2012b(i1, 1, 5147, &d_emlrtBCI, &b_st);
+        if (!((i1 >= 1) && (i1 <= 967))) {
+          emlrtDynamicBoundsCheckR2012b(i1, 1, 967, &d_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i1 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i1 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i1 >= 1) && (i1 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i1, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i1 >= 1) && (i1 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i1, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -650,8 +730,8 @@ void CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i1 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i1 >= 1) && (i1 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i1, 1, 10, &emlrtBCI, &b_st);
+            if (!((i1 >= 1) && (i1 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i1, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -720,8 +800,8 @@ void CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void ab_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5131], const real_T obj_Children[10262], const real_T obj_CutPoint
-  [5131], const real_T obj_NodeMean[5131], const emxArray_real_T *X,
+  obj_CutVar[1043], const real_T obj_Children[2086], const real_T obj_CutPoint
+  [1043], const real_T obj_NodeMean[1043], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -748,8 +828,8 @@ void ab_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i51 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i51, sizeof(real_T),
@@ -770,16 +850,16 @@ void ab_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i51 = (int32_T)m;
-        if (!((i51 >= 1) && (i51 <= 5131))) {
-          emlrtDynamicBoundsCheckR2012b(i51, 1, 5131, &eb_emlrtBCI, &b_st);
+        if (!((i51 >= 1) && (i51 <= 1043))) {
+          emlrtDynamicBoundsCheckR2012b(i51, 1, 1043, &eb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i51 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i51 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i51 >= 1) && (i51 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i51, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i51 >= 1) && (i51 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i51, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -787,8 +867,8 @@ void ab_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i51 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i51 >= 1) && (i51 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i51, 1, 10, &emlrtBCI, &b_st);
+            if (!((i51 >= 1) && (i51 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i51, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -856,9 +936,146 @@ void ab_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
   emlrtHeapReferenceStackLeaveFcnR2012b(sp);
 }
 
+void ac_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[993], const real_T obj_Children[1986], const real_T obj_CutPoint
+  [993], const real_T obj_NodeMean[993], const emxArray_real_T *X,
+  emxArray_real_T *Yfit)
+{
+  emxArray_real_T *node;
+  int32_T i101;
+  int32_T loop_ub;
+  int32_T i102;
+  real_T m;
+  int32_T exitg1;
+  emxArray_int32_T *r101;
+  emxArray_real_T *r102;
+  int32_T iv402[1];
+  int32_T iv403[1];
+  emlrtStack st;
+  emlrtStack b_st;
+  st.prev = sp;
+  st.tls = sp->tls;
+  b_st.prev = &st;
+  b_st.tls = st.tls;
+  emlrtHeapReferenceStackEnterFcnR2012b(sp);
+  if (X->size[0] == 0) {
+    i101 = Yfit->size[0];
+    Yfit->size[0] = 0;
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i101, sizeof(real_T),
+                      &c_emlrtRTEI);
+  } else {
+    emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
+    i101 = node->size[0];
+    node->size[0] = X->size[0];
+    emxEnsureCapacity(&b_st, (emxArray__common *)node, i101, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = X->size[0];
+    for (i101 = 0; i101 < loop_ub; i101++) {
+      node->data[i101] = 1.0;
+    }
+
+    for (loop_ub = 0; loop_ub < X->size[0]; loop_ub++) {
+      i101 = X->size[0];
+      i102 = loop_ub + 1;
+      if (!((i102 >= 1) && (i102 <= i101))) {
+        emlrtDynamicBoundsCheckR2012b(i102, 1, i101, &c_emlrtBCI, &b_st);
+      }
+
+      m = 1.0;
+      do {
+        exitg1 = 0;
+        i101 = (int32_T)m;
+        if (!((i101 >= 1) && (i101 <= 993))) {
+          emlrtDynamicBoundsCheckR2012b(i101, 1, 993, &ec_emlrtBCI, &b_st);
+        }
+
+        if (obj_CutVar[i101 - 1] == 0.0) {
+          exitg1 = 1;
+        } else {
+          i101 = (int32_T)obj_CutVar[(int32_T)m - 1];
+          if (!((i101 >= 1) && (i101 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i101, 1, 12, &b_emlrtBCI, &b_st);
+          }
+
+          if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
+                obj_CutVar[(int32_T)m - 1] - 1)])) {
+            exitg1 = 1;
+          } else {
+            i101 = (int32_T)obj_CutVar[(int32_T)m - 1];
+            if (!((i101 >= 1) && (i101 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i101, 1, 12, &emlrtBCI, &b_st);
+            }
+
+            if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
+                 1] - 1)] < obj_CutPoint[(int32_T)m - 1]) {
+              m = obj_Children[((int32_T)m - 1) << 1];
+            } else {
+              m = obj_Children[1 + (((int32_T)m - 1) << 1)];
+            }
+          }
+        }
+      } while (exitg1 == 0);
+
+      i101 = node->size[0];
+      i102 = 1 + loop_ub;
+      if (!((i102 >= 1) && (i102 <= i101))) {
+        emlrtDynamicBoundsCheckR2012b(i102, 1, i101, &e_emlrtBCI, &b_st);
+      }
+
+      node->data[i102 - 1] = m;
+    }
+
+    i101 = Yfit->size[0];
+    Yfit->size[0] = node->size[0];
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i101, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = node->size[0];
+    for (i101 = 0; i101 < loop_ub; i101++) {
+      Yfit->data[i101] = 0.0;
+    }
+
+    emxInit_int32_T(sp, &r101, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i101 = r101->size[0];
+    r101->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r101, i101, sizeof(int32_T),
+                      &c_emlrtRTEI);
+    for (i101 = 0; i101 < loop_ub; i101++) {
+      r101->data[i101] = i101;
+    }
+
+    emxInit_real_T(sp, &r102, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i101 = r102->size[0];
+    r102->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r102, i101, sizeof(real_T),
+                      &c_emlrtRTEI);
+    for (i101 = 0; i101 < loop_ub; i101++) {
+      r102->data[i101] = obj_NodeMean[(int32_T)node->data[i101] - 1];
+    }
+
+    i101 = node->size[0];
+    iv402[0] = r101->size[0];
+    iv403[0] = i101;
+    emlrtSubAssignSizeCheckR2012b(iv402, 1, iv403, 1, &b_emlrtECI, sp);
+    loop_ub = r102->size[0];
+    emxFree_real_T(&node);
+    for (i101 = 0; i101 < loop_ub; i101++) {
+      Yfit->data[r101->data[i101]] = r102->data[i101];
+    }
+
+    emxFree_real_T(&r102);
+    emxFree_int32_T(&r101);
+  }
+
+  emlrtHeapReferenceStackLeaveFcnR2012b(sp);
+}
+
 void b_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5099], const real_T obj_Children[10198], const real_T obj_CutPoint
-  [5099], const real_T obj_NodeMean[5099], const emxArray_real_T *X,
+  obj_CutVar[965], const real_T obj_Children[1930], const real_T obj_CutPoint
+  [965], const real_T obj_NodeMean[965], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -885,8 +1102,8 @@ void b_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i3 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i3, sizeof(real_T),
@@ -907,16 +1124,16 @@ void b_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i3 = (int32_T)m;
-        if (!((i3 >= 1) && (i3 <= 5099))) {
-          emlrtDynamicBoundsCheckR2012b(i3, 1, 5099, &f_emlrtBCI, &b_st);
+        if (!((i3 >= 1) && (i3 <= 965))) {
+          emlrtDynamicBoundsCheckR2012b(i3, 1, 965, &f_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i3 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i3 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i3 >= 1) && (i3 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i3, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i3 >= 1) && (i3 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i3, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -924,8 +1141,8 @@ void b_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i3 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i3 >= 1) && (i3 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i3, 1, 10, &emlrtBCI, &b_st);
+            if (!((i3 >= 1) && (i3 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i3, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -994,8 +1211,8 @@ void b_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void bb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5141], const real_T obj_Children[10282], const real_T obj_CutPoint
-  [5141], const real_T obj_NodeMean[5141], const emxArray_real_T *X,
+  obj_CutVar[995], const real_T obj_Children[1990], const real_T obj_CutPoint
+  [995], const real_T obj_NodeMean[995], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -1022,8 +1239,8 @@ void bb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i53 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i53, sizeof(real_T),
@@ -1044,16 +1261,16 @@ void bb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i53 = (int32_T)m;
-        if (!((i53 >= 1) && (i53 <= 5141))) {
-          emlrtDynamicBoundsCheckR2012b(i53, 1, 5141, &fb_emlrtBCI, &b_st);
+        if (!((i53 >= 1) && (i53 <= 995))) {
+          emlrtDynamicBoundsCheckR2012b(i53, 1, 995, &fb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i53 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i53 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i53 >= 1) && (i53 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i53, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i53 >= 1) && (i53 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i53, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -1061,8 +1278,8 @@ void bb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i53 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i53 >= 1) && (i53 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i53, 1, 10, &emlrtBCI, &b_st);
+            if (!((i53 >= 1) && (i53 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i53, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -1130,9 +1347,146 @@ void bb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
   emlrtHeapReferenceStackLeaveFcnR2012b(sp);
 }
 
+void bc_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[1027], const real_T obj_Children[2054], const real_T obj_CutPoint
+  [1027], const real_T obj_NodeMean[1027], const emxArray_real_T *X,
+  emxArray_real_T *Yfit)
+{
+  emxArray_real_T *node;
+  int32_T i103;
+  int32_T loop_ub;
+  int32_T i104;
+  real_T m;
+  int32_T exitg1;
+  emxArray_int32_T *r103;
+  emxArray_real_T *r104;
+  int32_T iv404[1];
+  int32_T iv405[1];
+  emlrtStack st;
+  emlrtStack b_st;
+  st.prev = sp;
+  st.tls = sp->tls;
+  b_st.prev = &st;
+  b_st.tls = st.tls;
+  emlrtHeapReferenceStackEnterFcnR2012b(sp);
+  if (X->size[0] == 0) {
+    i103 = Yfit->size[0];
+    Yfit->size[0] = 0;
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i103, sizeof(real_T),
+                      &c_emlrtRTEI);
+  } else {
+    emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
+    i103 = node->size[0];
+    node->size[0] = X->size[0];
+    emxEnsureCapacity(&b_st, (emxArray__common *)node, i103, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = X->size[0];
+    for (i103 = 0; i103 < loop_ub; i103++) {
+      node->data[i103] = 1.0;
+    }
+
+    for (loop_ub = 0; loop_ub < X->size[0]; loop_ub++) {
+      i103 = X->size[0];
+      i104 = loop_ub + 1;
+      if (!((i104 >= 1) && (i104 <= i103))) {
+        emlrtDynamicBoundsCheckR2012b(i104, 1, i103, &c_emlrtBCI, &b_st);
+      }
+
+      m = 1.0;
+      do {
+        exitg1 = 0;
+        i103 = (int32_T)m;
+        if (!((i103 >= 1) && (i103 <= 1027))) {
+          emlrtDynamicBoundsCheckR2012b(i103, 1, 1027, &fc_emlrtBCI, &b_st);
+        }
+
+        if (obj_CutVar[i103 - 1] == 0.0) {
+          exitg1 = 1;
+        } else {
+          i103 = (int32_T)obj_CutVar[(int32_T)m - 1];
+          if (!((i103 >= 1) && (i103 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i103, 1, 12, &b_emlrtBCI, &b_st);
+          }
+
+          if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
+                obj_CutVar[(int32_T)m - 1] - 1)])) {
+            exitg1 = 1;
+          } else {
+            i103 = (int32_T)obj_CutVar[(int32_T)m - 1];
+            if (!((i103 >= 1) && (i103 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i103, 1, 12, &emlrtBCI, &b_st);
+            }
+
+            if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
+                 1] - 1)] < obj_CutPoint[(int32_T)m - 1]) {
+              m = obj_Children[((int32_T)m - 1) << 1];
+            } else {
+              m = obj_Children[1 + (((int32_T)m - 1) << 1)];
+            }
+          }
+        }
+      } while (exitg1 == 0);
+
+      i103 = node->size[0];
+      i104 = 1 + loop_ub;
+      if (!((i104 >= 1) && (i104 <= i103))) {
+        emlrtDynamicBoundsCheckR2012b(i104, 1, i103, &e_emlrtBCI, &b_st);
+      }
+
+      node->data[i104 - 1] = m;
+    }
+
+    i103 = Yfit->size[0];
+    Yfit->size[0] = node->size[0];
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i103, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = node->size[0];
+    for (i103 = 0; i103 < loop_ub; i103++) {
+      Yfit->data[i103] = 0.0;
+    }
+
+    emxInit_int32_T(sp, &r103, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i103 = r103->size[0];
+    r103->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r103, i103, sizeof(int32_T),
+                      &c_emlrtRTEI);
+    for (i103 = 0; i103 < loop_ub; i103++) {
+      r103->data[i103] = i103;
+    }
+
+    emxInit_real_T(sp, &r104, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i103 = r104->size[0];
+    r104->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r104, i103, sizeof(real_T),
+                      &c_emlrtRTEI);
+    for (i103 = 0; i103 < loop_ub; i103++) {
+      r104->data[i103] = obj_NodeMean[(int32_T)node->data[i103] - 1];
+    }
+
+    i103 = node->size[0];
+    iv404[0] = r103->size[0];
+    iv405[0] = i103;
+    emlrtSubAssignSizeCheckR2012b(iv404, 1, iv405, 1, &b_emlrtECI, sp);
+    loop_ub = r104->size[0];
+    emxFree_real_T(&node);
+    for (i103 = 0; i103 < loop_ub; i103++) {
+      Yfit->data[r103->data[i103]] = r104->data[i103];
+    }
+
+    emxFree_real_T(&r104);
+    emxFree_int32_T(&r103);
+  }
+
+  emlrtHeapReferenceStackLeaveFcnR2012b(sp);
+}
+
 void c_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5187], const real_T obj_Children[10374], const real_T obj_CutPoint
-  [5187], const real_T obj_NodeMean[5187], const emxArray_real_T *X,
+  obj_CutVar[1023], const real_T obj_Children[2046], const real_T obj_CutPoint
+  [1023], const real_T obj_NodeMean[1023], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -1159,8 +1513,8 @@ void c_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i5 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i5, sizeof(real_T),
@@ -1181,16 +1535,16 @@ void c_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i5 = (int32_T)m;
-        if (!((i5 >= 1) && (i5 <= 5187))) {
-          emlrtDynamicBoundsCheckR2012b(i5, 1, 5187, &g_emlrtBCI, &b_st);
+        if (!((i5 >= 1) && (i5 <= 1023))) {
+          emlrtDynamicBoundsCheckR2012b(i5, 1, 1023, &g_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i5 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i5 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i5 >= 1) && (i5 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i5, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i5 >= 1) && (i5 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i5, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -1198,8 +1552,8 @@ void c_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i5 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i5 >= 1) && (i5 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i5, 1, 10, &emlrtBCI, &b_st);
+            if (!((i5 >= 1) && (i5 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i5, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -1268,8 +1622,8 @@ void c_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void cb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5125], const real_T obj_Children[10250], const real_T obj_CutPoint
-  [5125], const real_T obj_NodeMean[5125], const emxArray_real_T *X,
+  obj_CutVar[957], const real_T obj_Children[1914], const real_T obj_CutPoint
+  [957], const real_T obj_NodeMean[957], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -1296,8 +1650,8 @@ void cb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i55 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i55, sizeof(real_T),
@@ -1318,16 +1672,16 @@ void cb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i55 = (int32_T)m;
-        if (!((i55 >= 1) && (i55 <= 5125))) {
-          emlrtDynamicBoundsCheckR2012b(i55, 1, 5125, &gb_emlrtBCI, &b_st);
+        if (!((i55 >= 1) && (i55 <= 957))) {
+          emlrtDynamicBoundsCheckR2012b(i55, 1, 957, &gb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i55 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i55 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i55 >= 1) && (i55 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i55, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i55 >= 1) && (i55 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i55, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -1335,8 +1689,8 @@ void cb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i55 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i55 >= 1) && (i55 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i55, 1, 10, &emlrtBCI, &b_st);
+            if (!((i55 >= 1) && (i55 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i55, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -1404,9 +1758,146 @@ void cb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
   emlrtHeapReferenceStackLeaveFcnR2012b(sp);
 }
 
+void cc_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[1009], const real_T obj_Children[2018], const real_T obj_CutPoint
+  [1009], const real_T obj_NodeMean[1009], const emxArray_real_T *X,
+  emxArray_real_T *Yfit)
+{
+  emxArray_real_T *node;
+  int32_T i105;
+  int32_T loop_ub;
+  int32_T i106;
+  real_T m;
+  int32_T exitg1;
+  emxArray_int32_T *r105;
+  emxArray_real_T *r106;
+  int32_T iv406[1];
+  int32_T iv407[1];
+  emlrtStack st;
+  emlrtStack b_st;
+  st.prev = sp;
+  st.tls = sp->tls;
+  b_st.prev = &st;
+  b_st.tls = st.tls;
+  emlrtHeapReferenceStackEnterFcnR2012b(sp);
+  if (X->size[0] == 0) {
+    i105 = Yfit->size[0];
+    Yfit->size[0] = 0;
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i105, sizeof(real_T),
+                      &c_emlrtRTEI);
+  } else {
+    emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
+    i105 = node->size[0];
+    node->size[0] = X->size[0];
+    emxEnsureCapacity(&b_st, (emxArray__common *)node, i105, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = X->size[0];
+    for (i105 = 0; i105 < loop_ub; i105++) {
+      node->data[i105] = 1.0;
+    }
+
+    for (loop_ub = 0; loop_ub < X->size[0]; loop_ub++) {
+      i105 = X->size[0];
+      i106 = loop_ub + 1;
+      if (!((i106 >= 1) && (i106 <= i105))) {
+        emlrtDynamicBoundsCheckR2012b(i106, 1, i105, &c_emlrtBCI, &b_st);
+      }
+
+      m = 1.0;
+      do {
+        exitg1 = 0;
+        i105 = (int32_T)m;
+        if (!((i105 >= 1) && (i105 <= 1009))) {
+          emlrtDynamicBoundsCheckR2012b(i105, 1, 1009, &gc_emlrtBCI, &b_st);
+        }
+
+        if (obj_CutVar[i105 - 1] == 0.0) {
+          exitg1 = 1;
+        } else {
+          i105 = (int32_T)obj_CutVar[(int32_T)m - 1];
+          if (!((i105 >= 1) && (i105 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i105, 1, 12, &b_emlrtBCI, &b_st);
+          }
+
+          if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
+                obj_CutVar[(int32_T)m - 1] - 1)])) {
+            exitg1 = 1;
+          } else {
+            i105 = (int32_T)obj_CutVar[(int32_T)m - 1];
+            if (!((i105 >= 1) && (i105 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i105, 1, 12, &emlrtBCI, &b_st);
+            }
+
+            if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
+                 1] - 1)] < obj_CutPoint[(int32_T)m - 1]) {
+              m = obj_Children[((int32_T)m - 1) << 1];
+            } else {
+              m = obj_Children[1 + (((int32_T)m - 1) << 1)];
+            }
+          }
+        }
+      } while (exitg1 == 0);
+
+      i105 = node->size[0];
+      i106 = 1 + loop_ub;
+      if (!((i106 >= 1) && (i106 <= i105))) {
+        emlrtDynamicBoundsCheckR2012b(i106, 1, i105, &e_emlrtBCI, &b_st);
+      }
+
+      node->data[i106 - 1] = m;
+    }
+
+    i105 = Yfit->size[0];
+    Yfit->size[0] = node->size[0];
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i105, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = node->size[0];
+    for (i105 = 0; i105 < loop_ub; i105++) {
+      Yfit->data[i105] = 0.0;
+    }
+
+    emxInit_int32_T(sp, &r105, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i105 = r105->size[0];
+    r105->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r105, i105, sizeof(int32_T),
+                      &c_emlrtRTEI);
+    for (i105 = 0; i105 < loop_ub; i105++) {
+      r105->data[i105] = i105;
+    }
+
+    emxInit_real_T(sp, &r106, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i105 = r106->size[0];
+    r106->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r106, i105, sizeof(real_T),
+                      &c_emlrtRTEI);
+    for (i105 = 0; i105 < loop_ub; i105++) {
+      r106->data[i105] = obj_NodeMean[(int32_T)node->data[i105] - 1];
+    }
+
+    i105 = node->size[0];
+    iv406[0] = r105->size[0];
+    iv407[0] = i105;
+    emlrtSubAssignSizeCheckR2012b(iv406, 1, iv407, 1, &b_emlrtECI, sp);
+    loop_ub = r106->size[0];
+    emxFree_real_T(&node);
+    for (i105 = 0; i105 < loop_ub; i105++) {
+      Yfit->data[r105->data[i105]] = r106->data[i105];
+    }
+
+    emxFree_real_T(&r106);
+    emxFree_int32_T(&r105);
+  }
+
+  emlrtHeapReferenceStackLeaveFcnR2012b(sp);
+}
+
 void d_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5061], const real_T obj_Children[10122], const real_T obj_CutPoint
-  [5061], const real_T obj_NodeMean[5061], const emxArray_real_T *X,
+  obj_CutVar[1025], const real_T obj_Children[2050], const real_T obj_CutPoint
+  [1025], const real_T obj_NodeMean[1025], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -1433,8 +1924,8 @@ void d_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i7 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i7, sizeof(real_T),
@@ -1455,16 +1946,16 @@ void d_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i7 = (int32_T)m;
-        if (!((i7 >= 1) && (i7 <= 5061))) {
-          emlrtDynamicBoundsCheckR2012b(i7, 1, 5061, &h_emlrtBCI, &b_st);
+        if (!((i7 >= 1) && (i7 <= 1025))) {
+          emlrtDynamicBoundsCheckR2012b(i7, 1, 1025, &h_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i7 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i7 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i7 >= 1) && (i7 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i7, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i7 >= 1) && (i7 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i7, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -1472,8 +1963,8 @@ void d_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i7 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i7 >= 1) && (i7 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i7, 1, 10, &emlrtBCI, &b_st);
+            if (!((i7 >= 1) && (i7 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i7, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -1542,8 +2033,8 @@ void d_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void db_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[4959], const real_T obj_Children[9918], const real_T obj_CutPoint
-  [4959], const real_T obj_NodeMean[4959], const emxArray_real_T *X,
+  obj_CutVar[1029], const real_T obj_Children[2058], const real_T obj_CutPoint
+  [1029], const real_T obj_NodeMean[1029], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -1570,8 +2061,8 @@ void db_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i57 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i57, sizeof(real_T),
@@ -1592,16 +2083,16 @@ void db_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i57 = (int32_T)m;
-        if (!((i57 >= 1) && (i57 <= 4959))) {
-          emlrtDynamicBoundsCheckR2012b(i57, 1, 4959, &hb_emlrtBCI, &b_st);
+        if (!((i57 >= 1) && (i57 <= 1029))) {
+          emlrtDynamicBoundsCheckR2012b(i57, 1, 1029, &hb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i57 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i57 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i57 >= 1) && (i57 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i57, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i57 >= 1) && (i57 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i57, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -1609,8 +2100,8 @@ void db_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i57 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i57 >= 1) && (i57 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i57, 1, 10, &emlrtBCI, &b_st);
+            if (!((i57 >= 1) && (i57 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i57, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -1678,9 +2169,146 @@ void db_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
   emlrtHeapReferenceStackLeaveFcnR2012b(sp);
 }
 
+void dc_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[915], const real_T obj_Children[1830], const real_T obj_CutPoint
+  [915], const real_T obj_NodeMean[915], const emxArray_real_T *X,
+  emxArray_real_T *Yfit)
+{
+  emxArray_real_T *node;
+  int32_T i107;
+  int32_T loop_ub;
+  int32_T i108;
+  real_T m;
+  int32_T exitg1;
+  emxArray_int32_T *r107;
+  emxArray_real_T *r108;
+  int32_T iv408[1];
+  int32_T iv409[1];
+  emlrtStack st;
+  emlrtStack b_st;
+  st.prev = sp;
+  st.tls = sp->tls;
+  b_st.prev = &st;
+  b_st.tls = st.tls;
+  emlrtHeapReferenceStackEnterFcnR2012b(sp);
+  if (X->size[0] == 0) {
+    i107 = Yfit->size[0];
+    Yfit->size[0] = 0;
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i107, sizeof(real_T),
+                      &c_emlrtRTEI);
+  } else {
+    emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
+    i107 = node->size[0];
+    node->size[0] = X->size[0];
+    emxEnsureCapacity(&b_st, (emxArray__common *)node, i107, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = X->size[0];
+    for (i107 = 0; i107 < loop_ub; i107++) {
+      node->data[i107] = 1.0;
+    }
+
+    for (loop_ub = 0; loop_ub < X->size[0]; loop_ub++) {
+      i107 = X->size[0];
+      i108 = loop_ub + 1;
+      if (!((i108 >= 1) && (i108 <= i107))) {
+        emlrtDynamicBoundsCheckR2012b(i108, 1, i107, &c_emlrtBCI, &b_st);
+      }
+
+      m = 1.0;
+      do {
+        exitg1 = 0;
+        i107 = (int32_T)m;
+        if (!((i107 >= 1) && (i107 <= 915))) {
+          emlrtDynamicBoundsCheckR2012b(i107, 1, 915, &hc_emlrtBCI, &b_st);
+        }
+
+        if (obj_CutVar[i107 - 1] == 0.0) {
+          exitg1 = 1;
+        } else {
+          i107 = (int32_T)obj_CutVar[(int32_T)m - 1];
+          if (!((i107 >= 1) && (i107 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i107, 1, 12, &b_emlrtBCI, &b_st);
+          }
+
+          if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
+                obj_CutVar[(int32_T)m - 1] - 1)])) {
+            exitg1 = 1;
+          } else {
+            i107 = (int32_T)obj_CutVar[(int32_T)m - 1];
+            if (!((i107 >= 1) && (i107 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i107, 1, 12, &emlrtBCI, &b_st);
+            }
+
+            if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
+                 1] - 1)] < obj_CutPoint[(int32_T)m - 1]) {
+              m = obj_Children[((int32_T)m - 1) << 1];
+            } else {
+              m = obj_Children[1 + (((int32_T)m - 1) << 1)];
+            }
+          }
+        }
+      } while (exitg1 == 0);
+
+      i107 = node->size[0];
+      i108 = 1 + loop_ub;
+      if (!((i108 >= 1) && (i108 <= i107))) {
+        emlrtDynamicBoundsCheckR2012b(i108, 1, i107, &e_emlrtBCI, &b_st);
+      }
+
+      node->data[i108 - 1] = m;
+    }
+
+    i107 = Yfit->size[0];
+    Yfit->size[0] = node->size[0];
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i107, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = node->size[0];
+    for (i107 = 0; i107 < loop_ub; i107++) {
+      Yfit->data[i107] = 0.0;
+    }
+
+    emxInit_int32_T(sp, &r107, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i107 = r107->size[0];
+    r107->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r107, i107, sizeof(int32_T),
+                      &c_emlrtRTEI);
+    for (i107 = 0; i107 < loop_ub; i107++) {
+      r107->data[i107] = i107;
+    }
+
+    emxInit_real_T(sp, &r108, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i107 = r108->size[0];
+    r108->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r108, i107, sizeof(real_T),
+                      &c_emlrtRTEI);
+    for (i107 = 0; i107 < loop_ub; i107++) {
+      r108->data[i107] = obj_NodeMean[(int32_T)node->data[i107] - 1];
+    }
+
+    i107 = node->size[0];
+    iv408[0] = r107->size[0];
+    iv409[0] = i107;
+    emlrtSubAssignSizeCheckR2012b(iv408, 1, iv409, 1, &b_emlrtECI, sp);
+    loop_ub = r108->size[0];
+    emxFree_real_T(&node);
+    for (i107 = 0; i107 < loop_ub; i107++) {
+      Yfit->data[r107->data[i107]] = r108->data[i107];
+    }
+
+    emxFree_real_T(&r108);
+    emxFree_int32_T(&r107);
+  }
+
+  emlrtHeapReferenceStackLeaveFcnR2012b(sp);
+}
+
 void e_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5083], const real_T obj_Children[10166], const real_T obj_CutPoint
-  [5083], const real_T obj_NodeMean[5083], const emxArray_real_T *X,
+  obj_CutVar[1001], const real_T obj_Children[2002], const real_T obj_CutPoint
+  [1001], const real_T obj_NodeMean[1001], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -1707,8 +2335,8 @@ void e_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i9 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i9, sizeof(real_T),
@@ -1729,16 +2357,16 @@ void e_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i9 = (int32_T)m;
-        if (!((i9 >= 1) && (i9 <= 5083))) {
-          emlrtDynamicBoundsCheckR2012b(i9, 1, 5083, &i_emlrtBCI, &b_st);
+        if (!((i9 >= 1) && (i9 <= 1001))) {
+          emlrtDynamicBoundsCheckR2012b(i9, 1, 1001, &i_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i9 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i9 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i9 >= 1) && (i9 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i9, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i9 >= 1) && (i9 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i9, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -1746,8 +2374,8 @@ void e_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i9 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i9 >= 1) && (i9 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i9, 1, 10, &emlrtBCI, &b_st);
+            if (!((i9 >= 1) && (i9 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i9, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -1816,8 +2444,8 @@ void e_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void eb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5153], const real_T obj_Children[10306], const real_T obj_CutPoint
-  [5153], const real_T obj_NodeMean[5153], const emxArray_real_T *X,
+  obj_CutVar[1019], const real_T obj_Children[2038], const real_T obj_CutPoint
+  [1019], const real_T obj_NodeMean[1019], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -1844,8 +2472,8 @@ void eb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i59 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i59, sizeof(real_T),
@@ -1866,16 +2494,16 @@ void eb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i59 = (int32_T)m;
-        if (!((i59 >= 1) && (i59 <= 5153))) {
-          emlrtDynamicBoundsCheckR2012b(i59, 1, 5153, &ib_emlrtBCI, &b_st);
+        if (!((i59 >= 1) && (i59 <= 1019))) {
+          emlrtDynamicBoundsCheckR2012b(i59, 1, 1019, &ib_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i59 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i59 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i59 >= 1) && (i59 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i59, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i59 >= 1) && (i59 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i59, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -1883,8 +2511,8 @@ void eb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i59 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i59 >= 1) && (i59 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i59, 1, 10, &emlrtBCI, &b_st);
+            if (!((i59 >= 1) && (i59 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i59, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -1952,9 +2580,146 @@ void eb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
   emlrtHeapReferenceStackLeaveFcnR2012b(sp);
 }
 
+void ec_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[839], const real_T obj_Children[1678], const real_T obj_CutPoint
+  [839], const real_T obj_NodeMean[839], const emxArray_real_T *X,
+  emxArray_real_T *Yfit)
+{
+  emxArray_real_T *node;
+  int32_T i109;
+  int32_T loop_ub;
+  int32_T i110;
+  real_T m;
+  int32_T exitg1;
+  emxArray_int32_T *r109;
+  emxArray_real_T *r110;
+  int32_T iv410[1];
+  int32_T iv411[1];
+  emlrtStack st;
+  emlrtStack b_st;
+  st.prev = sp;
+  st.tls = sp->tls;
+  b_st.prev = &st;
+  b_st.tls = st.tls;
+  emlrtHeapReferenceStackEnterFcnR2012b(sp);
+  if (X->size[0] == 0) {
+    i109 = Yfit->size[0];
+    Yfit->size[0] = 0;
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i109, sizeof(real_T),
+                      &c_emlrtRTEI);
+  } else {
+    emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
+    i109 = node->size[0];
+    node->size[0] = X->size[0];
+    emxEnsureCapacity(&b_st, (emxArray__common *)node, i109, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = X->size[0];
+    for (i109 = 0; i109 < loop_ub; i109++) {
+      node->data[i109] = 1.0;
+    }
+
+    for (loop_ub = 0; loop_ub < X->size[0]; loop_ub++) {
+      i109 = X->size[0];
+      i110 = loop_ub + 1;
+      if (!((i110 >= 1) && (i110 <= i109))) {
+        emlrtDynamicBoundsCheckR2012b(i110, 1, i109, &c_emlrtBCI, &b_st);
+      }
+
+      m = 1.0;
+      do {
+        exitg1 = 0;
+        i109 = (int32_T)m;
+        if (!((i109 >= 1) && (i109 <= 839))) {
+          emlrtDynamicBoundsCheckR2012b(i109, 1, 839, &ic_emlrtBCI, &b_st);
+        }
+
+        if (obj_CutVar[i109 - 1] == 0.0) {
+          exitg1 = 1;
+        } else {
+          i109 = (int32_T)obj_CutVar[(int32_T)m - 1];
+          if (!((i109 >= 1) && (i109 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i109, 1, 12, &b_emlrtBCI, &b_st);
+          }
+
+          if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
+                obj_CutVar[(int32_T)m - 1] - 1)])) {
+            exitg1 = 1;
+          } else {
+            i109 = (int32_T)obj_CutVar[(int32_T)m - 1];
+            if (!((i109 >= 1) && (i109 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i109, 1, 12, &emlrtBCI, &b_st);
+            }
+
+            if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
+                 1] - 1)] < obj_CutPoint[(int32_T)m - 1]) {
+              m = obj_Children[((int32_T)m - 1) << 1];
+            } else {
+              m = obj_Children[1 + (((int32_T)m - 1) << 1)];
+            }
+          }
+        }
+      } while (exitg1 == 0);
+
+      i109 = node->size[0];
+      i110 = 1 + loop_ub;
+      if (!((i110 >= 1) && (i110 <= i109))) {
+        emlrtDynamicBoundsCheckR2012b(i110, 1, i109, &e_emlrtBCI, &b_st);
+      }
+
+      node->data[i110 - 1] = m;
+    }
+
+    i109 = Yfit->size[0];
+    Yfit->size[0] = node->size[0];
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i109, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = node->size[0];
+    for (i109 = 0; i109 < loop_ub; i109++) {
+      Yfit->data[i109] = 0.0;
+    }
+
+    emxInit_int32_T(sp, &r109, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i109 = r109->size[0];
+    r109->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r109, i109, sizeof(int32_T),
+                      &c_emlrtRTEI);
+    for (i109 = 0; i109 < loop_ub; i109++) {
+      r109->data[i109] = i109;
+    }
+
+    emxInit_real_T(sp, &r110, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i109 = r110->size[0];
+    r110->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r110, i109, sizeof(real_T),
+                      &c_emlrtRTEI);
+    for (i109 = 0; i109 < loop_ub; i109++) {
+      r110->data[i109] = obj_NodeMean[(int32_T)node->data[i109] - 1];
+    }
+
+    i109 = node->size[0];
+    iv410[0] = r109->size[0];
+    iv411[0] = i109;
+    emlrtSubAssignSizeCheckR2012b(iv410, 1, iv411, 1, &b_emlrtECI, sp);
+    loop_ub = r110->size[0];
+    emxFree_real_T(&node);
+    for (i109 = 0; i109 < loop_ub; i109++) {
+      Yfit->data[r109->data[i109]] = r110->data[i109];
+    }
+
+    emxFree_real_T(&r110);
+    emxFree_int32_T(&r109);
+  }
+
+  emlrtHeapReferenceStackLeaveFcnR2012b(sp);
+}
+
 void f_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5165], const real_T obj_Children[10330], const real_T obj_CutPoint
-  [5165], const real_T obj_NodeMean[5165], const emxArray_real_T *X,
+  obj_CutVar[971], const real_T obj_Children[1942], const real_T obj_CutPoint
+  [971], const real_T obj_NodeMean[971], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -1981,8 +2746,8 @@ void f_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i11 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i11, sizeof(real_T),
@@ -2003,16 +2768,16 @@ void f_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i11 = (int32_T)m;
-        if (!((i11 >= 1) && (i11 <= 5165))) {
-          emlrtDynamicBoundsCheckR2012b(i11, 1, 5165, &j_emlrtBCI, &b_st);
+        if (!((i11 >= 1) && (i11 <= 971))) {
+          emlrtDynamicBoundsCheckR2012b(i11, 1, 971, &j_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i11 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i11 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i11 >= 1) && (i11 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i11, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i11 >= 1) && (i11 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i11, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -2020,8 +2785,8 @@ void f_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i11 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i11 >= 1) && (i11 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i11, 1, 10, &emlrtBCI, &b_st);
+            if (!((i11 >= 1) && (i11 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i11, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -2090,8 +2855,8 @@ void f_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void fb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5149], const real_T obj_Children[10298], const real_T obj_CutPoint
-  [5149], const real_T obj_NodeMean[5149], const emxArray_real_T *X,
+  obj_CutVar[919], const real_T obj_Children[1838], const real_T obj_CutPoint
+  [919], const real_T obj_NodeMean[919], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -2118,8 +2883,8 @@ void fb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i61 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i61, sizeof(real_T),
@@ -2140,16 +2905,16 @@ void fb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i61 = (int32_T)m;
-        if (!((i61 >= 1) && (i61 <= 5149))) {
-          emlrtDynamicBoundsCheckR2012b(i61, 1, 5149, &jb_emlrtBCI, &b_st);
+        if (!((i61 >= 1) && (i61 <= 919))) {
+          emlrtDynamicBoundsCheckR2012b(i61, 1, 919, &jb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i61 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i61 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i61 >= 1) && (i61 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i61, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i61 >= 1) && (i61 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i61, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -2157,8 +2922,8 @@ void fb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i61 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i61 >= 1) && (i61 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i61, 1, 10, &emlrtBCI, &b_st);
+            if (!((i61 >= 1) && (i61 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i61, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -2226,9 +2991,146 @@ void fb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
   emlrtHeapReferenceStackLeaveFcnR2012b(sp);
 }
 
+void fc_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[979], const real_T obj_Children[1958], const real_T obj_CutPoint
+  [979], const real_T obj_NodeMean[979], const emxArray_real_T *X,
+  emxArray_real_T *Yfit)
+{
+  emxArray_real_T *node;
+  int32_T i111;
+  int32_T loop_ub;
+  int32_T i112;
+  real_T m;
+  int32_T exitg1;
+  emxArray_int32_T *r111;
+  emxArray_real_T *r112;
+  int32_T iv412[1];
+  int32_T iv413[1];
+  emlrtStack st;
+  emlrtStack b_st;
+  st.prev = sp;
+  st.tls = sp->tls;
+  b_st.prev = &st;
+  b_st.tls = st.tls;
+  emlrtHeapReferenceStackEnterFcnR2012b(sp);
+  if (X->size[0] == 0) {
+    i111 = Yfit->size[0];
+    Yfit->size[0] = 0;
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i111, sizeof(real_T),
+                      &c_emlrtRTEI);
+  } else {
+    emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
+    i111 = node->size[0];
+    node->size[0] = X->size[0];
+    emxEnsureCapacity(&b_st, (emxArray__common *)node, i111, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = X->size[0];
+    for (i111 = 0; i111 < loop_ub; i111++) {
+      node->data[i111] = 1.0;
+    }
+
+    for (loop_ub = 0; loop_ub < X->size[0]; loop_ub++) {
+      i111 = X->size[0];
+      i112 = loop_ub + 1;
+      if (!((i112 >= 1) && (i112 <= i111))) {
+        emlrtDynamicBoundsCheckR2012b(i112, 1, i111, &c_emlrtBCI, &b_st);
+      }
+
+      m = 1.0;
+      do {
+        exitg1 = 0;
+        i111 = (int32_T)m;
+        if (!((i111 >= 1) && (i111 <= 979))) {
+          emlrtDynamicBoundsCheckR2012b(i111, 1, 979, &jc_emlrtBCI, &b_st);
+        }
+
+        if (obj_CutVar[i111 - 1] == 0.0) {
+          exitg1 = 1;
+        } else {
+          i111 = (int32_T)obj_CutVar[(int32_T)m - 1];
+          if (!((i111 >= 1) && (i111 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i111, 1, 12, &b_emlrtBCI, &b_st);
+          }
+
+          if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
+                obj_CutVar[(int32_T)m - 1] - 1)])) {
+            exitg1 = 1;
+          } else {
+            i111 = (int32_T)obj_CutVar[(int32_T)m - 1];
+            if (!((i111 >= 1) && (i111 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i111, 1, 12, &emlrtBCI, &b_st);
+            }
+
+            if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
+                 1] - 1)] < obj_CutPoint[(int32_T)m - 1]) {
+              m = obj_Children[((int32_T)m - 1) << 1];
+            } else {
+              m = obj_Children[1 + (((int32_T)m - 1) << 1)];
+            }
+          }
+        }
+      } while (exitg1 == 0);
+
+      i111 = node->size[0];
+      i112 = 1 + loop_ub;
+      if (!((i112 >= 1) && (i112 <= i111))) {
+        emlrtDynamicBoundsCheckR2012b(i112, 1, i111, &e_emlrtBCI, &b_st);
+      }
+
+      node->data[i112 - 1] = m;
+    }
+
+    i111 = Yfit->size[0];
+    Yfit->size[0] = node->size[0];
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i111, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = node->size[0];
+    for (i111 = 0; i111 < loop_ub; i111++) {
+      Yfit->data[i111] = 0.0;
+    }
+
+    emxInit_int32_T(sp, &r111, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i111 = r111->size[0];
+    r111->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r111, i111, sizeof(int32_T),
+                      &c_emlrtRTEI);
+    for (i111 = 0; i111 < loop_ub; i111++) {
+      r111->data[i111] = i111;
+    }
+
+    emxInit_real_T(sp, &r112, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i111 = r112->size[0];
+    r112->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r112, i111, sizeof(real_T),
+                      &c_emlrtRTEI);
+    for (i111 = 0; i111 < loop_ub; i111++) {
+      r112->data[i111] = obj_NodeMean[(int32_T)node->data[i111] - 1];
+    }
+
+    i111 = node->size[0];
+    iv412[0] = r111->size[0];
+    iv413[0] = i111;
+    emlrtSubAssignSizeCheckR2012b(iv412, 1, iv413, 1, &b_emlrtECI, sp);
+    loop_ub = r112->size[0];
+    emxFree_real_T(&node);
+    for (i111 = 0; i111 < loop_ub; i111++) {
+      Yfit->data[r111->data[i111]] = r112->data[i111];
+    }
+
+    emxFree_real_T(&r112);
+    emxFree_int32_T(&r111);
+  }
+
+  emlrtHeapReferenceStackLeaveFcnR2012b(sp);
+}
+
 void g_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5105], const real_T obj_Children[10210], const real_T obj_CutPoint
-  [5105], const real_T obj_NodeMean[5105], const emxArray_real_T *X,
+  obj_CutVar[1039], const real_T obj_Children[2078], const real_T obj_CutPoint
+  [1039], const real_T obj_NodeMean[1039], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -2255,8 +3157,8 @@ void g_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i13 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i13, sizeof(real_T),
@@ -2277,16 +3179,16 @@ void g_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i13 = (int32_T)m;
-        if (!((i13 >= 1) && (i13 <= 5105))) {
-          emlrtDynamicBoundsCheckR2012b(i13, 1, 5105, &k_emlrtBCI, &b_st);
+        if (!((i13 >= 1) && (i13 <= 1039))) {
+          emlrtDynamicBoundsCheckR2012b(i13, 1, 1039, &k_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i13 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i13 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i13 >= 1) && (i13 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i13, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i13 >= 1) && (i13 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i13, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -2294,8 +3196,8 @@ void g_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i13 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i13 >= 1) && (i13 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i13, 1, 10, &emlrtBCI, &b_st);
+            if (!((i13 >= 1) && (i13 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i13, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -2364,8 +3266,8 @@ void g_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void gb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5113], const real_T obj_Children[10226], const real_T obj_CutPoint
-  [5113], const real_T obj_NodeMean[5113], const emxArray_real_T *X,
+  obj_CutVar[1033], const real_T obj_Children[2066], const real_T obj_CutPoint
+  [1033], const real_T obj_NodeMean[1033], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -2392,8 +3294,8 @@ void gb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i63 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i63, sizeof(real_T),
@@ -2414,16 +3316,16 @@ void gb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i63 = (int32_T)m;
-        if (!((i63 >= 1) && (i63 <= 5113))) {
-          emlrtDynamicBoundsCheckR2012b(i63, 1, 5113, &kb_emlrtBCI, &b_st);
+        if (!((i63 >= 1) && (i63 <= 1033))) {
+          emlrtDynamicBoundsCheckR2012b(i63, 1, 1033, &kb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i63 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i63 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i63 >= 1) && (i63 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i63, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i63 >= 1) && (i63 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i63, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -2431,8 +3333,8 @@ void gb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i63 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i63 >= 1) && (i63 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i63, 1, 10, &emlrtBCI, &b_st);
+            if (!((i63 >= 1) && (i63 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i63, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -2500,9 +3402,146 @@ void gb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
   emlrtHeapReferenceStackLeaveFcnR2012b(sp);
 }
 
+void gc_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[973], const real_T obj_Children[1946], const real_T obj_CutPoint
+  [973], const real_T obj_NodeMean[973], const emxArray_real_T *X,
+  emxArray_real_T *Yfit)
+{
+  emxArray_real_T *node;
+  int32_T i113;
+  int32_T loop_ub;
+  int32_T i114;
+  real_T m;
+  int32_T exitg1;
+  emxArray_int32_T *r113;
+  emxArray_real_T *r114;
+  int32_T iv414[1];
+  int32_T iv415[1];
+  emlrtStack st;
+  emlrtStack b_st;
+  st.prev = sp;
+  st.tls = sp->tls;
+  b_st.prev = &st;
+  b_st.tls = st.tls;
+  emlrtHeapReferenceStackEnterFcnR2012b(sp);
+  if (X->size[0] == 0) {
+    i113 = Yfit->size[0];
+    Yfit->size[0] = 0;
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i113, sizeof(real_T),
+                      &c_emlrtRTEI);
+  } else {
+    emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
+    i113 = node->size[0];
+    node->size[0] = X->size[0];
+    emxEnsureCapacity(&b_st, (emxArray__common *)node, i113, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = X->size[0];
+    for (i113 = 0; i113 < loop_ub; i113++) {
+      node->data[i113] = 1.0;
+    }
+
+    for (loop_ub = 0; loop_ub < X->size[0]; loop_ub++) {
+      i113 = X->size[0];
+      i114 = loop_ub + 1;
+      if (!((i114 >= 1) && (i114 <= i113))) {
+        emlrtDynamicBoundsCheckR2012b(i114, 1, i113, &c_emlrtBCI, &b_st);
+      }
+
+      m = 1.0;
+      do {
+        exitg1 = 0;
+        i113 = (int32_T)m;
+        if (!((i113 >= 1) && (i113 <= 973))) {
+          emlrtDynamicBoundsCheckR2012b(i113, 1, 973, &kc_emlrtBCI, &b_st);
+        }
+
+        if (obj_CutVar[i113 - 1] == 0.0) {
+          exitg1 = 1;
+        } else {
+          i113 = (int32_T)obj_CutVar[(int32_T)m - 1];
+          if (!((i113 >= 1) && (i113 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i113, 1, 12, &b_emlrtBCI, &b_st);
+          }
+
+          if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
+                obj_CutVar[(int32_T)m - 1] - 1)])) {
+            exitg1 = 1;
+          } else {
+            i113 = (int32_T)obj_CutVar[(int32_T)m - 1];
+            if (!((i113 >= 1) && (i113 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i113, 1, 12, &emlrtBCI, &b_st);
+            }
+
+            if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
+                 1] - 1)] < obj_CutPoint[(int32_T)m - 1]) {
+              m = obj_Children[((int32_T)m - 1) << 1];
+            } else {
+              m = obj_Children[1 + (((int32_T)m - 1) << 1)];
+            }
+          }
+        }
+      } while (exitg1 == 0);
+
+      i113 = node->size[0];
+      i114 = 1 + loop_ub;
+      if (!((i114 >= 1) && (i114 <= i113))) {
+        emlrtDynamicBoundsCheckR2012b(i114, 1, i113, &e_emlrtBCI, &b_st);
+      }
+
+      node->data[i114 - 1] = m;
+    }
+
+    i113 = Yfit->size[0];
+    Yfit->size[0] = node->size[0];
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i113, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = node->size[0];
+    for (i113 = 0; i113 < loop_ub; i113++) {
+      Yfit->data[i113] = 0.0;
+    }
+
+    emxInit_int32_T(sp, &r113, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i113 = r113->size[0];
+    r113->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r113, i113, sizeof(int32_T),
+                      &c_emlrtRTEI);
+    for (i113 = 0; i113 < loop_ub; i113++) {
+      r113->data[i113] = i113;
+    }
+
+    emxInit_real_T(sp, &r114, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i113 = r114->size[0];
+    r114->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r114, i113, sizeof(real_T),
+                      &c_emlrtRTEI);
+    for (i113 = 0; i113 < loop_ub; i113++) {
+      r114->data[i113] = obj_NodeMean[(int32_T)node->data[i113] - 1];
+    }
+
+    i113 = node->size[0];
+    iv414[0] = r113->size[0];
+    iv415[0] = i113;
+    emlrtSubAssignSizeCheckR2012b(iv414, 1, iv415, 1, &b_emlrtECI, sp);
+    loop_ub = r114->size[0];
+    emxFree_real_T(&node);
+    for (i113 = 0; i113 < loop_ub; i113++) {
+      Yfit->data[r113->data[i113]] = r114->data[i113];
+    }
+
+    emxFree_real_T(&r114);
+    emxFree_int32_T(&r113);
+  }
+
+  emlrtHeapReferenceStackLeaveFcnR2012b(sp);
+}
+
 void h_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5185], const real_T obj_Children[10370], const real_T obj_CutPoint
-  [5185], const real_T obj_NodeMean[5185], const emxArray_real_T *X,
+  obj_CutVar[1077], const real_T obj_Children[2154], const real_T obj_CutPoint
+  [1077], const real_T obj_NodeMean[1077], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -2529,8 +3568,8 @@ void h_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i15 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i15, sizeof(real_T),
@@ -2551,16 +3590,16 @@ void h_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i15 = (int32_T)m;
-        if (!((i15 >= 1) && (i15 <= 5185))) {
-          emlrtDynamicBoundsCheckR2012b(i15, 1, 5185, &l_emlrtBCI, &b_st);
+        if (!((i15 >= 1) && (i15 <= 1077))) {
+          emlrtDynamicBoundsCheckR2012b(i15, 1, 1077, &l_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i15 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i15 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i15 >= 1) && (i15 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i15, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i15 >= 1) && (i15 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i15, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -2568,8 +3607,8 @@ void h_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i15 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i15 >= 1) && (i15 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i15, 1, 10, &emlrtBCI, &b_st);
+            if (!((i15 >= 1) && (i15 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i15, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -2638,8 +3677,8 @@ void h_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void hb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5095], const real_T obj_Children[10190], const real_T obj_CutPoint
-  [5095], const real_T obj_NodeMean[5095], const emxArray_real_T *X,
+  obj_CutVar[1041], const real_T obj_Children[2082], const real_T obj_CutPoint
+  [1041], const real_T obj_NodeMean[1041], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -2666,8 +3705,8 @@ void hb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i65 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i65, sizeof(real_T),
@@ -2688,16 +3727,16 @@ void hb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i65 = (int32_T)m;
-        if (!((i65 >= 1) && (i65 <= 5095))) {
-          emlrtDynamicBoundsCheckR2012b(i65, 1, 5095, &lb_emlrtBCI, &b_st);
+        if (!((i65 >= 1) && (i65 <= 1041))) {
+          emlrtDynamicBoundsCheckR2012b(i65, 1, 1041, &lb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i65 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i65 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i65 >= 1) && (i65 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i65, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i65 >= 1) && (i65 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i65, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -2705,8 +3744,8 @@ void hb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i65 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i65 >= 1) && (i65 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i65, 1, 10, &emlrtBCI, &b_st);
+            if (!((i65 >= 1) && (i65 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i65, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -2774,9 +3813,146 @@ void hb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
   emlrtHeapReferenceStackLeaveFcnR2012b(sp);
 }
 
+void hc_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
+  obj_CutVar[1079], const real_T obj_Children[2158], const real_T obj_CutPoint
+  [1079], const real_T obj_NodeMean[1079], const emxArray_real_T *X,
+  emxArray_real_T *Yfit)
+{
+  emxArray_real_T *node;
+  int32_T i115;
+  int32_T loop_ub;
+  int32_T i116;
+  real_T m;
+  int32_T exitg1;
+  emxArray_int32_T *r115;
+  emxArray_real_T *r116;
+  int32_T iv416[1];
+  int32_T iv417[1];
+  emlrtStack st;
+  emlrtStack b_st;
+  st.prev = sp;
+  st.tls = sp->tls;
+  b_st.prev = &st;
+  b_st.tls = st.tls;
+  emlrtHeapReferenceStackEnterFcnR2012b(sp);
+  if (X->size[0] == 0) {
+    i115 = Yfit->size[0];
+    Yfit->size[0] = 0;
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i115, sizeof(real_T),
+                      &c_emlrtRTEI);
+  } else {
+    emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
+    i115 = node->size[0];
+    node->size[0] = X->size[0];
+    emxEnsureCapacity(&b_st, (emxArray__common *)node, i115, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = X->size[0];
+    for (i115 = 0; i115 < loop_ub; i115++) {
+      node->data[i115] = 1.0;
+    }
+
+    for (loop_ub = 0; loop_ub < X->size[0]; loop_ub++) {
+      i115 = X->size[0];
+      i116 = loop_ub + 1;
+      if (!((i116 >= 1) && (i116 <= i115))) {
+        emlrtDynamicBoundsCheckR2012b(i116, 1, i115, &c_emlrtBCI, &b_st);
+      }
+
+      m = 1.0;
+      do {
+        exitg1 = 0;
+        i115 = (int32_T)m;
+        if (!((i115 >= 1) && (i115 <= 1079))) {
+          emlrtDynamicBoundsCheckR2012b(i115, 1, 1079, &lc_emlrtBCI, &b_st);
+        }
+
+        if (obj_CutVar[i115 - 1] == 0.0) {
+          exitg1 = 1;
+        } else {
+          i115 = (int32_T)obj_CutVar[(int32_T)m - 1];
+          if (!((i115 >= 1) && (i115 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i115, 1, 12, &b_emlrtBCI, &b_st);
+          }
+
+          if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
+                obj_CutVar[(int32_T)m - 1] - 1)])) {
+            exitg1 = 1;
+          } else {
+            i115 = (int32_T)obj_CutVar[(int32_T)m - 1];
+            if (!((i115 >= 1) && (i115 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i115, 1, 12, &emlrtBCI, &b_st);
+            }
+
+            if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
+                 1] - 1)] < obj_CutPoint[(int32_T)m - 1]) {
+              m = obj_Children[((int32_T)m - 1) << 1];
+            } else {
+              m = obj_Children[1 + (((int32_T)m - 1) << 1)];
+            }
+          }
+        }
+      } while (exitg1 == 0);
+
+      i115 = node->size[0];
+      i116 = 1 + loop_ub;
+      if (!((i116 >= 1) && (i116 <= i115))) {
+        emlrtDynamicBoundsCheckR2012b(i116, 1, i115, &e_emlrtBCI, &b_st);
+      }
+
+      node->data[i116 - 1] = m;
+    }
+
+    i115 = Yfit->size[0];
+    Yfit->size[0] = node->size[0];
+    emxEnsureCapacity(sp, (emxArray__common *)Yfit, i115, sizeof(real_T),
+                      &c_emlrtRTEI);
+    loop_ub = node->size[0];
+    for (i115 = 0; i115 < loop_ub; i115++) {
+      Yfit->data[i115] = 0.0;
+    }
+
+    emxInit_int32_T(sp, &r115, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i115 = r115->size[0];
+    r115->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r115, i115, sizeof(int32_T),
+                      &c_emlrtRTEI);
+    for (i115 = 0; i115 < loop_ub; i115++) {
+      r115->data[i115] = i115;
+    }
+
+    emxInit_real_T(sp, &r116, 1, &c_emlrtRTEI, true);
+    loop_ub = node->size[0];
+    i115 = r116->size[0];
+    r116->size[0] = loop_ub;
+    emxEnsureCapacity(sp, (emxArray__common *)r116, i115, sizeof(real_T),
+                      &c_emlrtRTEI);
+    for (i115 = 0; i115 < loop_ub; i115++) {
+      r116->data[i115] = obj_NodeMean[(int32_T)node->data[i115] - 1];
+    }
+
+    i115 = node->size[0];
+    iv416[0] = r115->size[0];
+    iv417[0] = i115;
+    emlrtSubAssignSizeCheckR2012b(iv416, 1, iv417, 1, &b_emlrtECI, sp);
+    loop_ub = r116->size[0];
+    emxFree_real_T(&node);
+    for (i115 = 0; i115 < loop_ub; i115++) {
+      Yfit->data[r115->data[i115]] = r116->data[i115];
+    }
+
+    emxFree_real_T(&r116);
+    emxFree_int32_T(&r115);
+  }
+
+  emlrtHeapReferenceStackLeaveFcnR2012b(sp);
+}
+
 void i_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5155], const real_T obj_Children[10310], const real_T obj_CutPoint
-  [5155], const real_T obj_NodeMean[5155], const emxArray_real_T *X,
+  obj_CutVar[999], const real_T obj_Children[1998], const real_T obj_CutPoint
+  [999], const real_T obj_NodeMean[999], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -2803,8 +3979,8 @@ void i_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i17 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i17, sizeof(real_T),
@@ -2825,16 +4001,16 @@ void i_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i17 = (int32_T)m;
-        if (!((i17 >= 1) && (i17 <= 5155))) {
-          emlrtDynamicBoundsCheckR2012b(i17, 1, 5155, &m_emlrtBCI, &b_st);
+        if (!((i17 >= 1) && (i17 <= 999))) {
+          emlrtDynamicBoundsCheckR2012b(i17, 1, 999, &m_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i17 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i17 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i17 >= 1) && (i17 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i17, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i17 >= 1) && (i17 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i17, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -2842,8 +4018,8 @@ void i_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i17 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i17 >= 1) && (i17 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i17, 1, 10, &emlrtBCI, &b_st);
+            if (!((i17 >= 1) && (i17 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i17, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -2912,8 +4088,8 @@ void i_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void ib_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5159], const real_T obj_Children[10318], const real_T obj_CutPoint
-  [5159], const real_T obj_NodeMean[5159], const emxArray_real_T *X,
+  obj_CutVar[1035], const real_T obj_Children[2070], const real_T obj_CutPoint
+  [1035], const real_T obj_NodeMean[1035], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -2940,8 +4116,8 @@ void ib_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i67 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i67, sizeof(real_T),
@@ -2962,16 +4138,16 @@ void ib_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i67 = (int32_T)m;
-        if (!((i67 >= 1) && (i67 <= 5159))) {
-          emlrtDynamicBoundsCheckR2012b(i67, 1, 5159, &mb_emlrtBCI, &b_st);
+        if (!((i67 >= 1) && (i67 <= 1035))) {
+          emlrtDynamicBoundsCheckR2012b(i67, 1, 1035, &mb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i67 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i67 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i67 >= 1) && (i67 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i67, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i67 >= 1) && (i67 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i67, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -2979,8 +4155,8 @@ void ib_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i67 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i67 >= 1) && (i67 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i67, 1, 10, &emlrtBCI, &b_st);
+            if (!((i67 >= 1) && (i67 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i67, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -3049,8 +4225,8 @@ void ib_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void j_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5117], const real_T obj_Children[10234], const real_T obj_CutPoint
-  [5117], const real_T obj_NodeMean[5117], const emxArray_real_T *X,
+  obj_CutVar[987], const real_T obj_Children[1974], const real_T obj_CutPoint
+  [987], const real_T obj_NodeMean[987], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -3077,8 +4253,8 @@ void j_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i19 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i19, sizeof(real_T),
@@ -3099,16 +4275,16 @@ void j_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i19 = (int32_T)m;
-        if (!((i19 >= 1) && (i19 <= 5117))) {
-          emlrtDynamicBoundsCheckR2012b(i19, 1, 5117, &n_emlrtBCI, &b_st);
+        if (!((i19 >= 1) && (i19 <= 987))) {
+          emlrtDynamicBoundsCheckR2012b(i19, 1, 987, &n_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i19 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i19 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i19 >= 1) && (i19 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i19, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i19 >= 1) && (i19 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i19, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -3116,8 +4292,8 @@ void j_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i19 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i19 >= 1) && (i19 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i19, 1, 10, &emlrtBCI, &b_st);
+            if (!((i19 >= 1) && (i19 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i19, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -3186,8 +4362,8 @@ void j_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void jb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5103], const real_T obj_Children[10206], const real_T obj_CutPoint
-  [5103], const real_T obj_NodeMean[5103], const emxArray_real_T *X,
+  obj_CutVar[959], const real_T obj_Children[1918], const real_T obj_CutPoint
+  [959], const real_T obj_NodeMean[959], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -3214,8 +4390,8 @@ void jb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i69 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i69, sizeof(real_T),
@@ -3236,16 +4412,16 @@ void jb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i69 = (int32_T)m;
-        if (!((i69 >= 1) && (i69 <= 5103))) {
-          emlrtDynamicBoundsCheckR2012b(i69, 1, 5103, &nb_emlrtBCI, &b_st);
+        if (!((i69 >= 1) && (i69 <= 959))) {
+          emlrtDynamicBoundsCheckR2012b(i69, 1, 959, &nb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i69 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i69 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i69 >= 1) && (i69 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i69, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i69 >= 1) && (i69 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i69, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -3253,8 +4429,8 @@ void jb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i69 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i69 >= 1) && (i69 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i69, 1, 10, &emlrtBCI, &b_st);
+            if (!((i69 >= 1) && (i69 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i69, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -3323,8 +4499,8 @@ void jb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void k_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5129], const real_T obj_Children[10258], const real_T obj_CutPoint
-  [5129], const real_T obj_NodeMean[5129], const emxArray_real_T *X,
+  obj_CutVar[1015], const real_T obj_Children[2030], const real_T obj_CutPoint
+  [1015], const real_T obj_NodeMean[1015], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -3351,8 +4527,8 @@ void k_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i21 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i21, sizeof(real_T),
@@ -3373,16 +4549,16 @@ void k_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i21 = (int32_T)m;
-        if (!((i21 >= 1) && (i21 <= 5129))) {
-          emlrtDynamicBoundsCheckR2012b(i21, 1, 5129, &o_emlrtBCI, &b_st);
+        if (!((i21 >= 1) && (i21 <= 1015))) {
+          emlrtDynamicBoundsCheckR2012b(i21, 1, 1015, &o_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i21 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i21 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i21 >= 1) && (i21 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i21, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i21 >= 1) && (i21 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i21, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -3390,8 +4566,8 @@ void k_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i21 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i21 >= 1) && (i21 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i21, 1, 10, &emlrtBCI, &b_st);
+            if (!((i21 >= 1) && (i21 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i21, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -3460,8 +4636,8 @@ void k_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void kb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5115], const real_T obj_Children[10230], const real_T obj_CutPoint
-  [5115], const real_T obj_NodeMean[5115], const emxArray_real_T *X,
+  obj_CutVar[1031], const real_T obj_Children[2062], const real_T obj_CutPoint
+  [1031], const real_T obj_NodeMean[1031], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -3488,8 +4664,8 @@ void kb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i71 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i71, sizeof(real_T),
@@ -3510,16 +4686,16 @@ void kb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i71 = (int32_T)m;
-        if (!((i71 >= 1) && (i71 <= 5115))) {
-          emlrtDynamicBoundsCheckR2012b(i71, 1, 5115, &ob_emlrtBCI, &b_st);
+        if (!((i71 >= 1) && (i71 <= 1031))) {
+          emlrtDynamicBoundsCheckR2012b(i71, 1, 1031, &ob_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i71 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i71 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i71 >= 1) && (i71 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i71, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i71 >= 1) && (i71 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i71, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -3527,8 +4703,8 @@ void kb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i71 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i71 >= 1) && (i71 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i71, 1, 10, &emlrtBCI, &b_st);
+            if (!((i71 >= 1) && (i71 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i71, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -3597,8 +4773,8 @@ void kb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void l_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5135], const real_T obj_Children[10270], const real_T obj_CutPoint
-  [5135], const real_T obj_NodeMean[5135], const emxArray_real_T *X,
+  obj_CutVar[1021], const real_T obj_Children[2042], const real_T obj_CutPoint
+  [1021], const real_T obj_NodeMean[1021], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -3625,8 +4801,8 @@ void l_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i23 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i23, sizeof(real_T),
@@ -3647,16 +4823,16 @@ void l_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i23 = (int32_T)m;
-        if (!((i23 >= 1) && (i23 <= 5135))) {
-          emlrtDynamicBoundsCheckR2012b(i23, 1, 5135, &p_emlrtBCI, &b_st);
+        if (!((i23 >= 1) && (i23 <= 1021))) {
+          emlrtDynamicBoundsCheckR2012b(i23, 1, 1021, &p_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i23 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i23 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i23 >= 1) && (i23 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i23, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i23 >= 1) && (i23 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i23, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -3664,8 +4840,8 @@ void l_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i23 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i23 >= 1) && (i23 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i23, 1, 10, &emlrtBCI, &b_st);
+            if (!((i23 >= 1) && (i23 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i23, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -3734,8 +4910,8 @@ void l_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void lb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5177], const real_T obj_Children[10354], const real_T obj_CutPoint
-  [5177], const real_T obj_NodeMean[5177], const emxArray_real_T *X,
+  obj_CutVar[969], const real_T obj_Children[1938], const real_T obj_CutPoint
+  [969], const real_T obj_NodeMean[969], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -3762,8 +4938,8 @@ void lb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i73 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i73, sizeof(real_T),
@@ -3784,16 +4960,16 @@ void lb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i73 = (int32_T)m;
-        if (!((i73 >= 1) && (i73 <= 5177))) {
-          emlrtDynamicBoundsCheckR2012b(i73, 1, 5177, &pb_emlrtBCI, &b_st);
+        if (!((i73 >= 1) && (i73 <= 969))) {
+          emlrtDynamicBoundsCheckR2012b(i73, 1, 969, &pb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i73 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i73 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i73 >= 1) && (i73 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i73, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i73 >= 1) && (i73 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i73, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -3801,8 +4977,8 @@ void lb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i73 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i73 >= 1) && (i73 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i73, 1, 10, &emlrtBCI, &b_st);
+            if (!((i73 >= 1) && (i73 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i73, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -3871,8 +5047,8 @@ void lb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void m_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5119], const real_T obj_Children[10238], const real_T obj_CutPoint
-  [5119], const real_T obj_NodeMean[5119], const emxArray_real_T *X,
+  obj_CutVar[985], const real_T obj_Children[1970], const real_T obj_CutPoint
+  [985], const real_T obj_NodeMean[985], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -3899,8 +5075,8 @@ void m_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i25 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i25, sizeof(real_T),
@@ -3921,16 +5097,16 @@ void m_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i25 = (int32_T)m;
-        if (!((i25 >= 1) && (i25 <= 5119))) {
-          emlrtDynamicBoundsCheckR2012b(i25, 1, 5119, &q_emlrtBCI, &b_st);
+        if (!((i25 >= 1) && (i25 <= 985))) {
+          emlrtDynamicBoundsCheckR2012b(i25, 1, 985, &q_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i25 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i25 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i25 >= 1) && (i25 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i25, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i25 >= 1) && (i25 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i25, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -3938,8 +5114,8 @@ void m_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i25 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i25 >= 1) && (i25 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i25, 1, 10, &emlrtBCI, &b_st);
+            if (!((i25 >= 1) && (i25 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i25, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -4008,8 +5184,8 @@ void m_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void mb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5107], const real_T obj_Children[10214], const real_T obj_CutPoint
-  [5107], const real_T obj_NodeMean[5107], const emxArray_real_T *X,
+  obj_CutVar[1003], const real_T obj_Children[2006], const real_T obj_CutPoint
+  [1003], const real_T obj_NodeMean[1003], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -4036,8 +5212,8 @@ void mb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i75 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i75, sizeof(real_T),
@@ -4058,16 +5234,16 @@ void mb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i75 = (int32_T)m;
-        if (!((i75 >= 1) && (i75 <= 5107))) {
-          emlrtDynamicBoundsCheckR2012b(i75, 1, 5107, &qb_emlrtBCI, &b_st);
+        if (!((i75 >= 1) && (i75 <= 1003))) {
+          emlrtDynamicBoundsCheckR2012b(i75, 1, 1003, &qb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i75 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i75 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i75 >= 1) && (i75 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i75, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i75 >= 1) && (i75 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i75, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -4075,8 +5251,8 @@ void mb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i75 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i75 >= 1) && (i75 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i75, 1, 10, &emlrtBCI, &b_st);
+            if (!((i75 >= 1) && (i75 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i75, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -4145,8 +5321,8 @@ void mb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void n_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5151], const real_T obj_Children[10302], const real_T obj_CutPoint
-  [5151], const real_T obj_NodeMean[5151], const emxArray_real_T *X,
+  obj_CutVar[997], const real_T obj_Children[1994], const real_T obj_CutPoint
+  [997], const real_T obj_NodeMean[997], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -4173,8 +5349,8 @@ void n_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i27 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i27, sizeof(real_T),
@@ -4195,16 +5371,16 @@ void n_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i27 = (int32_T)m;
-        if (!((i27 >= 1) && (i27 <= 5151))) {
-          emlrtDynamicBoundsCheckR2012b(i27, 1, 5151, &r_emlrtBCI, &b_st);
+        if (!((i27 >= 1) && (i27 <= 997))) {
+          emlrtDynamicBoundsCheckR2012b(i27, 1, 997, &r_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i27 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i27 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i27 >= 1) && (i27 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i27, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i27 >= 1) && (i27 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i27, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -4212,8 +5388,8 @@ void n_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i27 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i27 >= 1) && (i27 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i27, 1, 10, &emlrtBCI, &b_st);
+            if (!((i27 >= 1) && (i27 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i27, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -4282,8 +5458,8 @@ void n_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void nb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5079], const real_T obj_Children[10158], const real_T obj_CutPoint
-  [5079], const real_T obj_NodeMean[5079], const emxArray_real_T *X,
+  obj_CutVar[1057], const real_T obj_Children[2114], const real_T obj_CutPoint
+  [1057], const real_T obj_NodeMean[1057], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -4310,8 +5486,8 @@ void nb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i77 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i77, sizeof(real_T),
@@ -4332,16 +5508,16 @@ void nb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i77 = (int32_T)m;
-        if (!((i77 >= 1) && (i77 <= 5079))) {
-          emlrtDynamicBoundsCheckR2012b(i77, 1, 5079, &rb_emlrtBCI, &b_st);
+        if (!((i77 >= 1) && (i77 <= 1057))) {
+          emlrtDynamicBoundsCheckR2012b(i77, 1, 1057, &rb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i77 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i77 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i77 >= 1) && (i77 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i77, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i77 >= 1) && (i77 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i77, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -4349,8 +5525,8 @@ void nb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i77 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i77 >= 1) && (i77 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i77, 1, 10, &emlrtBCI, &b_st);
+            if (!((i77 >= 1) && (i77 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i77, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -4419,8 +5595,8 @@ void nb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void o_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5139], const real_T obj_Children[10278], const real_T obj_CutPoint
-  [5139], const real_T obj_NodeMean[5139], const emxArray_real_T *X,
+  obj_CutVar[943], const real_T obj_Children[1886], const real_T obj_CutPoint
+  [943], const real_T obj_NodeMean[943], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -4447,8 +5623,8 @@ void o_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i29 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i29, sizeof(real_T),
@@ -4469,16 +5645,16 @@ void o_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i29 = (int32_T)m;
-        if (!((i29 >= 1) && (i29 <= 5139))) {
-          emlrtDynamicBoundsCheckR2012b(i29, 1, 5139, &s_emlrtBCI, &b_st);
+        if (!((i29 >= 1) && (i29 <= 943))) {
+          emlrtDynamicBoundsCheckR2012b(i29, 1, 943, &s_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i29 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i29 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i29 >= 1) && (i29 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i29, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i29 >= 1) && (i29 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i29, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -4486,8 +5662,8 @@ void o_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i29 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i29 >= 1) && (i29 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i29, 1, 10, &emlrtBCI, &b_st);
+            if (!((i29 >= 1) && (i29 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i29, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -4556,8 +5732,8 @@ void o_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void ob_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5167], const real_T obj_Children[10334], const real_T obj_CutPoint
-  [5167], const real_T obj_NodeMean[5167], const emxArray_real_T *X,
+  obj_CutVar[1005], const real_T obj_Children[2010], const real_T obj_CutPoint
+  [1005], const real_T obj_NodeMean[1005], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -4584,8 +5760,8 @@ void ob_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i79 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i79, sizeof(real_T),
@@ -4606,16 +5782,16 @@ void ob_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i79 = (int32_T)m;
-        if (!((i79 >= 1) && (i79 <= 5167))) {
-          emlrtDynamicBoundsCheckR2012b(i79, 1, 5167, &sb_emlrtBCI, &b_st);
+        if (!((i79 >= 1) && (i79 <= 1005))) {
+          emlrtDynamicBoundsCheckR2012b(i79, 1, 1005, &sb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i79 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i79 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i79 >= 1) && (i79 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i79, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i79 >= 1) && (i79 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i79, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -4623,8 +5799,8 @@ void ob_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i79 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i79 >= 1) && (i79 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i79, 1, 10, &emlrtBCI, &b_st);
+            if (!((i79 >= 1) && (i79 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i79, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -4693,8 +5869,8 @@ void ob_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void p_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5145], const real_T obj_Children[10290], const real_T obj_CutPoint
-  [5145], const real_T obj_NodeMean[5145], const emxArray_real_T *X,
+  obj_CutVar[1037], const real_T obj_Children[2074], const real_T obj_CutPoint
+  [1037], const real_T obj_NodeMean[1037], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -4721,8 +5897,8 @@ void p_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i31 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i31, sizeof(real_T),
@@ -4743,16 +5919,16 @@ void p_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i31 = (int32_T)m;
-        if (!((i31 >= 1) && (i31 <= 5145))) {
-          emlrtDynamicBoundsCheckR2012b(i31, 1, 5145, &t_emlrtBCI, &b_st);
+        if (!((i31 >= 1) && (i31 <= 1037))) {
+          emlrtDynamicBoundsCheckR2012b(i31, 1, 1037, &t_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i31 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i31 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i31 >= 1) && (i31 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i31, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i31 >= 1) && (i31 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i31, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -4760,8 +5936,8 @@ void p_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i31 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i31 >= 1) && (i31 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i31, 1, 10, &emlrtBCI, &b_st);
+            if (!((i31 >= 1) && (i31 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i31, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -4830,8 +6006,8 @@ void p_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void pb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5081], const real_T obj_Children[10162], const real_T obj_CutPoint
-  [5081], const real_T obj_NodeMean[5081], const emxArray_real_T *X,
+  obj_CutVar[927], const real_T obj_Children[1854], const real_T obj_CutPoint
+  [927], const real_T obj_NodeMean[927], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -4858,8 +6034,8 @@ void pb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i81 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i81, sizeof(real_T),
@@ -4880,16 +6056,16 @@ void pb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i81 = (int32_T)m;
-        if (!((i81 >= 1) && (i81 <= 5081))) {
-          emlrtDynamicBoundsCheckR2012b(i81, 1, 5081, &tb_emlrtBCI, &b_st);
+        if (!((i81 >= 1) && (i81 <= 927))) {
+          emlrtDynamicBoundsCheckR2012b(i81, 1, 927, &tb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i81 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i81 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i81 >= 1) && (i81 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i81, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i81 >= 1) && (i81 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i81, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -4897,8 +6073,8 @@ void pb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i81 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i81 >= 1) && (i81 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i81, 1, 10, &emlrtBCI, &b_st);
+            if (!((i81 >= 1) && (i81 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i81, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -4967,8 +6143,8 @@ void pb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void q_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5111], const real_T obj_Children[10222], const real_T obj_CutPoint
-  [5111], const real_T obj_NodeMean[5111], const emxArray_real_T *X,
+  obj_CutVar[1059], const real_T obj_Children[2118], const real_T obj_CutPoint
+  [1059], const real_T obj_NodeMean[1059], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -4995,8 +6171,8 @@ void q_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i33 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i33, sizeof(real_T),
@@ -5017,16 +6193,16 @@ void q_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i33 = (int32_T)m;
-        if (!((i33 >= 1) && (i33 <= 5111))) {
-          emlrtDynamicBoundsCheckR2012b(i33, 1, 5111, &u_emlrtBCI, &b_st);
+        if (!((i33 >= 1) && (i33 <= 1059))) {
+          emlrtDynamicBoundsCheckR2012b(i33, 1, 1059, &u_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i33 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i33 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i33 >= 1) && (i33 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i33, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i33 >= 1) && (i33 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i33, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -5034,8 +6210,8 @@ void q_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i33 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i33 >= 1) && (i33 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i33, 1, 10, &emlrtBCI, &b_st);
+            if (!((i33 >= 1) && (i33 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i33, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -5104,8 +6280,8 @@ void q_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void qb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[4763], const real_T obj_Children[9526], const real_T obj_CutPoint
-  [4763], const real_T obj_NodeMean[4763], const emxArray_real_T *X,
+  obj_CutVar[1061], const real_T obj_Children[2122], const real_T obj_CutPoint
+  [1061], const real_T obj_NodeMean[1061], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -5132,8 +6308,8 @@ void qb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i83 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i83, sizeof(real_T),
@@ -5154,16 +6330,16 @@ void qb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i83 = (int32_T)m;
-        if (!((i83 >= 1) && (i83 <= 4763))) {
-          emlrtDynamicBoundsCheckR2012b(i83, 1, 4763, &ub_emlrtBCI, &b_st);
+        if (!((i83 >= 1) && (i83 <= 1061))) {
+          emlrtDynamicBoundsCheckR2012b(i83, 1, 1061, &ub_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i83 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i83 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i83 >= 1) && (i83 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i83, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i83 >= 1) && (i83 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i83, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -5171,8 +6347,8 @@ void qb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i83 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i83 >= 1) && (i83 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i83, 1, 10, &emlrtBCI, &b_st);
+            if (!((i83 >= 1) && (i83 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i83, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -5241,8 +6417,8 @@ void qb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void r_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5127], const real_T obj_Children[10254], const real_T obj_CutPoint
-  [5127], const real_T obj_NodeMean[5127], const emxArray_real_T *X,
+  obj_CutVar[923], const real_T obj_Children[1846], const real_T obj_CutPoint
+  [923], const real_T obj_NodeMean[923], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -5269,8 +6445,8 @@ void r_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i35 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i35, sizeof(real_T),
@@ -5291,16 +6467,16 @@ void r_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i35 = (int32_T)m;
-        if (!((i35 >= 1) && (i35 <= 5127))) {
-          emlrtDynamicBoundsCheckR2012b(i35, 1, 5127, &v_emlrtBCI, &b_st);
+        if (!((i35 >= 1) && (i35 <= 923))) {
+          emlrtDynamicBoundsCheckR2012b(i35, 1, 923, &v_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i35 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i35 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i35 >= 1) && (i35 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i35, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i35 >= 1) && (i35 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i35, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -5308,8 +6484,8 @@ void r_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i35 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i35 >= 1) && (i35 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i35, 1, 10, &emlrtBCI, &b_st);
+            if (!((i35 >= 1) && (i35 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i35, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -5378,8 +6554,8 @@ void r_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void rb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5173], const real_T obj_Children[10346], const real_T obj_CutPoint
-  [5173], const real_T obj_NodeMean[5173], const emxArray_real_T *X,
+  obj_CutVar[989], const real_T obj_Children[1978], const real_T obj_CutPoint
+  [989], const real_T obj_NodeMean[989], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -5406,8 +6582,8 @@ void rb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i85 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i85, sizeof(real_T),
@@ -5428,16 +6604,16 @@ void rb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i85 = (int32_T)m;
-        if (!((i85 >= 1) && (i85 <= 5173))) {
-          emlrtDynamicBoundsCheckR2012b(i85, 1, 5173, &vb_emlrtBCI, &b_st);
+        if (!((i85 >= 1) && (i85 <= 989))) {
+          emlrtDynamicBoundsCheckR2012b(i85, 1, 989, &vb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i85 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i85 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i85 >= 1) && (i85 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i85, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i85 >= 1) && (i85 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i85, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -5445,8 +6621,8 @@ void rb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i85 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i85 >= 1) && (i85 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i85, 1, 10, &emlrtBCI, &b_st);
+            if (!((i85 >= 1) && (i85 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i85, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -5515,8 +6691,8 @@ void rb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void s_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5157], const real_T obj_Children[10314], const real_T obj_CutPoint
-  [5157], const real_T obj_NodeMean[5157], const emxArray_real_T *X,
+  obj_CutVar[921], const real_T obj_Children[1842], const real_T obj_CutPoint
+  [921], const real_T obj_NodeMean[921], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -5543,8 +6719,8 @@ void s_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i37 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i37, sizeof(real_T),
@@ -5565,16 +6741,16 @@ void s_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i37 = (int32_T)m;
-        if (!((i37 >= 1) && (i37 <= 5157))) {
-          emlrtDynamicBoundsCheckR2012b(i37, 1, 5157, &w_emlrtBCI, &b_st);
+        if (!((i37 >= 1) && (i37 <= 921))) {
+          emlrtDynamicBoundsCheckR2012b(i37, 1, 921, &w_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i37 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i37 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i37 >= 1) && (i37 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i37, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i37 >= 1) && (i37 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i37, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -5582,8 +6758,8 @@ void s_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i37 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i37 >= 1) && (i37 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i37, 1, 10, &emlrtBCI, &b_st);
+            if (!((i37 >= 1) && (i37 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i37, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -5652,8 +6828,8 @@ void s_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void sb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5087], const real_T obj_Children[10174], const real_T obj_CutPoint
-  [5087], const real_T obj_NodeMean[5087], const emxArray_real_T *X,
+  obj_CutVar[953], const real_T obj_Children[1906], const real_T obj_CutPoint
+  [953], const real_T obj_NodeMean[953], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -5680,8 +6856,8 @@ void sb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i87 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i87, sizeof(real_T),
@@ -5702,16 +6878,16 @@ void sb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i87 = (int32_T)m;
-        if (!((i87 >= 1) && (i87 <= 5087))) {
-          emlrtDynamicBoundsCheckR2012b(i87, 1, 5087, &wb_emlrtBCI, &b_st);
+        if (!((i87 >= 1) && (i87 <= 953))) {
+          emlrtDynamicBoundsCheckR2012b(i87, 1, 953, &wb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i87 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i87 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i87 >= 1) && (i87 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i87, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i87 >= 1) && (i87 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i87, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -5719,8 +6895,8 @@ void sb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i87 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i87 >= 1) && (i87 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i87, 1, 10, &emlrtBCI, &b_st);
+            if (!((i87 >= 1) && (i87 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i87, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -5789,8 +6965,8 @@ void sb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void t_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5121], const real_T obj_Children[10242], const real_T obj_CutPoint
-  [5121], const real_T obj_NodeMean[5121], const emxArray_real_T *X,
+  obj_CutVar[963], const real_T obj_Children[1926], const real_T obj_CutPoint
+  [963], const real_T obj_NodeMean[963], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -5817,8 +6993,8 @@ void t_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i39 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i39, sizeof(real_T),
@@ -5839,16 +7015,16 @@ void t_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i39 = (int32_T)m;
-        if (!((i39 >= 1) && (i39 <= 5121))) {
-          emlrtDynamicBoundsCheckR2012b(i39, 1, 5121, &x_emlrtBCI, &b_st);
+        if (!((i39 >= 1) && (i39 <= 963))) {
+          emlrtDynamicBoundsCheckR2012b(i39, 1, 963, &x_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i39 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i39 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i39 >= 1) && (i39 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i39, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i39 >= 1) && (i39 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i39, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -5856,8 +7032,8 @@ void t_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i39 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i39 >= 1) && (i39 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i39, 1, 10, &emlrtBCI, &b_st);
+            if (!((i39 >= 1) && (i39 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i39, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -5926,8 +7102,8 @@ void t_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void tb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5093], const real_T obj_Children[10186], const real_T obj_CutPoint
-  [5093], const real_T obj_NodeMean[5093], const emxArray_real_T *X,
+  obj_CutVar[925], const real_T obj_Children[1850], const real_T obj_CutPoint
+  [925], const real_T obj_NodeMean[925], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -5954,8 +7130,8 @@ void tb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i89 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i89, sizeof(real_T),
@@ -5976,16 +7152,16 @@ void tb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i89 = (int32_T)m;
-        if (!((i89 >= 1) && (i89 <= 5093))) {
-          emlrtDynamicBoundsCheckR2012b(i89, 1, 5093, &xb_emlrtBCI, &b_st);
+        if (!((i89 >= 1) && (i89 <= 925))) {
+          emlrtDynamicBoundsCheckR2012b(i89, 1, 925, &xb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i89 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i89 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i89 >= 1) && (i89 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i89, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i89 >= 1) && (i89 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i89, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -5993,8 +7169,8 @@ void tb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i89 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i89 >= 1) && (i89 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i89, 1, 10, &emlrtBCI, &b_st);
+            if (!((i89 >= 1) && (i89 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i89, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -6063,8 +7239,8 @@ void tb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void u_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5137], const real_T obj_Children[10274], const real_T obj_CutPoint
-  [5137], const real_T obj_NodeMean[5137], const emxArray_real_T *X,
+  obj_CutVar[1011], const real_T obj_Children[2022], const real_T obj_CutPoint
+  [1011], const real_T obj_NodeMean[1011], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -6091,8 +7267,8 @@ void u_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i41 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i41, sizeof(real_T),
@@ -6113,16 +7289,16 @@ void u_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i41 = (int32_T)m;
-        if (!((i41 >= 1) && (i41 <= 5137))) {
-          emlrtDynamicBoundsCheckR2012b(i41, 1, 5137, &y_emlrtBCI, &b_st);
+        if (!((i41 >= 1) && (i41 <= 1011))) {
+          emlrtDynamicBoundsCheckR2012b(i41, 1, 1011, &y_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i41 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i41 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i41 >= 1) && (i41 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i41, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i41 >= 1) && (i41 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i41, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -6130,8 +7306,8 @@ void u_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i41 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i41 >= 1) && (i41 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i41, 1, 10, &emlrtBCI, &b_st);
+            if (!((i41 >= 1) && (i41 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i41, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -6200,8 +7376,8 @@ void u_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void ub_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5075], const real_T obj_Children[10150], const real_T obj_CutPoint
-  [5075], const real_T obj_NodeMean[5075], const emxArray_real_T *X,
+  obj_CutVar[1093], const real_T obj_Children[2186], const real_T obj_CutPoint
+  [1093], const real_T obj_NodeMean[1093], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -6228,8 +7404,8 @@ void ub_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i91 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i91, sizeof(real_T),
@@ -6250,16 +7426,16 @@ void ub_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i91 = (int32_T)m;
-        if (!((i91 >= 1) && (i91 <= 5075))) {
-          emlrtDynamicBoundsCheckR2012b(i91, 1, 5075, &yb_emlrtBCI, &b_st);
+        if (!((i91 >= 1) && (i91 <= 1093))) {
+          emlrtDynamicBoundsCheckR2012b(i91, 1, 1093, &yb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i91 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i91 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i91 >= 1) && (i91 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i91, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i91 >= 1) && (i91 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i91, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -6267,8 +7443,8 @@ void ub_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i91 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i91 >= 1) && (i91 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i91, 1, 10, &emlrtBCI, &b_st);
+            if (!((i91 >= 1) && (i91 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i91, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -6337,8 +7513,8 @@ void ub_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void v_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5123], const real_T obj_Children[10246], const real_T obj_CutPoint
-  [5123], const real_T obj_NodeMean[5123], const emxArray_real_T *X,
+  obj_CutVar[1051], const real_T obj_Children[2102], const real_T obj_CutPoint
+  [1051], const real_T obj_NodeMean[1051], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -6365,8 +7541,8 @@ void v_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i43 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i43, sizeof(real_T),
@@ -6387,16 +7563,16 @@ void v_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i43 = (int32_T)m;
-        if (!((i43 >= 1) && (i43 <= 5123))) {
-          emlrtDynamicBoundsCheckR2012b(i43, 1, 5123, &ab_emlrtBCI, &b_st);
+        if (!((i43 >= 1) && (i43 <= 1051))) {
+          emlrtDynamicBoundsCheckR2012b(i43, 1, 1051, &ab_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i43 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i43 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i43 >= 1) && (i43 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i43, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i43 >= 1) && (i43 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i43, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -6404,8 +7580,8 @@ void v_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i43 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i43 >= 1) && (i43 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i43, 1, 10, &emlrtBCI, &b_st);
+            if (!((i43 >= 1) && (i43 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i43, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -6474,8 +7650,8 @@ void v_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void vb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5179], const real_T obj_Children[10358], const real_T obj_CutPoint
-  [5179], const real_T obj_NodeMean[5179], const emxArray_real_T *X,
+  obj_CutVar[1047], const real_T obj_Children[2094], const real_T obj_CutPoint
+  [1047], const real_T obj_NodeMean[1047], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -6502,8 +7678,8 @@ void vb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i93 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i93, sizeof(real_T),
@@ -6524,16 +7700,16 @@ void vb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i93 = (int32_T)m;
-        if (!((i93 >= 1) && (i93 <= 5179))) {
-          emlrtDynamicBoundsCheckR2012b(i93, 1, 5179, &ac_emlrtBCI, &b_st);
+        if (!((i93 >= 1) && (i93 <= 1047))) {
+          emlrtDynamicBoundsCheckR2012b(i93, 1, 1047, &ac_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i93 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i93 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i93 >= 1) && (i93 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i93, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i93 >= 1) && (i93 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i93, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -6541,8 +7717,8 @@ void vb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i93 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i93 >= 1) && (i93 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i93, 1, 10, &emlrtBCI, &b_st);
+            if (!((i93 >= 1) && (i93 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i93, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -6611,8 +7787,8 @@ void vb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void w_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5163], const real_T obj_Children[10326], const real_T obj_CutPoint
-  [5163], const real_T obj_NodeMean[5163], const emxArray_real_T *X,
+  obj_CutVar[1007], const real_T obj_Children[2014], const real_T obj_CutPoint
+  [1007], const real_T obj_NodeMean[1007], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -6639,8 +7815,8 @@ void w_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i45 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i45, sizeof(real_T),
@@ -6661,16 +7837,16 @@ void w_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i45 = (int32_T)m;
-        if (!((i45 >= 1) && (i45 <= 5163))) {
-          emlrtDynamicBoundsCheckR2012b(i45, 1, 5163, &bb_emlrtBCI, &b_st);
+        if (!((i45 >= 1) && (i45 <= 1007))) {
+          emlrtDynamicBoundsCheckR2012b(i45, 1, 1007, &bb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i45 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i45 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i45 >= 1) && (i45 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i45, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i45 >= 1) && (i45 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i45, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -6678,8 +7854,8 @@ void w_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i45 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i45 >= 1) && (i45 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i45, 1, 10, &emlrtBCI, &b_st);
+            if (!((i45 >= 1) && (i45 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i45, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -6748,8 +7924,8 @@ void w_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void wb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5133], const real_T obj_Children[10266], const real_T obj_CutPoint
-  [5133], const real_T obj_NodeMean[5133], const emxArray_real_T *X,
+  obj_CutVar[1053], const real_T obj_Children[2106], const real_T obj_CutPoint
+  [1053], const real_T obj_NodeMean[1053], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -6776,8 +7952,8 @@ void wb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i95 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i95, sizeof(real_T),
@@ -6798,16 +7974,16 @@ void wb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i95 = (int32_T)m;
-        if (!((i95 >= 1) && (i95 <= 5133))) {
-          emlrtDynamicBoundsCheckR2012b(i95, 1, 5133, &bc_emlrtBCI, &b_st);
+        if (!((i95 >= 1) && (i95 <= 1053))) {
+          emlrtDynamicBoundsCheckR2012b(i95, 1, 1053, &bc_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i95 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i95 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i95 >= 1) && (i95 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i95, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i95 >= 1) && (i95 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i95, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -6815,8 +7991,8 @@ void wb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i95 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i95 >= 1) && (i95 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i95, 1, 10, &emlrtBCI, &b_st);
+            if (!((i95 >= 1) && (i95 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i95, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -6885,8 +8061,8 @@ void wb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void x_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5143], const real_T obj_Children[10286], const real_T obj_CutPoint
-  [5143], const real_T obj_NodeMean[5143], const emxArray_real_T *X,
+  obj_CutVar[1071], const real_T obj_Children[2142], const real_T obj_CutPoint
+  [1071], const real_T obj_NodeMean[1071], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -6913,8 +8089,8 @@ void x_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i47 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i47, sizeof(real_T),
@@ -6935,16 +8111,16 @@ void x_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i47 = (int32_T)m;
-        if (!((i47 >= 1) && (i47 <= 5143))) {
-          emlrtDynamicBoundsCheckR2012b(i47, 1, 5143, &cb_emlrtBCI, &b_st);
+        if (!((i47 >= 1) && (i47 <= 1071))) {
+          emlrtDynamicBoundsCheckR2012b(i47, 1, 1071, &cb_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i47 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i47 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i47 >= 1) && (i47 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i47, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i47 >= 1) && (i47 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i47, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -6952,8 +8128,8 @@ void x_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i47 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i47 >= 1) && (i47 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i47, 1, 10, &emlrtBCI, &b_st);
+            if (!((i47 >= 1) && (i47 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i47, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -7022,8 +8198,8 @@ void x_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void xb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[4965], const real_T obj_Children[9930], const real_T obj_CutPoint
-  [4965], const real_T obj_NodeMean[4965], const emxArray_real_T *X,
+  obj_CutVar[981], const real_T obj_Children[1962], const real_T obj_CutPoint
+  [981], const real_T obj_NodeMean[981], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -7050,8 +8226,8 @@ void xb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i97 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i97, sizeof(real_T),
@@ -7072,16 +8248,16 @@ void xb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i97 = (int32_T)m;
-        if (!((i97 >= 1) && (i97 <= 4965))) {
-          emlrtDynamicBoundsCheckR2012b(i97, 1, 4965, &cc_emlrtBCI, &b_st);
+        if (!((i97 >= 1) && (i97 <= 981))) {
+          emlrtDynamicBoundsCheckR2012b(i97, 1, 981, &cc_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i97 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i97 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i97 >= 1) && (i97 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i97, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i97 >= 1) && (i97 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i97, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -7089,8 +8265,8 @@ void xb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i97 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i97 >= 1) && (i97 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i97, 1, 10, &emlrtBCI, &b_st);
+            if (!((i97 >= 1) && (i97 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i97, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -7159,8 +8335,8 @@ void xb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
 }
 
 void y_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
-  obj_CutVar[5077], const real_T obj_Children[10154], const real_T obj_CutPoint
-  [5077], const real_T obj_NodeMean[5077], const emxArray_real_T *X,
+  obj_CutVar[1017], const real_T obj_Children[2034], const real_T obj_CutPoint
+  [1017], const real_T obj_NodeMean[1017], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -7187,8 +8363,8 @@ void y_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i49 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i49, sizeof(real_T),
@@ -7209,16 +8385,16 @@ void y_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i49 = (int32_T)m;
-        if (!((i49 >= 1) && (i49 <= 5077))) {
-          emlrtDynamicBoundsCheckR2012b(i49, 1, 5077, &db_emlrtBCI, &b_st);
+        if (!((i49 >= 1) && (i49 <= 1017))) {
+          emlrtDynamicBoundsCheckR2012b(i49, 1, 1017, &db_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i49 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i49 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i49 >= 1) && (i49 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i49, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i49 >= 1) && (i49 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i49, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -7226,8 +8402,8 @@ void y_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i49 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i49 >= 1) && (i49 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i49, 1, 10, &emlrtBCI, &b_st);
+            if (!((i49 >= 1) && (i49 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i49, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -
@@ -7296,8 +8472,8 @@ void y_CompactRegressionTree_predict(const emlrtStack *sp, const real_T
 }
 
 void yb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
-  obj_CutVar[5109], const real_T obj_Children[10218], const real_T obj_CutPoint
-  [5109], const real_T obj_NodeMean[5109], const emxArray_real_T *X,
+  obj_CutVar[975], const real_T obj_Children[1950], const real_T obj_CutPoint
+  [975], const real_T obj_NodeMean[975], const emxArray_real_T *X,
   emxArray_real_T *Yfit)
 {
   emxArray_real_T *node;
@@ -7324,8 +8500,8 @@ void yb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
                       &c_emlrtRTEI);
   } else {
     emxInit_real_T(sp, &node, 1, &d_emlrtRTEI, true);
-    st.site = &k_emlrtRSI;
-    b_st.site = &l_emlrtRSI;
+    st.site = &j_emlrtRSI;
+    b_st.site = &k_emlrtRSI;
     i99 = node->size[0];
     node->size[0] = X->size[0];
     emxEnsureCapacity(&b_st, (emxArray__common *)node, i99, sizeof(real_T),
@@ -7346,16 +8522,16 @@ void yb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
       do {
         exitg1 = 0;
         i99 = (int32_T)m;
-        if (!((i99 >= 1) && (i99 <= 5109))) {
-          emlrtDynamicBoundsCheckR2012b(i99, 1, 5109, &dc_emlrtBCI, &b_st);
+        if (!((i99 >= 1) && (i99 <= 975))) {
+          emlrtDynamicBoundsCheckR2012b(i99, 1, 975, &dc_emlrtBCI, &b_st);
         }
 
         if (obj_CutVar[i99 - 1] == 0.0) {
           exitg1 = 1;
         } else {
           i99 = (int32_T)obj_CutVar[(int32_T)m - 1];
-          if (!((i99 >= 1) && (i99 <= 10))) {
-            emlrtDynamicBoundsCheckR2012b(i99, 1, 10, &b_emlrtBCI, &b_st);
+          if (!((i99 >= 1) && (i99 <= 12))) {
+            emlrtDynamicBoundsCheckR2012b(i99, 1, 12, &b_emlrtBCI, &b_st);
           }
 
           if (muDoubleScalarIsNaN(X->data[loop_ub + X->size[0] * ((int32_T)
@@ -7363,8 +8539,8 @@ void yb_CompactRegressionTree_predic(const emlrtStack *sp, const real_T
             exitg1 = 1;
           } else {
             i99 = (int32_T)obj_CutVar[(int32_T)m - 1];
-            if (!((i99 >= 1) && (i99 <= 10))) {
-              emlrtDynamicBoundsCheckR2012b(i99, 1, 10, &emlrtBCI, &b_st);
+            if (!((i99 >= 1) && (i99 <= 12))) {
+              emlrtDynamicBoundsCheckR2012b(i99, 1, 12, &emlrtBCI, &b_st);
             }
 
             if (X->data[loop_ub + X->size[0] * ((int32_T)obj_CutVar[(int32_T)m -

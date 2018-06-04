@@ -41,7 +41,7 @@ void b_error(const emlrtStack *sp, real_T varargin_3)
 {
   const mxArray *y;
   const mxArray *m1;
-  static const int32_T iv287[2] = { 1, 68 };
+  static const int32_T iv301[2] = { 1, 68 };
 
   static const char_T varargin_1[68] = { 'N', 'u', 'm', 'b', 'e', 'r', ' ', 'o',
     'f', ' ', 'p', 'r', 'e', 'd', 'i', 'c', 't', 'o', 'r', 's', ' ', 'i', 's',
@@ -55,11 +55,11 @@ void b_error(const emlrtStack *sp, real_T varargin_3)
   st.prev = sp;
   st.tls = sp->tls;
   y = NULL;
-  m1 = emlrtCreateCharArray(2, iv287);
+  m1 = emlrtCreateCharArray(2, iv301);
   emlrtInitCharArrayR2013a(sp, 68, m1, &varargin_1[0]);
   emlrtAssign(&y, m1);
   b_y = NULL;
-  m1 = emlrtCreateDoubleScalar(7.0);
+  m1 = emlrtCreateDoubleScalar(8.0);
   emlrtAssign(&b_y, m1);
   c_y = NULL;
   m1 = emlrtCreateDoubleScalar(varargin_3);
@@ -72,7 +72,7 @@ void error(const emlrtStack *sp, real_T varargin_3)
 {
   const mxArray *y;
   const mxArray *m0;
-  static const int32_T iv286[2] = { 1, 63 };
+  static const int32_T iv300[2] = { 1, 63 };
 
   static const char_T varargin_1[63] = { 'N', 'u', 'm', 'b', 'e', 'r', ' ', 'o',
     'f', ' ', 't', 'r', 'e', 'e', 's', ' ', 'i', 's', ' ', '%', 'd', ' ', 'i',
@@ -86,7 +86,7 @@ void error(const emlrtStack *sp, real_T varargin_3)
   st.prev = sp;
   st.tls = sp->tls;
   y = NULL;
-  m0 = emlrtCreateCharArray(2, iv286);
+  m0 = emlrtCreateCharArray(2, iv300);
   emlrtInitCharArrayR2013a(sp, 63, m0, &varargin_1[0]);
   emlrtAssign(&y, m0);
   b_y = NULL;

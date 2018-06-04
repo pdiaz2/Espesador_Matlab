@@ -20,8 +20,8 @@ generateOne = true;
 if generateOne
     % Input wave
     waveVector = 3;
-    experiment = 10;
-    delayUCases = 1;
+    experiment = 8;
+    delayUCases = 2;
     delayYCases = 2;
 else
    waveVector = 1:4;
@@ -74,7 +74,7 @@ testBatch = 8;
 OLExpStruct = generate_ol_array_index(makeSelected);
 [garbage , numExpGroups] = size(OLExpStruct);
 %% Machine Learning Parameters
-mlParameters = {100,1,'on',10,'on','curvature','TBagger'};
+mlParameters = {100,1,'on',10,'on','curvature','Ensemble'};
 maxMinLS = 20;
 
 % Optimization Hyperparameters

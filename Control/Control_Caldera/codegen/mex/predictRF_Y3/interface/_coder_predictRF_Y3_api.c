@@ -67,15 +67,15 @@ static real_T d_emlrt_marshallIn(const emlrtStack *sp, const mxArray *u, const
 static void e_emlrt_marshallIn(const emlrtStack *sp, const mxArray *src, const
   emlrtMsgIdentifier *msgId, emxArray_real_T *ret)
 {
-  static const int32_T dims[2] = { -1, 10 };
+  static const int32_T dims[2] = { -1, 12 };
 
   const boolean_T bv0[2] = { true, false };
 
-  int32_T iv403[2];
+  int32_T iv419[2];
   emlrtCheckVsBuiltInR2012b(sp, msgId, src, "double", false, 2U, dims, &bv0[0],
-    iv403);
-  ret->size[0] = iv403[0];
-  ret->size[1] = iv403[1];
+    iv419);
+  ret->size[0] = iv419[0];
+  ret->size[1] = iv419[1];
   ret->allocatedSize = ret->size[0] * ret->size[1];
   ret->data = (real_T *)mxGetData(src);
   ret->canFreeData = false;
@@ -97,10 +97,10 @@ static const mxArray *emlrt_marshallOut(const emxArray_real_T *u)
 {
   const mxArray *y;
   const mxArray *m2;
-  static const int32_T iv402[1] = { 0 };
+  static const int32_T iv418[1] = { 0 };
 
   y = NULL;
-  m2 = emlrtCreateNumericArray(1, iv402, mxDOUBLE_CLASS, mxREAL);
+  m2 = emlrtCreateNumericArray(1, iv418, mxDOUBLE_CLASS, mxREAL);
   mxSetData((mxArray *)m2, (void *)&u->data[0]);
   emlrtSetDimensions((mxArray *)m2, u->size, 1);
   emlrtAssign(&y, m2);
