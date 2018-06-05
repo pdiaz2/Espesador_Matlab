@@ -59,7 +59,7 @@ void b_error(const emlrtStack *sp, real_T varargin_3)
   emlrtInitCharArrayR2013a(sp, 68, m1, &varargin_1[0]);
   emlrtAssign(&y, m1);
   b_y = NULL;
-  m1 = emlrtCreateDoubleScalar(8.0);
+  m1 = emlrtCreateDoubleScalar(12.0);
   emlrtAssign(&b_y, m1);
   c_y = NULL;
   m1 = emlrtCreateDoubleScalar(varargin_3);

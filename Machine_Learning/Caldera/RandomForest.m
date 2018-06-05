@@ -3,26 +3,29 @@ clear all;
 close all;
 clc;
 %% Test Plant Specifics
-load('testData_0206.mat');
+dateMatStr = '0206'
+load(['testData_' dateMatStr '.mat']);
 saveToMatFile = true;
-matFileName = 'ResultsRF_Noise_0206';
+matFileName = ['ResultsRF_NoNoise_' dateMatStr '.mat'];
 optimizeMLHyperparameters = false;
 
-useNoisy = true;
+useNoisy = false;
 if useNoisy
     PlantData = results;
 else
     PlantData = resultsSmooth; 
 end
 
-generateOne = false;
+generateOne = true;
 
 if generateOne
     % Input wave
+    outputOfInterest = 3;
     waveVector = 3;
-    experiment = 8;
+    experiment = 10;
     delayUCases = 2;
     delayYCases = 2;
+    
 else
    waveVector = 1:4;
 end
@@ -74,7 +77,7 @@ testBatch = 8;
 OLExpStruct = generate_ol_array_index(makeSelected);
 [garbage , numExpGroups] = size(OLExpStruct);
 %% Machine Learning Parameters
-mlParameters = {100,1,'on',10,'on','curvature','TBagger'};
+mlParameters = {100,1,'on',10,'on','curvature','Ensemble'};
 maxMinLS = 20;
 
 % Optimization Hyperparameters
@@ -143,6 +146,15 @@ for waveformSelected = waveVector
                                             Results(y).MSE;
             ML_Results.Output(y).Performance(experiment,delayUCases,delayYCases).Correlation = ...
                                             Results(y).Correlation;
+        end
+        %% Store Model if Ensemble mode
+        RF = ML_Model(outputOfInterest).Model;
+        saveRFStr = ['RF_Y' num2str(outputOfInterest) '_' dateMatStr '.mat'];
+        switch mlParameters{7}
+            case 'TBagger'
+                
+            case 'Ensemble'
+                save(saveRFStr,'RF');
         end
     else
         for experiment = 1:numExpGroups%1:numSubSets

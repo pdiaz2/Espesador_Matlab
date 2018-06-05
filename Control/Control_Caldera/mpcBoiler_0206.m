@@ -26,6 +26,7 @@ mpc_generate_design_parameters(dateMatFileStr,N_y,N_u);
 %% Filter Design
 bFilter = fir1(10,0.8,kaiser(11,6));
 % freqz(bFilter,1);
+bFilter = 1;
 %%
 for strFile = 1:3
    load(parametersFileArray{strFile}); 

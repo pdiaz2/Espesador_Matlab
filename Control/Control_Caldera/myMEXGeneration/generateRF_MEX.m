@@ -1,7 +1,7 @@
 %% Check version of RF
 numOutputs = 3;
 numTrees = [100 100 100];
-numPredictors = [8 8 12];
+numPredictors = [8 12 12];
 for y = 1:numOutputs
     PredictorVector(y).X = 30+rand(1,numPredictors(y));
 end
@@ -46,7 +46,7 @@ end
 % X = repmat(X,50,1);
 [nObs,p] = size(X);
 tic;
-prediction = predictRF_Y2_mex(X,numTreesPerOutput,p);
+prediction = predictRF_Y1_mex(X,numTreesPerOutput,p);
 toc;
 pause(1)
 % Below is unfixed

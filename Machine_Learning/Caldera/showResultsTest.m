@@ -3,11 +3,12 @@ clear all;
 close all;
 clc;
 %%
-load('ResultsRF_NoNoise_0206_step.mat');
+load('ResultsRF_NoNoise_0206_saw.mat');
 ml_Type = 'RF';
 %%
-ResultsStupidFix = fix_stupid_me(ML_Results,ml_Type,NameOutputs);
-J = Evaluate_Performance(ResultsStupidFix,ml_Type,NameInputs,NameOutputs);
+
+ResultsStupidFix = fix_stupid_me(ML_Results,ml_Type,nameOutputs);
+J = Evaluate_Performance(ResultsStupidFix,ml_Type,nameInputs,nameOutputs);
 [numOutputs,J_i,garbage] = size(J);
 
 J_Handy = build_j_handy(ResultsStupidFix,ml_Type,J,numOutputs,J_i);
@@ -116,26 +117,26 @@ end
 
 function [J_Handy] = build_j_handy(Results,ml_Type,J,numOutputs,J_i)
     if strcmp(ml_Type,'N4SID')
-        fullSize = size(Results.Output(1).MSE);
+        fullSize = size(Results.Output(1).MSE_1);
         dims = length(fullSize);
         J_Handy = zeros(numOutputs,dims,J_i);
         for j_i = 1:J_i
             for y = 1:numOutputs
                 % It would be ideal to create I_i according to dims, but it
                 % cannot be done
-                [I1,I2,I3] = ind2sub(size(Results.Output(1).MSE),J(y,j_i,1));
+                [I1,I2,I3] = ind2sub(size(Results.Output(1).MSE_1),J(y,j_i,1));
                 J_Handy(y,:,j_i) = [I1 I2 I3];
             end
         end
     elseif strcmp(ml_Type,'ARMAX')
-        fullSize = size(Results.Output(1).MSE);
+        fullSize = size(Results.Output(1).MSE_1);
         dims = length(fullSize);
         J_Handy = zeros(numOutputs,dims,J_i);
         for j_i = 1:J_i
             for y = 1:numOutputs
                 % It would be ideal to create I_i according to dims, but it
                 % cannot be done
-                [I1,I2,I3,I4,I5,I6,I7] = ind2sub(size(Results.Output(1).MSE),J(y,j_i,1));
+                [I1,I2,I3,I4,I5,I6,I7] = ind2sub(size(Results.Output(1).MSE_1),J(y,j_i,1));
                 J_Handy(y,:,j_i) = [I1 I2 I3 I4 I5 I6 I7];
             end
         end
