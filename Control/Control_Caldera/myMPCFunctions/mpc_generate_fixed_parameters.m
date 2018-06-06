@@ -15,7 +15,8 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
     else
         D = [0, D0];
     end
-    yRef = {[0,Y0(1);floor(simTime/25),36.412],[0,Y0(2);floor(simTime/4),23.7553],[0,Y0(3)]};
+%     yRef = {[0,Y0(1);floor(simTime/25),36.412],[0,Y0(2);floor(simTime/4),23.7553],[0,Y0(3)]};
+%     yRef = {[0,Y0(1)],[0,Y0(2);floor(simTime/4),33.7553],[0,Y0(3)]};
     %% Random Forest MEX Parameters
     [na,nb,nc,maxDelay] = generate_rf_model_orders(delayParametersFile,numCV);
     maxYDelay = maxDelay(1);

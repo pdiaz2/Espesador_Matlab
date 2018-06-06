@@ -5,7 +5,7 @@ close all;
 N_y = 10;
 N_u = 3;
 Dt = 1;
-simTime = 1200;
+simTime = 3600;
 tau_R = 5; % 5 s
 tau_C = 12; % 60 s
 stepInDV = false;
@@ -35,7 +35,7 @@ end
 %%
 rng(120938103);
 tic;
-sim('mpc_rf_boiler.slx');
+sim('mpc_rf_boiler_closed_loop.slx');
 toc;
 %% Plot
 close all
