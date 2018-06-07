@@ -5,7 +5,7 @@ close all;
 %% Input Design
 Dt = 1; % 0.5 seconds sampling time
 simTime = 80*60;
-amplitude = 30;
+amplitude = 10;
 % stepsOrSpecial = 'steps';
 matFileName = ['testData_0206.mat'];
 showGraphs = true;
@@ -24,8 +24,8 @@ makeMatrix = [1 0 0 0;...
              ];
 [numMakes ~] = size(makeMatrix);
 stepInitTime = 60;
-for f = 1:length(freqs)%;1:length(freqs)
-   for w = 4:length(waveform)%1:length(waveform)
+for f = 2:length(freqs)%;1:length(freqs)
+   for w = 3:length(waveform)%1:length(waveform)
       for m = 1:numMakes%;numMakes
         numberCycles = freqs(f);
         wave = waveform{w};

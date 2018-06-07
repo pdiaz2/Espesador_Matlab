@@ -7,7 +7,7 @@ makeMatrix = eye(4)%;[1 0 1 1];
 % Dt = 1/40; % 5 seconds sampling time
 Dt = 1; % 5 seconds sampling time
 simTime = 100;
-amplitude = 10;
+amplitude = 20;
 [numMakes ~] = size(makeMatrix);
 stepInitTime = 60;
 tau_R = 5;
@@ -36,6 +36,7 @@ simTime = 1200;
 titlesCV = {'Presión de vapor y consigna (%)','Oxígeno en exceso y consigna (%)',...
         'Nivel de agua y consigna (%)'};
 titlesMV = {'Combustible (%)','Aire (%)', 'Agua (%)'};
+titlesDV = {'Demanda de vapor (%)'};
 for m = 1:numMakes
     make = makeMatrix(m,:);
     demandaVals = myStepTest(simTime,Dt,1/2,simTime/3,stepInitTime,1,0,simTime/4);
@@ -75,8 +76,7 @@ for m = 1:numMakes
     sim('rf_boiler_open_loop.slx');
     %%
     t = inputs.time;
-    titles = {'Presión de vapor y consigna (%)','Oxígeno en exceso y consigna (%)',...
-            'Nivel de agua y consigna (%)'};
+    
     close all;
     
     figure(1)
@@ -84,18 +84,31 @@ for m = 1:numMakes
         caca = yHat.signals.values(cv,1,:);
         yHatVector(:,cv) = reshape(caca,simTime+1,1);
         subplot(numCV,1,cv)
-        plot(t(tau_R:end),y.signals.values(tau_R:end,cv),'LineWidth',1)
+        plot(downsample(t(1:end),tau_R),downsample(y.signals.values(1:end,cv),tau_R),'LineWidth',1)
         hold on
-        plot(t(tau_R:end),yHatVector(1:end-tau_R+1,cv)','LineWidth',1)
-        title(titles{cv})
+        plot(downsample(t(1:end),tau_R),downsample(yHatVector(1:end,cv),tau_R)','LineWidth',1)
+        title(titlesCV{cv})
         xlabel('Tiempo (s)')
         yLegend = ['$y_' num2str(cv) '$'];
         yHatLegend = ['$\hat{y}_' num2str(cv) '$'];
         legend({yLegend,yHatLegend},'Interpreter','latex');
         grid on
     end
-    
     figure(2)
+    for dv = 1:numDV
+        subplot(numDV,1,dv)
+        plot(t(startPlotTime:end),inputs.signals.values(startPlotTime:end,dv),'LineWidth',1)
+        title(titlesDV{dv})
+        xlabel('Tiempo (s)')
+        dLegend = ['$d_' num2str(dv) '$'];
+        legend({dLegend},'Interpreter','latex');
+        grid on
+        if imprint
+            printName = [figurePath 'mpc_rf_DV_' dateMatFileStr];
+            print(printName,'-depsc');
+        end
+    end
+    figure(3)
     for mv = 1:numMV
         subplot(numMV,1,mv)
         plot(t(startPlotTime:end),inputs.signals.values(startPlotTime:end,mv+numDV),'LineWidth',1)
