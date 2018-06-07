@@ -4,21 +4,22 @@ close all;
 clc;
 %% Boolean control
 load('Agosto_SimResults_1304_rawData.mat');
-saveToMatFile = true;
+saveToMatFile = false;
 matFileName = 'ResultsRF_0506';
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
-generateOne = false;
+generateOne = true;
 if generateOne
     % Input wave
-    waveVector = 3;
-    experiment = 8;
-    delayUCases = 2;
-    delayYCases = 2;
+    cvToGenerate = 4;
+    experiment = 1;
+    delayUCases = 1;
+    delayYCases = 4;
 else
    waveVector = 1:4;
+   cvToGenerate = -1; %Not used in this case
 end
 
 
@@ -44,7 +45,7 @@ mlParamsStruct.DelayMatrix.U = repmat([1:5]',1,numInputs);
 mlParamsStruct.DelayMatrix.Y = repmat([1:5]',1,numOutputs);
 [mlParamsStruct.sizeYMatrix garbage] = size(mlParamsStruct.DelayMatrix.Y);
 
-mlParamsStruct.trainingParamsArray = {100,1,'on',10,'on','curvature','TBagger'};
+mlParamsStruct.trainingParamsArray = {100,1,'on',10,'on','curvature','Ensemble'};
 mlParamsStruct.optimizeParams.maxMinLS = 40;
 mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         [1,mlParamsStruct.optimizeParams.maxMinLS],...
@@ -58,7 +59,8 @@ mlParamsStruct.trainingSamples = floor(0.9*nSamples);
 mlParamsStruct.validationSamples = controlParamsStruct.nSamples -...
                                 mlParamsStruct.trainingSamples;
 mlParamsStruct.mlMethod = mlMethod;
-
+mlParamsStruct.generateOneBool = generateOne;
+mlParamsStruct.cvToGenerate = cvToGenerate;
 %% Training & Testing Set
 testBigSet = struct;
 trainingBigSet = struct;
@@ -84,6 +86,16 @@ if generateOne
                                                         controlParamsStruct,...
                                                         mlParamsStruct,...
                                                         mOrder);
+    %%
+    RF = ML_Model(1).Model;
+    
+    RF.PredictorNames
+    if strcmp(mlParamsStruct.trainingParamsArray{7},'TBagger')
+        RF.OOBPermutedPredictorDeltaError
+    else
+        matFileName = ['RF_Y' num2str(cvToGenerate) '_0706.mat' ];
+        save(matFileName,'RF');
+    end
 else
     ML_Results = struct;
     for delayUCases = 1:mlParamsStruct.sizeUMatrix
