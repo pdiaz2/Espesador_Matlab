@@ -15,7 +15,7 @@ numVars = length(BigData.varsIndex);
 [numSamples garbage] = size(BigData.RawData');
 Dt = 1;
 simTime = BigData.manual.timeLimit;
-simTime = 1e5;
+% simTime = 1e5;
 % simTime = 1e5;
 % Noise generation
 % Currently with random numbers block, - maybe use band limited for solver

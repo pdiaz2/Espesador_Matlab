@@ -5,15 +5,15 @@ close all;
 N_y = 10;
 N_u = 3;
 Dt = 1;
-simTime = 2000;
+simTime = 1200;
 tau_R = 5; % 5 s
-tau_C = 12; % 60 s
+tau_C = 12*tau_R;
 stepInDV = false;
 imprint = true;
 controlClosedLoop = 1;
 startPlotTime = 1; %Wait for noise filter to stabilize
-dateMatFileStr = '0606';
-figurePath = 'figures\trialsActiveLimits\';
+dateMatFileStr = '0706';
+figurePath = 'figures\trialsTuningMPC\';
 %% Reference Values Struct
 wValuesStruct.delta = [0 5 -5];
 wValuesStruct.changeBool = logical([0 1 1]);

@@ -41,6 +41,8 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
     % Constraints on U are free according to CIC2017
     uLowLims = 0*ones(numMV,1); 
     uHighLims = 100*ones(numMV,1);
+    %% Numeric Solution Stability Factor
+    stabilityFactor = 1;
     %% Save
     save(matFileName);
 end
