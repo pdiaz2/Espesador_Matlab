@@ -14,10 +14,10 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
 %     rMatrix(2,:) = rMatrix(2,:);
     rMatrix(3,:) = 0.01*rMatrix(3,:);
     beta = 0*ones(numCV,1);
-    lambdaMatrix = 1*ones(numCV,N_y);
-    lambdaMatrix(1,:) = zeros(1,N_y);
-    lambdaMatrix(2,:) = zeros(1,N_y);
-    lambdaMatrix(3,:) = zeros(1,N_y);
+    lambdaMatrix = 100*ones(numCV,N_y);
+%     lambdaMatrix(1,:) = zeros(1,N_y);
+%     lambdaMatrix(2,:) = zeros(1,N_y);
+%     lambdaMatrix(3,:) = zeros(1,N_y);
 
     % Delta U bounds (decission variables)
     lBounds = deltaULowLim*ones(1,numMV*N_u);

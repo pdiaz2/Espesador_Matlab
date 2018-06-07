@@ -9,11 +9,11 @@ simTime = 2000;
 tau_R = 5; % 5 s
 tau_C = 12; % 60 s
 stepInDV = false;
-imprint = false;
+imprint = true;
 controlClosedLoop = 1;
 startPlotTime = 1; %Wait for noise filter to stabilize
 dateMatFileStr = '0606';
-figurePath = 'figures\';
+figurePath = 'figures\trialsActiveLimits\';
 %% Reference Values Struct
 wValuesStruct.delta = [0 5 -5];
 wValuesStruct.changeBool = logical([0 1 1]);
@@ -126,3 +126,7 @@ for hyp = 1:hyperResults
         print(printName,'-depsc');
     end
 end
+%% Save Specific Parameters
+saveTuningName = [figurePath 'mpc_rf_GA_' dateMatFileStr];
+save(saveTuningName,'qMatrix','rMatrix','lambdaMatrix','N_y','N_u','GAParameters',...
+                    'bFilter','tau_C');
