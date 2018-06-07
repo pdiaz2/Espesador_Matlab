@@ -6,13 +6,15 @@ close all;
 makeMatrix = eye(4)%;[1 0 1 1];
 % Dt = 1/40; % 5 seconds sampling time
 Dt = 1; % 5 seconds sampling time
-simTime = 80*60;
+simTime = 100;
 amplitude = 10;
 [numMakes ~] = size(makeMatrix);
 stepInitTime = 60;
 tau_R = 5;
 dateMatFileStr = '0606';
 delayParametersFile = ['delayParameters_' dateMatFileStr '.mat'];
+startPlotTime = 1;
+imprint = false;
 %%
 %% Initial Conditions
 D0 = 35.7834;
@@ -30,7 +32,7 @@ maxDDelay = maxDelay(3);
 nTrees = ones(1,numCV)*100
 nPredictors = [8 12 12]
 %% Simulation Time
-simTime = 80*60;
+simTime = 1200;
 titlesCV = {'Presión de vapor y consigna (%)','Oxígeno en exceso y consigna (%)',...
         'Nivel de agua y consigna (%)'};
 titlesMV = {'Combustible (%)','Aire (%)', 'Agua (%)'};
@@ -72,22 +74,25 @@ for m = 1:numMakes
     %%
     sim('rf_boiler_open_loop.slx');
     %%
-    t = inputs.time(tau_R:end);
+    t = inputs.time;
     titles = {'Presión de vapor y consigna (%)','Oxígeno en exceso y consigna (%)',...
             'Nivel de agua y consigna (%)'};
     close all;
+    
     figure(1)
     for cv = 1:numCV
+        caca = yHat.signals.values(cv,1,:);
+        yHatVector(:,cv) = reshape(caca,simTime+1,1);
         subplot(numCV,1,cv)
-        plot(t,y.signals.values(tau_R:end,cv),'LineWidth',1)
+        plot(t(tau_R:end),y.signals.values(tau_R:end,cv),'LineWidth',1)
         hold on
-        plot(t,yHat.signals.values(1:end-tau_R,cv),'LineWidth',1)
+        plot(t(tau_R:end),yHatVector(1:end-tau_R+1,cv)','LineWidth',1)
         title(titles{cv})
         xlabel('Tiempo (s)')
         yLegend = ['$y_' num2str(cv) '$'];
         yHatLegend = ['$\hat{y}_' num2str(cv) '$'];
         legend({yLegend,yHatLegend},'Interpreter','latex');
-        grid
+        grid on
     end
     
     figure(2)

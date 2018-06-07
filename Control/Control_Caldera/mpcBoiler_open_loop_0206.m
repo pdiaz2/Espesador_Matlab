@@ -54,7 +54,7 @@ ySensor = mpc_generate_input(yValuesStruct);
 %%
 rng(120938103);
 tic;
-sim('mpc_rf_boiler_open_loop.slx');
+sim('mpc_rf_boiler.slx');
 toc;
 %% Plot
 close all
