@@ -25,7 +25,7 @@ switch mlParamsStruct.mlMethod
             switch mlParamsStruct.trainingParamsArray{7}
                 case 'TBagger'
                     ML_Results.Output(cv).Performance(casesArray(1),casesArray(2),casesArray(3)).OOBError = ...
-                                                                        Results(y).OOBError;
+                                                                        resultsIter(cv).OOBError;
                 case 'Ensemble'
 
             end
