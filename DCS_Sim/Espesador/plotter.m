@@ -2,10 +2,10 @@ close all;
 clear all;
 clc;
 %%
-matFileName = 'Agosto_SimResults_1304.mat';
+matFileName = 'Agosto_SimResults_1304_rawData.mat';
 figurePath = 'figures\';
 imprint = false;
-plotFigures = false;
+plotFigures = true;
 granularity = 's';
 %%
 load(matFileName)
