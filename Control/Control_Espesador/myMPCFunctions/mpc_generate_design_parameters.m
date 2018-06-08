@@ -6,19 +6,25 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
     %% MPC Design Parameters
     % Weight Matrices (Design)
     qMatrix = 1*ones(numCV,N_y-1);
-    qMatrix(1,:) = zeros(1,N_y-1);
+%     qMatrix(1,:) = 0.00001*ones(1,N_y-1);
 %     qMatrix(2,:) = zeros(1,N_y-1);
 %     qMatrix(3,:) = zeros(1,N_y-1);
+%     qMatrix(4,:) = zeros(1,N_y-1);
     rMatrix = 1*ones(numMV,N_u);
 %     rMatrix(1,:) = rMatrix(2,:);
 %     rMatrix(2,:) = rMatrix(2,:);
-    rMatrix(3,:) = 0.01*rMatrix(3,:);
-    beta = 0*ones(numCV,1);
-    lambdaMatrix = 100*ones(numCV,N_y);
+    beta = 0.0001*ones(numCV,1);
+    lambdaMatrix = 0.0001*ones(numCV,N_y);
 %     lambdaMatrix(1,:) = zeros(1,N_y);
 %     lambdaMatrix(2,:) = zeros(1,N_y);
 %     lambdaMatrix(3,:) = zeros(1,N_y);
-
+%     lambdaMatrix(4,:) = zeros(1,N_y);
+    %% Stability for Numeric Method
+    qMatrix = stabilityFactor*qMatrix;
+    rMatrix = stabilityFactor*rMatrix;
+    beta = stabilityFactor*beta;
+    lambdaMatrix = stabilityFactor*lambdaMatrix;
+    %% Bounds and Constraints
     % Delta U bounds (decission variables)
     lBounds = deltaULowLim*ones(1,numMV*N_u);
     uBounds = deltaUHighLim*ones(1,numMV*N_u);
@@ -36,14 +42,18 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
     
     %% MPC GA Parameters
     pop = 200;
-    gens = 100;
+    gens = 50;
     eliteFraction = 0.05;
     GAParameters = [pop; % nPopulation 
                     gens; % maxGens
                     floor(0.75*gens); % maxStallGens
                     1e-6; % functionTolerance
-                    3;    % fitnessLimit
+                    3*stabilityFactor;    % fitnessLimit
                     ceil(eliteFraction*pop);
+                    1; % Use OutputFcn
+                    0; %Plot Progress within Generations
+                    1e-6; % Champion distance tolerance
+                    10; % Champion break tolerance limit
                     numMV*N_u % nVars
                     ];
                      
