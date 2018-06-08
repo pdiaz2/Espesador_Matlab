@@ -26,9 +26,8 @@ startPlotTime = 1;
 imprint = false;
 
 %% Noise
-noisePower = [0.5 0.1 0.3 0.0001];
+noisePower = [0.05 0.001 0.03 0.00001];
 noiseSeed = [1231235 456345 93894 748563];
-%%
 %% Initial Conditions
 % Obtained by LOOKING AT INITIAL VALUES ON GRAPHS!!!!!
 % Can be done much better!!
