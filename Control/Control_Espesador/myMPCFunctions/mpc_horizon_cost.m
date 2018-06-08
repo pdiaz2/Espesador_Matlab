@@ -1,5 +1,5 @@
 function [ spTrackCost, terminalCost, limBreakCost ] = mpc_horizon_cost( spTrackingError, terminalError, epsilonValues, ...
-                                                                        qMatrix,beta,lambdaMatrix)
+                                                                        qMatrix,betaCost,lambdaMatrix)
 %MPC_HORIZON_COST Computes cost of prediction related terms of F.O.
 %   - Computes sum(||spTrackingError||_Q^2) tracking cost
 %   - Calculates sum(||epsilonValues||_{Lambda}^2) limit violation cost
@@ -15,7 +15,7 @@ function [ spTrackCost, terminalCost, limBreakCost ] = mpc_horizon_cost( spTrack
 % Setpoint tracking cost
 spTrackCost = spTrackingError.^2*qMatrix(:);
 % Terminal cost
-terminalCost = terminalError.^2*beta;
+terminalCost = terminalError.^2*betaCost;
 % Limit violation cost
 limBreakCost = epsilonValues.^2*lambdaMatrix(:);
 

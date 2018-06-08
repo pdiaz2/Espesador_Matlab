@@ -30,8 +30,7 @@ for cv = 1:n
         case 3
             yHat(:,cv) = predictRF_Y3_mex(X,nTrees(cv),p);
         case 4
-                yHat(cv,1) = predictRF_Y4_mex(X,nTrees(cv),p);
-        end
+            yHat(:,cv) = predictRF_Y4_mex(X,nTrees(cv),p);
     end
 end
 yHatMatrix = yHat;

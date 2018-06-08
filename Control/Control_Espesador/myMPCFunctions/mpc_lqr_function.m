@@ -1,4 +1,4 @@
-function [ z ] = mpc_lqr_function(x, beta, rMatrix, qMatrix, lambdaMatrix, wMatrix, ...
+function [ z ] = mpc_lqr_function(x, betaCost, rMatrix, qMatrix, lambdaMatrix, wMatrix, ...
                                   yLims, uLims, yPastValues, uPastValues, dPastValues,...
                                   nTrees, nPredictors, na, nb, nc)
 %MPC_LQR_FUNCTION MPC objective finite LQR function
@@ -38,7 +38,7 @@ dPastValues = permute(repmat(dPastValues,1,1,nPopulation),[3 2 1]);
 [ spTrackingError, terminalError, epsilonValues ] = mpc_horizon_error( yHat, wMatrix, yLims );
 %% Costs of prediction 
 [ spTrackingCost, terminalCost, limBreakCost ] = mpc_horizon_cost( spTrackingError, terminalError, epsilonValues, ...
-                                                                        qMatrix,beta,lambdaMatrix);
+                                                                        qMatrix,betaCost,lambdaMatrix);
 %% Compute Objective Funcion Value 
 z = 1/2*spTrackingCost+1/2*terminalCost+1/2*limBreakCost+1/2*x(:,NUM_PSEUDO_COSTS+1:end).^2*rMatrix(:);
 

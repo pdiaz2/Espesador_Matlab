@@ -10,7 +10,8 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
     numDV = length(D0);
     numMV = length(U0);
     %% Noise
-    noisePower = [0.05 0.001 0.03 0.00001];
+    noisePower = [0.0005 0.00000001 0.0003 0.000001];
+%     noisePower = zeros(1,4);
     noiseSeed = [1231235 456345 93894 748563];
     %% DV Design
     if (stepInDV)
@@ -18,7 +19,9 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
         stepTimeDV(2) = simTime;
         stepTimeDV(3) = simTime;
     else
-        
+        stepTimeDV(1) = simTime;
+        stepTimeDV(2) = simTime;
+        stepTimeDV(3) = simTime;
     end
     %% Random Forest MEX Parameters
     [na,nb,nc,maxDelay] = generate_rf_model_orders(delayParametersFile,numCV);
@@ -32,8 +35,10 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
 
     % Constraints (Fixed by CIC2017)
     % On MV (1 pps => 5 pp5s)
-    deltaULowLim = -3;
-    deltaUHighLim = 3;
+    deltaULowLim(1) = -15;
+    deltaULowLim(2) = -5;
+    deltaUHighLim(1) = 15;
+    deltaUHighLim(2) = 5;
 
     % Restriction only on y2: 0.95*Y0(2)<= y <= 1.05*Y0(2)
 
