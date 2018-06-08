@@ -5,8 +5,8 @@ load(matFileName);
 na = [];
 for cv = 1:numCV
     % Choose model and output specific delay combinations (chosen off-line)
-    delayUMatrix(cv,:) = UBackshiftMatrix(delayU(cv),:);
-    delayYMatrix(cv,:) = YBackshiftMatrix(delayY(cv),:);
+    delayUMatrix(cv,:) = mlParamsStruct.DelayMatrix.U(delayU(cv),:);
+    delayYMatrix(cv,:) = mlParamsStruct.DelayMatrix.Y(delayY(cv),:);
     na = [na;delayYMatrix(cv,cv)];
 end
 nb = delayUMatrix(:,(1+numDV):end);
