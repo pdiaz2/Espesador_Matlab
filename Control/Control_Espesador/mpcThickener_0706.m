@@ -80,7 +80,9 @@ titlesCV = {'Torque','Concentración de Descarga','Nivel de Interfaz',...
 titlesMV = {'Flujo de Descarga','Dosis de Floculante'};
 titlesDV = {'Flujo de Alimentación','Concentración de Alimentación','Granulometría de Alimentación'};
 titlesHyp = {'ExitFlags','F.O. Values'};
-
+CVUnits = {'%','%','m','%'};
+MVUnits = {'m3/hr','gpt'};
+DVUnits = {'m3/s','%','N/A'};
 figure(1)
 for cv = 1:numCV-1
     subplot(numCV-1,1,cv)
@@ -89,6 +91,7 @@ for cv = 1:numCV-1
     title(titlesCV{cv})
     plot(t(startPlotTime:end),wRef.signals.values(startPlotTime:end,cv),'r','LineWidth',1);
 %     plot(t(startPlotTime:end),yFiltered.signals.values(startPlotTime:end,cv),'g','LineWidth',1);
+    ylabel(CVUnits{cv})
     xlabel('Tiempo (hr)')
     yLegend = ['$y_' num2str(cv) '$'];
     wLegend = ['$w_' num2str(cv) '$'];
@@ -106,6 +109,7 @@ for dv = 1:numDV
     subplot(numDV,1,dv)
     plot(t(startPlotTime:end),inputs.signals.values(startPlotTime:end,dv),'LineWidth',1)
     title(titlesDV{dv})
+    ylabel(DVUnits{dv})
     xlabel('Tiempo (hr)')
     dLegend = ['$d_' num2str(dv) '$'];
     legend({dLegend},'Interpreter','latex');
@@ -120,6 +124,7 @@ for mv = 1:numMV
     subplot(numMV,1,mv)
     plot(t(startPlotTime:end),inputs.signals.values(startPlotTime:end,mv+numDV),'LineWidth',1)
     title(titlesMV{mv})
+    ylabel(MVUnits{mv})
     xlabel('Tiempo (hr)')
     mLegend = ['$u_' num2str(mv) '$'];
     legend({mLegend},'Interpreter','latex');
