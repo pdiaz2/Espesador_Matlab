@@ -2,21 +2,24 @@ function [ state, options, optchanged ] = mpc_display_output_fcn(options, state,
                                                                 qMatrix, beta, lambdaMatrix, wMatrix, yLims,uLims,...
                                                                 yPastValues, uPastValues, dPastValues,...
                                                                 nTrees, nPredictors, na, nb, nc,...
-                                                                plotProgressBool)
+                                                                plotProgressBool,championTolerance,...
+                                                                championBreakTolerance)
 %MPC_DISPLAY_OUTPUT_FCN Displays associated costs of objective function
 persistent bestMeanTrackingError bestMeanTerminalError bestMeanLimBreakError
 persistent bestMaxTrackingError bestMaxTerminalError bestMaxLimBreakError
 persistent bestMinTrackingError bestMinTerminalError bestMinLimBreakError
 persistent bestTrackingCost bestTerminalCost bestLimBreakCost
 persistent h1 h2
-persistent champion
+persistent champion championDistancePast championToleranceBreakCounter
 optchanged = false;
 switch flag
     case 'init'
-        bestScore = state.Best(end);
-        ibest = find(state.Score == bestScore,1,'last');
-        bestIndividual = state.Population(ibest,:);
-        champion = bestIndividual;
+%         bestScore = state.Best(end);
+%         ibest = find(state.Score == bestScore,1,'last');
+%         bestIndividual = state.Population(ibest,:);
+        champion = state.Population(1,:);
+        championDistancePast = 1e5;
+        championToleranceBreakCounter = 0;
         if plotProgressBool
             h1 = figure;
             ax = gca;
@@ -35,7 +38,9 @@ switch flag
         bestIndividual = state.Population(ibest,:);
         decissionVars = numel(bestIndividual);
         weightVector = ones(1,decissionVars);
-        championSpread = (bestIndividual-champion).^2*weightVector';
+        championDistance = (bestIndividual-champion).^2*weightVector';
+        championSpread = championDistance-championDistancePast;
+        champion = bestIndividual;
         if plotProgressBool
             fprintf('ChampionSpread: %4.6f\r\n',championSpread);
         end
@@ -115,16 +120,20 @@ switch flag
             end
         else
         end
-        if championSpread < 1e-3
-            state.StopFlag = 'y';
+        if (abs(championSpread)) < championTolerance
+            championToleranceBreakCounter = championToleranceBreakCounter+1;   
         end
+        if championToleranceBreakCounter > championBreakTolerance
+           state.StopFlag = 'y'; 
+        end
+        championDistancePast = championDistance;
     case 'done'
         clear bestMeanTrackingError bestMeanTerminalError bestMeanLimBreakError
         clear bestMaxTrackingError bestMaxTerminalError bestMaxLimBreakError
         clear bestMinTrackingError bestMinTerminalError bestMinLimBreakError
         clear bestTrackingCost bestTerminalCost bestLimBreakCost
         clear h1 h2
-        clear champion
+        clear champion championDistancePast championToleranceBreakCounter
         close all
 end
 
