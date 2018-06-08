@@ -30,8 +30,8 @@ end
 %% Building delayParameters Mat File
 delayU = J_Handy(:,2,1);
 delayY = J_Handy(:,3,1);
-numDV = 1;
-numMV = 3;
+numDV = 3;
+numMV = 2;
 numInputs = numDV+numDV;
 
 save('delayParameters_0706.mat','delayU','delayY','controlParamsStruct','numDV','numInputs',...
