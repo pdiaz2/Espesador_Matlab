@@ -23,7 +23,7 @@ tau_R = 10*groupBy;
 dateMatFileStr = '0706';
 delayParametersFile = ['delayParameters_' dateMatFileStr '.mat'];
 startPlotTime = 1;
-imprint = false;
+imprint = true;
 
 %% Noise
 noisePower = [0.05 0.001 0.03 0.00001];
@@ -52,6 +52,9 @@ titlesCV = {'Torque','Concentración de Descarga','Nivel de Interfaz',...
             'Flujo de Rebalse'};
 titlesMV = {'Flujo de Descarga','Dosis de Floculante'};
 titlesDV = {'Flujo de Alimentación','Concentración de Alimentación','Granulometría de Alimentación'};
+CVUnits = {'%','%','m','%'};
+MVUnits = {'m3/hr','gpt'};
+DVUnits = {'m3/s','%','N/A'};
 for m = 1:numMakes
     make = makeMatrix(m,:);
     if stepTests
@@ -112,7 +115,7 @@ for m = 1:numMakes
     sim('rf_thickener_open_loop.slx');
     toc;
     %%
-    t = inputs.time(1:simTime);
+    t = inputs.time(1:simTime)/3600;
     
     
     figure(1)
@@ -124,7 +127,8 @@ for m = 1:numMakes
         hold on
         plot(downsample(t(1:simTime),tau_R),downsample(yHatVector(1:simTime,cv),tau_R)','LineWidth',1)
         title(titlesCV{cv})
-        xlabel('Tiempo (s)')
+        ylabel(CVUnits{cv})
+        xlabel('Tiempo (hr)')
         yLegend = ['$y_' num2str(cv) '$'];
         yHatLegend = ['$\hat{y}_' num2str(cv) '$'];
         legend({yLegend,yHatLegend},'Interpreter','latex');
@@ -140,7 +144,8 @@ for m = 1:numMakes
         subplot(numDV,1,dv)
         plot(t(startPlotTime:simTime),inputs.signals.values(startPlotTime:simTime,dv),'LineWidth',1)
         title(titlesDV{dv})
-        xlabel('Tiempo (s)')
+        ylabel(DVUnits{dv})
+        xlabel('Tiempo (hr)')
         dLegend = ['$d_' num2str(dv) '$'];
         legend({dLegend},'Interpreter','latex');
         grid on
@@ -154,7 +159,8 @@ for m = 1:numMakes
         subplot(numMV,1,mv)
         plot(t(startPlotTime:simTime),inputs.signals.values(startPlotTime:simTime,mv+numDV),'LineWidth',1)
         title(titlesMV{mv})
-        xlabel('Tiempo (s)')
+        ylabel(MVUnits{mv})
+        xlabel('Tiempo (hr)')
         mLegend = ['$u_' num2str(mv) '$'];
         legend({mLegend},'Interpreter','latex');
         grid on
