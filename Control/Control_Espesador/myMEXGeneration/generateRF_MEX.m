@@ -5,7 +5,7 @@ numPredictors = [10 10 9 9];
 for y = 1:numOutputs
     PredictorVector(y).X = 30+rand(1,numPredictors(y));
 end
-cv = 1;
+cv = 4;
 setenv('MW_MINGW64_LOC','C:\TDM-GCC-64')
 %%
 
@@ -41,6 +41,8 @@ switch cv
         codegen predictRF_Y2.m -config:mex -args {x,num_trees,num_predictors}
     case 3
         codegen predictRF_Y3.m -config:mex -args {x,num_trees,num_predictors}
+    case 4
+        codegen predictRF_Y4.m -config:mex -args {x,num_trees,num_predictors}
 end
 
 %% Prediction - Speed Comparison
@@ -61,6 +63,6 @@ toc;
 tic;
 for obs = 1:nObs
     x = 30+rand(1,10);
-    prediction(obs) = predictRF_Y2_old_mex(x,numTrees,p);
+    prediction(obs) = predictRF_Y2_old_mex(x,100,p);
 end
 toc;
