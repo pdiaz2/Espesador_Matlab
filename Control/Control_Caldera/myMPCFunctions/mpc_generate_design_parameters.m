@@ -49,6 +49,8 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
                     1e-6; % functionTolerance
                     3*stabilityFactor;    % fitnessLimit
                     ceil(eliteFraction*pop);
+                    1; % Use OutputFcn
+                    1; %Plot Progress within Generations
                     numMV*N_u % nVars
                     ];
                      
