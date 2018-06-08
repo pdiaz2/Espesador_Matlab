@@ -10,16 +10,16 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
     numDV = length(D0);
     numMV = length(U0);
     %% Noise
-    noisePower = [0.5 0.1 0.3 0.0001];
+    noisePower = [0.05 0.001 0.03 0.00001];
     noiseSeed = [1231235 456345 93894 748563];
     %% DV Design
     if (stepInDV)
-        D = [0,35.7834;floor(simTime/14),42.7834;3*floor(simTime/14),35.7834];
+        stepTimeDV(1) = floor(simTime/10);
+        stepTimeDV(2) = simTime;
+        stepTimeDV(3) = simTime;
     else
-        D = [0, D0];
+        
     end
-%     yRef = {[0,Y0(1);floor(simTime/25),36.412],[0,Y0(2);floor(simTime/4),23.7553],[0,Y0(3)]};
-%     yRef = {[0,Y0(1)],[0,Y0(2);floor(simTime/4),33.7553],[0,Y0(3)]};
     %% Random Forest MEX Parameters
     [na,nb,nc,maxDelay] = generate_rf_model_orders(delayParametersFile,numCV);
     maxYDelay = maxDelay(1);
@@ -36,16 +36,24 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
     deltaUHighLim = 3;
 
     % Restriction only on y2: 0.95*Y0(2)<= y <= 1.05*Y0(2)
-    yLowLims = 0*ones(numCV,1);
-    yHighLims = 100*ones(numCV,1);
-    yLowLims(1,:) = 
+
+    yLowLims(1,:) = 0.8*Y0(1);
+    yHighLims(1,:) = 1.2*Y0(1);
     yLowLims(2,:) = 0.97*Y0(2);
     yHighLims(2,:) = 1.03*Y0(2);
+    yLowLims(3,:) = 2;
+    yHighLims(3,:) = 6;
+    yLowLims(4,:) = 0;
+    yHighLims(4,:) = 0.1;
     
     
     % Constraints on U are free according to CIC2017
-    uLowLims = 0*ones(numMV,1); 
-    uHighLims = 100*ones(numMV,1);
+    uLowLims(1,:) = 70;
+    uHighLims(1,:) = 125;
+    uLowLims(2,:) = 23;
+    uHighLims(2,:) = 29;
+    %% Numeric Solution Stability Factor
+    stabilityFactor = 1;
     %% Save
     save(matFileName);
 end

@@ -5,6 +5,7 @@ close all;
 N_y = 10;
 N_u = 3;
 Dt = 1;
+simTime = 1.4e6;
 groupBy = 60; % This should be automatic
 tau_R = 10*groupBy;
 tau_C = 2*tau_R;
@@ -16,7 +17,7 @@ dateMatFileStr = '0706';
 figurePath = 'figures\trialsTuningMPC\';
 %%
 %% Reference Values Struct
-wValuesStruct.delta = [0 5 -5 0];
+wValuesStruct.delta = [0 0.01 1.5 0];
 wValuesStruct.changeBool = logical([0 1 1 0]);
 wValuesStruct.shape = {'step','step','step','step'};
 wValuesStruct.timeToChange = [-1 floor(simTime/22) floor(simTime/2) -1];
@@ -45,3 +46,14 @@ bFilter = 1;
 for strFile = 1:3
    load(parametersFileArray{strFile}); 
 end
+%% Reference for MPC
+wValuesStruct.IC = Y0;
+yRef = mpc_generate_input(wValuesStruct);
+%% Sensor Input for MPC
+yValuesStruct.IC = Y0;
+ySensor = mpc_generate_input(yValuesStruct);
+%%
+rng(120938103);
+tic;
+sim('mpc_rf_boiler.slx');
+toc;
