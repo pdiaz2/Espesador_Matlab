@@ -13,8 +13,8 @@ else
     addICInSimulation = zeros(1,5);
 end
 Dt = 1; % 5 seconds sampling time
-simTime = BigData.manual.timeLimit;
-% simTime = 1e6;
+% simTime = BigData.manual.timeLimit;
+simTime = 1.4e6;
 amplitude = 20;
 [numMakes ~] = size(makeMatrix);
 stepInitTime = 120;
@@ -25,7 +25,9 @@ delayParametersFile = ['delayParameters_' dateMatFileStr '.mat'];
 startPlotTime = 1;
 imprint = false;
 
-%%
+%% Noise
+noisePower = [0.5 0.1 0.3 0.0001];
+noiseSeed = [1231235 456345 93894 748563];
 %%
 %% Initial Conditions
 % Obtained by LOOKING AT INITIAL VALUES ON GRAPHS!!!!!
@@ -110,8 +112,8 @@ for m = 1:numMakes
     tic;
     sim('rf_thickener_open_loop.slx');
     toc;
-    
-    t = inputs.time;
+    %%
+    t = inputs.time(1:simTime);
     
     
     figure(1)
@@ -119,9 +121,9 @@ for m = 1:numMakes
         caca = yHat.signals.values(cv,1,:);
         yHatVector(:,cv) = reshape(caca,simTime+1,1);
         subplot(numCV,1,cv)
-        plot(downsample(t(1:end),tau_R),downsample(y.signals.values(1:end,cv),tau_R),'LineWidth',1)
+        plot(downsample(t(1:simTime),tau_R),downsample(y.signals.values(1:simTime,cv),tau_R),'LineWidth',1)
         hold on
-        plot(downsample(t(1:end),tau_R),downsample(yHatVector(1:end,cv),tau_R)','LineWidth',1)
+        plot(downsample(t(1:simTime),tau_R),downsample(yHatVector(1:simTime,cv),tau_R)','LineWidth',1)
         title(titlesCV{cv})
         xlabel('Tiempo (s)')
         yLegend = ['$y_' num2str(cv) '$'];
@@ -129,32 +131,36 @@ for m = 1:numMakes
         legend({yLegend,yHatLegend},'Interpreter','latex');
         grid on
         hold off
+        if imprint
+            printName = [figurePath 'rf_comparison_CV_' dateMatFileStr];
+            print(printName,'-depsc');
+        end
     end
     figure(2)
     for dv = 1:numDV
         subplot(numDV,1,dv)
-        plot(t(startPlotTime:end),inputs.signals.values(startPlotTime:end,dv),'LineWidth',1)
+        plot(t(startPlotTime:simTime),inputs.signals.values(startPlotTime:simTime,dv),'LineWidth',1)
         title(titlesDV{dv})
         xlabel('Tiempo (s)')
         dLegend = ['$d_' num2str(dv) '$'];
         legend({dLegend},'Interpreter','latex');
         grid on
         if imprint
-            printName = [figurePath 'mpc_rf_DV_' dateMatFileStr];
+            printName = [figurePath 'rf_comparison_DV_' dateMatFileStr];
             print(printName,'-depsc');
         end
     end
     figure(3)
     for mv = 1:numMV
         subplot(numMV,1,mv)
-        plot(t(startPlotTime:end),inputs.signals.values(startPlotTime:end,mv+numDV),'LineWidth',1)
+        plot(t(startPlotTime:simTime),inputs.signals.values(startPlotTime:simTime,mv+numDV),'LineWidth',1)
         title(titlesMV{mv})
         xlabel('Tiempo (s)')
         mLegend = ['$u_' num2str(mv) '$'];
         legend({mLegend},'Interpreter','latex');
         grid on
         if imprint
-            printName = [figurePath 'mpc_rf_MV_' dateMatFileStr];
+            printName = [figurePath 'rf_comparison_MV_' dateMatFileStr];
             print(printName,'-depsc');
         end
     end
