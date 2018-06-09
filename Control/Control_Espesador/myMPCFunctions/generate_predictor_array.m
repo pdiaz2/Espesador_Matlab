@@ -1,6 +1,7 @@
 function predictorArray  = generate_predictor_array(x,jAhead,uLims,...
                                                 yPastValues,uPastValues,dPastValues,...
-                                                na,nb,nc,N_u,NUM_PSEUDO_COSTS)
+                                                na,nb,nc,N_u,kappaControl,...
+                                                NUM_PSEUDO_COSTS)
 % GENERATE_PREDICTOR_VECTOR Help after
 % all xPastValues already up to date
 [nPopulation,~] = size(x);
@@ -43,7 +44,9 @@ for cv = 1:n
 %         MVVector = zeros(nPopulation,delayU+1); % Change after new RF Model
         MVVector = zeros(nPopulation,delayU);
         % Calculate MV to be added to record
-        computedMV = compute_MV_value(x,uLims,uPastValues,mv,m,jAhead,N_u,NUM_PSEUDO_COSTS);  
+        computedMV = compute_MV_value(x,uLims,uPastValues,mv,m,...
+                                        jAhead,N_u,kappaControl,...
+                                        NUM_PSEUDO_COSTS);  
         MVVector(:,1) = computedMV;
         if delayU >= 2 % 1 Before Change to 2 after new RF Model
             MVVector(:,2:end) = uPastValues(:,[1:(delayU-1)],mv); %Works even if delayU = 0. After new RF Model, delayU >=1

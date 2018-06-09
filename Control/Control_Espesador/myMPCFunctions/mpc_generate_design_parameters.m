@@ -5,20 +5,20 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
     load(fixedParametersFileName);
     %% MPC Design Parameters
     % Weight Matrices (Design)
-    qMatrix = 1000*ones(numCV,N_y-1);
-    qMatrix(1,:) = 0.000000001*ones(1,N_y-1);
-%     qMatrix(2,:) = 0.00001*ones(1,N_y-1);
-    qMatrix(3,:) = 10*ones(1,N_y-1); % 0.01 lets bdlvl down. 10 compensates
-    qMatrix(4,:) = 0.00001*ones(1,N_y-1);
-    rMatrix = 0.0001*ones(numMV,N_u); % 0.001 bad results
-%     rMatrix(1,:) = rMatrix(2,:);
-    rMatrix(2,:) = 0.001*rMatrix(2,:); % 1 is very very good. 10 very similar
-    betaCost = 0.0001*ones(numCV,1);
-    lambdaMatrix = 0.0001*ones(numCV,N_y);
-%     lambdaMatrix(1,:) = zeros(1,N_y);
-%     lambdaMatrix(2,:) = zeros(1,N_y);
-%     lambdaMatrix(3,:) = zeros(1,N_y);
-%     lambdaMatrix(4,:) = zeros(1,N_y);
+    qMatrix = qNormMatrix*ones(numCV,N_y-1)*1/((N_y-1)*numCV);
+%     qMatrix(1,:) = 10*qMatrix(1,:);
+%     qMatrix(2,:) = 100*qMatrix(2,:);
+%     qMatrix(3,:) = 10*qMatrix(3,:); % 0.01 lets bdlvl down. 10 compensates
+%     qMatrix(4,:) = 0.00001*qMatrix(4,:);
+    rMatrix = rNormMatrix*ones(numMV,N_u); % 0.001 bad results
+%     rMatrix(1,:) = 1*rMatrix(1,:);
+%     rMatrix(2,:) = 1*rMatrix(2,:); % 1 is very very good. 10 very similar
+    betaCost = betaNormMatrix*ones(numCV,1)*1/(numCV);
+    lambdaMatrix = lambdaNormMatrix*ones(numCV,N_y)*1/((N_y)*numCV);
+%     lambdaMatrix(1,:) = 0.00001*lambdaMatrix(1,:);
+%     lambdaMatrix(2,:) = 0.00001*lambdaMatrix(2,:);
+%     lambdaMatrix(3,:) = 0.00001*lambdaMatrix(3,:);
+%     lambdaMatrix(4,:) = 0.00001*lambdaMatrix(4,:);
     %% Stability for Numeric Method
     qMatrix = stabilityFactor*qMatrix;
     rMatrix = stabilityFactor*rMatrix;
@@ -43,18 +43,18 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
     
     
     %% MPC GA Parameters
-    pop = 200;
-    gens = 50;
+    pop = 200;% 200
+    gens = 100;
     eliteFraction = 0.05;
     GAParameters = [pop; % nPopulation 
                     gens; % maxGens
                     floor(0.75*gens); % maxStallGens
-                    1e-6; % functionTolerance
+                    1e-3; % functionTolerance
                     0.001*stabilityFactor;    % fitnessLimit
                     ceil(eliteFraction*pop);
                     1; % Use OutputFcn
-                    0; %Plot Progress within Generations
-                    1e-6; % Champion distance tolerance
+                    2; %Plot Progress within Generations
+                    1e-3; % Champion distance tolerance
                     10; % Champion break tolerance limit
                     numMV*N_u % nVars
                     ];
