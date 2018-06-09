@@ -7,6 +7,7 @@ N_u = 3;
 kappaControl = 5;
 Dt = 1;
 simTime = 1.3e5;
+
 groupBy = 60; % This should be automatic
 tau_R = 10*groupBy;
 tau_C = kappaControl*tau_R;
@@ -93,6 +94,8 @@ CVUnits = {'%','%','m','%'};
 MVUnits = {'m3/hr','gpt'};
 DVUnits = {'m3/s','%','N/A'};
 figure(1)
+fig = gcf;
+movegui(fig,'southwest')
 for cv = 1:numCV-1
     subplot(numCV-1,1,cv)
     plot(t(startPlotTime:end),y.signals.values(startPlotTime:end,cv),'LineWidth',1)
@@ -114,6 +117,8 @@ for cv = 1:numCV-1
     end
 end
 figure(2)
+fig = gcf;
+movegui(fig,'northwest')
 for dv = 1:numDV
     subplot(numDV,1,dv)
     plot(t(startPlotTime:end),inputs.signals.values(startPlotTime:end,dv),'LineWidth',1)
@@ -129,6 +134,8 @@ for dv = 1:numDV
     end
 end
 figure(3)
+fig = gcf;
+movegui(fig,'northeast')
 for mv = 1:numMV
     subplot(numMV,1,mv)
     plot(t(startPlotTime:end),inputs.signals.values(startPlotTime:end,mv+numDV),'LineWidth',1)
@@ -144,6 +151,8 @@ for mv = 1:numMV
     end
 end
 figure(4)
+fig = gcf;
+movegui(fig,'southeast')
 [~,hyperResults] = size(gaResults.signals.values);
 for hyp = 1:hyperResults
     subplot(hyperResults,1,hyp)

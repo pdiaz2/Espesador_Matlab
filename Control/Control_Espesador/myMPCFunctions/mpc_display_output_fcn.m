@@ -26,9 +26,11 @@ switch flag
             h1 = figure;
             ax = gca;
             ax.XLim = [0 (state.Generation+1)];
+            movegui(h1,'west')
             h2 = figure;
             ax = gca;
             ax.XLim = [0 (state.Generation+1)];
+            movegui(h2,'east')
         else
             
         end
@@ -96,30 +98,35 @@ switch flag
                 ax = gca;
                 ax.XLim = [0 (state.Generation+1)];
                 if plotProgress == 1
-                    plot(0:state.Generation,bestMeanTrackingError,'b+')
+                    plot(0:state.Generation,bestMeanTrackingError,'r+')
                     hold on
-                    plot(0:state.Generation,bestMeanTerminalError,'r*')
+                    plot(0:state.Generation,bestMeanTerminalError,'b*')
                     plot(0:state.Generation,bestMeanLimBreakError,'go')
 
-                    plot(0:state.Generation,bestMaxTrackingError,'b--')
-                    plot(0:state.Generation,bestMaxTerminalError,'r--')
+                    plot(0:state.Generation,bestMaxTrackingError,'r--')
+                    plot(0:state.Generation,bestMaxTerminalError,'b--')
                     plot(0:state.Generation,bestMaxLimBreakError,'g--')
 
-                    plot(0:state.Generation,bestMinTrackingError,'b--')
-                    plot(0:state.Generation,bestMinTerminalError,'r--')
+                    plot(0:state.Generation,bestMinTrackingError,'r--')
+                    plot(0:state.Generation,bestMinTerminalError,'b--')
                     plot(0:state.Generation,bestMinLimBreakError,'g--')
                     hold off
                     grid on
                     legend({'Mean Track Error','Mean Terminal Error','Mean LimBreak Error'},'Location','southwest')
                 elseif plotProgress == 2
                     legendArray = {};
+                    markerType = {'*','o','s','.'};
+                    colorType = {'b','r','g'};
                     for cv = 1:n
-                        plot(0:state.Generation,bestMaxTrackingError(cv,:))
+                        plot(0:state.Generation,bestMaxTerminalError(cv,:),...
+                            'Marker',markerType{cv},'Color',colorType{1})
                         hold on
-                        plot(0:state.Generation,bestMaxTerminalError(cv,:))
-                        plot(0:state.Generation,bestMaxLimBreakError(cv,:))
-                        legendArray{end+1} = ['MaxTrack_' num2str(cv)];
+                        plot(0:state.Generation,bestMaxTrackingError(cv,:),...
+                            'Marker',markerType{cv},'Color',colorType{2})
+                        plot(0:state.Generation,bestMaxLimBreakError(cv,:),...
+                            'Marker',markerType{cv},'Color',colorType{3})
                         legendArray{end+1} = ['MaxTerm_' num2str(cv)];
+                        legendArray{end+1} = ['MaxTrack_' num2str(cv)];
                         legendArray{end+1} = ['MaxLim_' num2str(cv) ];
                     end
                     hold off
@@ -139,16 +146,16 @@ switch flag
                 figure(h2)
                 ax = gca;
                 ax.XLim = [0 (state.Generation+1)];
-                plot(0:state.Generation,bestTrackingCost,'b.')
+                plot(0:state.Generation,bestTrackingCost,'r*')
                 hold on
-                plot(0:state.Generation,bestTerminalCost,'r*')
+                plot(0:state.Generation,bestTerminalCost,'b.')
                 plot(0:state.Generation,bestLimBreakCost,'go')
                 hold off
                 grid on
                 legend({'Track Cost','Terminal Cost','LimBreak Cost'},'Location','northeast')
                 fprintf('Generation %d\r\n',state.Generation);
                 fprintf('Last Improvement Generation %d\r\n',state.LastImprovement)
-                fprintf('Delta U(0) is %4.4f\r\n',bestIndividual(1:3))
+                fprintf('Delta U(0) is %4.4f\r\n',bestIndividual(1:2))
                 fprintf('F.O.Value Now is %4.8f\r\n',bestScore)
                 fprintf('Total Function Evaluations %d\r\n',state.FunEval)
                 fprintf('Champion Distance Counter is %d\r\n',championToleranceBreakCounter);

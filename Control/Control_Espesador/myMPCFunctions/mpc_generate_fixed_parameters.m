@@ -11,7 +11,7 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
     numMV = length(U0);
     %% Noise
     noisePower = [0.0005 0.00000001 0.0003 0.000001];
-%     noisePower = zeros(1,4);
+    noisePower = zeros(1,numCV);
     noiseSeed = [1231235 456345 93894 748563];
     %% DV Design
     if (stepInDV)

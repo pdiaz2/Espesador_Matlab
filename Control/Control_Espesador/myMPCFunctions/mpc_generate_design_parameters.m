@@ -8,11 +8,11 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
     qMatrix = qNormMatrix*ones(numCV,N_y-1)*1/((N_y-1)*numCV);
 %     qMatrix(1,:) = 10*qMatrix(1,:);
 %     qMatrix(2,:) = 100*qMatrix(2,:);
-%     qMatrix(3,:) = 10*qMatrix(3,:); % 0.01 lets bdlvl down. 10 compensates
+    qMatrix(3,:) = 10*qMatrix(3,:); % 0.01 lets bdlvl down. 10 compensates
 %     qMatrix(4,:) = 0.00001*qMatrix(4,:);
     rMatrix = rNormMatrix*ones(numMV,N_u); % 0.001 bad results
-%     rMatrix(1,:) = 1*rMatrix(1,:);
-%     rMatrix(2,:) = 1*rMatrix(2,:); % 1 is very very good. 10 very similar
+    rMatrix(1,:) = 0.001*rMatrix(1,:);
+    rMatrix(2,:) = 1*rMatrix(2,:); % 1 is very very good. 10 very similar
     betaCost = betaNormMatrix*ones(numCV,1)*1/(numCV);
     lambdaMatrix = lambdaNormMatrix*ones(numCV,N_y)*1/((N_y)*numCV);
 %     lambdaMatrix(1,:) = 0.00001*lambdaMatrix(1,:);
@@ -46,16 +46,17 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
     pop = 200;% 200
     gens = 100;
     eliteFraction = 0.05;
+    championCounterFraction = 0.25;
     GAParameters = [pop; % nPopulation 
                     gens; % maxGens
                     floor(0.75*gens); % maxStallGens
-                    1e-3; % functionTolerance
+                    0.5e-3; % functionTolerance
                     0.001*stabilityFactor;    % fitnessLimit
                     ceil(eliteFraction*pop);
                     1; % Use OutputFcn
-                    2; %Plot Progress within Generations
+                    0; %Plot Progress within Generations. 1 => plot; 2 => verbose
                     1e-3; % Champion distance tolerance
-                    10; % Champion break tolerance limit
+                    ceil(championCounterFraction*gens); % Champion break tolerance limit
                     numMV*N_u % nVars
                     ];
                      
