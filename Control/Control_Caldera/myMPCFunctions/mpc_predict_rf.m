@@ -14,7 +14,7 @@ function [ yHatMatrix ] = mpc_predict_rf(predictorArray,nTrees,nPredictors,na,nb
 for cv = 1:n
     % Predict
 %     p = na(cv)+sum(nb(cv,:))+m+nc(cv,:)+d;
-    p = na(cv)+sum(nb(cv,:))+nc(cv,:);
+    p = na(cv)+sum(nb(cv,:))+sum(nc(cv,:));
     if nTrees(cv) ~= 100
        error('Number of trees is %d in hardcoded function. Different from: %d',100,nTrees(cv)); 
     end

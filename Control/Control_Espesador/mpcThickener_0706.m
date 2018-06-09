@@ -4,13 +4,15 @@ close all;
 %% 
 N_y = 10;
 N_u = 3;
+kappaControl = 5;
 Dt = 1;
-simTime = 1.e5;
+simTime = 1.3e5;
 groupBy = 60; % This should be automatic
 tau_R = 10*groupBy;
-tau_C = 5*tau_R;
+tau_C = kappaControl*tau_R;
 stepInDV = false;
 dvStepSize = [0 0 0];
+dvRealData = false;
 imprint = false;
 controlClosedLoop = 1;
 startPlotTime = 1; %Wait for noise filter to stabilize
@@ -18,10 +20,10 @@ dateMatFileStr = '0706';
 figurePath = 'figures\';
 %%
 %% Reference Values Struct
-wValuesStruct.delta = [0 0.01 1.5 0];
-wValuesStruct.changeBool = logical([0 1 0 0]);
+wValuesStruct.delta = [0 0.01 2 0];
+wValuesStruct.changeBool = logical([0 0 0 0]);
 wValuesStruct.shape = {'step','step','step','step'};
-wValuesStruct.timeToChange = [-1 floor(simTime/22) floor(simTime/2) -1];
+wValuesStruct.timeToChange = [-1 floor(simTime/22) floor(simTime/10) -1];
 wValuesStruct.addNoiseBool = false; %always false for w
 %% Sensor Values Struct
 yValuesStruct.delta = [0 0 0 0];
@@ -56,12 +58,19 @@ ySensor = mpc_generate_input(yValuesStruct);
 %%
 rng(120938103);
 load('ThickenerOperation_Septiembre_rawData.mat');
-Q_f.signals.values = BigData.PreProcessed(7,1:simTime)';
 Q_f.time = linspace(0,simTime,simTime/Dt)';
-Cp_f.signals.values = wt_f(1:simTime)'/100;
 Cp_f.time = linspace(0,simTime,simTime/Dt)';
-p1_f.signals.values = D0(3)*ones(1,simTime)';
 p1_f.time = linspace(0,simTime,simTime/Dt)';
+if dvRealData
+    Q_f.signals.values = BigData.PreProcessed(7,1:simTime)';
+    Cp_f.signals.values = wt_f(1:simTime)'/100;
+    p1_f.signals.values = D0(3)*ones(1,simTime)';
+else
+   Q_f.signals.values = D0(1)*ones(1,simTime)';
+   Cp_f.signals.values = D0(2)*ones(1,simTime)';
+   p1_f.signals.values = D0(3)*ones(1,simTime)';
+end
+
 
 run parametrosEmpty.m
 

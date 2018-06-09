@@ -1,6 +1,6 @@
 function [ z ] = mpc_lqr_function(x, betaCost, rMatrix, qMatrix, lambdaMatrix, wMatrix, ...
                                   yLims, uLims, yPastValues, uPastValues, dPastValues,...
-                                  nTrees, nPredictors, na, nb, nc)
+                                  nTrees, nPredictors, na, nb, nc, kappaControl)
 %MPC_LQR_FUNCTION MPC objective finite LQR function
 % Calculates value of objective function for delta_u
 % Inputs:
@@ -20,6 +20,7 @@ function [ z ] = mpc_lqr_function(x, betaCost, rMatrix, qMatrix, lambdaMatrix, w
 %   - na: n*1 vector containing order of delays for each CV
 %   - nb: n*m containing order of MV delay for each CV
 %   - nc: n*d containing order of DV delay for each CV
+%   - kappaControl: tau_C = kappaControl*tau_R
 % z = mpc_lqr_function(x)
 %% Size managing
 NUM_PSEUDO_COSTS = 0;
@@ -33,7 +34,7 @@ dPastValues = permute(repmat(dPastValues,1,1,nPopulation),[3 2 1]);
 [yHat] = mpc_horizon_predict(x,N_y,uLims,...
                               yPastValues,uPastValues,dPastValues,...
                               nTrees,nPredictors,...
-                              na,nb,nc);
+                              na,nb,nc,kappaControl);
 %% Error vectors
 [ spTrackingError, terminalError, epsilonValues ] = mpc_horizon_error( yHat, wMatrix, yLims );
 %% Costs of prediction 

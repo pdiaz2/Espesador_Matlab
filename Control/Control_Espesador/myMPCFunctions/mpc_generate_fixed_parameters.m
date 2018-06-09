@@ -46,8 +46,8 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
     yHighLims(1,:) = 1.2*Y0(1);
     yLowLims(2,:) = 0.97*Y0(2);
     yHighLims(2,:) = 1.03*Y0(2);
-    yLowLims(3,:) = 2;
-    yHighLims(3,:) = 6;
+    yLowLims(3,:) = 1.8;
+    yHighLims(3,:) = 8;
     yLowLims(4,:) = 0;
     yHighLims(4,:) = 0.1;
     
@@ -57,6 +57,13 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
     uHighLims(1,:) = 125;
     uLowLims(2,:) = 23;
     uHighLims(2,:) = 29;
+    %% Normalization Parameters
+    % Factor that multiplies cost matrixes of MPC to normalize the error
+    % w.r.t the setpoints/dynamic range of each variable
+    qNormMatrix = diag([10 100 1 1000]);
+    rNormMatrix = diag([1 1]);
+    betaNormMatrix = qNormMatrix;
+    lambdaNormMatrix = qNormMatrix;
     %% Numeric Solution Stability Factor
     stabilityFactor = 1;
     %% Save
