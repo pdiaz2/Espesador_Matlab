@@ -36,11 +36,13 @@ function [ predictorMLStruct,delayMaxInTime] = ml_prepare_IO_data( IOBigSet,...
                                         
     elseif (strcmp(mlMethod,'SS')||strcmp(mlMethod,'ARMAX'))
         % Specify simulation Time sampling
-        DtSim = na;
-        % Downsample time series by tau_R/DtSim samples
-        U = downsample(IOBigSet(OLExperiment).Inputs.TimeSeries(:,:),tau_R/DtSim);
-        Y = downsample(IOBigSet(OLExperiment).Outputs.TimeSeries(:,:),tau_R/DtSim);
-        Ts = tau_R/DtSim;
+%         DtSim = na;
+%         % Downsample time series by tau_R/DtSim samples
+%         U = downsample(IOBigSet(OLExperiment).Inputs.TimeSeries(:,:),tau_R/DtSim);
+%         Y = downsample(IOBigSet(OLExperiment).Outputs.TimeSeries(:,:),tau_R/DtSim);
+        U = downsample(IOBigSet(OLExperiment).Inputs.TimeSeries(:,:),tau_R);
+        Y = downsample(IOBigSet(OLExperiment).Outputs.TimeSeries(:,:),tau_R);
+        Ts = tau_R;
         predictorMLStruct = iddata(Y,U,Ts,'InputName',nameInputs','OutputName',nameOutputs');
         delayMaxInTime = -1; %bogey value
     end                                       

@@ -5,12 +5,12 @@ clc;
 %% Boolean control
 load('Agosto_SimResults_1304_rawData.mat');
 saveToMatFile = false;
-matFileName = 'ResultsRF_0506';
+matFileName = 'ResultsRF_0806';
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
-generateOne = true;
+generateOne = false;
 if generateOne
     % Input wave
     cvToGenerate = 4;
@@ -30,28 +30,29 @@ numInputs = d+m;
 n = length(SimResults.CV);
 numOutputs = n;
 nSamples = length(SimResults.CV(1).GroupedTimeSeries);
+Dt = 1;
 %% Structure definitions
 % Plant and control params definition
 controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.nSamples = nSamples;
-controlParamsStruct.tau_R = 10;
+controlParamsStruct.Dt = Dt;
+controlParamsStruct.tau_R = 5;
 controlParamsStruct.N_y = N_y;
 
 %% Machine Learning - Structural Parameters
 
-mlParamsStruct.DelayMatrix.U = repmat([1:5]',1,numInputs);
-[mlParamsStruct.sizeUMatrix garbage] = size(mlParamsStruct.DelayMatrix.U);
-
-mlParamsStruct.DelayMatrix.Y = repmat([1:5]',1,numOutputs);
-[mlParamsStruct.sizeYMatrix garbage] = size(mlParamsStruct.DelayMatrix.Y);
-
-mlParamsStruct.trainingParamsArray = {100,1,'on',10,'on','curvature','Ensemble'};
+mlParamsStruct.trainingParamsArray = {100,1,'on',10,'on','curvature','TBagger'};
 mlParamsStruct.optimizeParams.maxMinLS = 40;
 mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         [1,mlParamsStruct.optimizeParams.maxMinLS],...
                                         'Type','integer');
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
 
+mlParamsStruct.DelayMatrix.U = repmat([1:3]',1,numInputs);
+[mlParamsStruct.sizeUMatrix garbage] = size(mlParamsStruct.DelayMatrix.U);
+
+mlParamsStruct.DelayMatrix.Y = repmat([4:5]',1,numOutputs);
+[mlParamsStruct.sizeYMatrix garbage] = size(mlParamsStruct.DelayMatrix.Y);
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
 mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;

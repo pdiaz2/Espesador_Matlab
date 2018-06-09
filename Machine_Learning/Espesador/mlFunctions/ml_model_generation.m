@@ -27,11 +27,21 @@ function [results,ML_Model,trainingTime] = ml_model_generation(trainingBigSet,te
                                     mlParamsStruct.mlMethod);
 %% Hyperparameter Optimization
 % If specified in optimizeBool
-bestHyp = ml_optimize_hyperParams(trainingSubset,...
-                                controlParamsStruct.dimsSystem(1),...
-                                mlParamsStruct.trainingParamsArray,...
-                                mlParamsStruct.optimizeParams.hyperparametersRF,...
-                                mlParamsStruct.optimizeParams.optimizeBool);
+switch mlParamsStruct.mlMethod
+    case 'RF'
+        bestHyp = ml_optimize_hyperParams(trainingSubset,...
+                                        controlParamsStruct.dimsSystem(1),...
+                                        mlParamsStruct.trainingParamsArray,...
+                                        mlParamsStruct.optimizeParams.hyperparametersRF,...
+                                        mlParamsStruct.optimizeParams.optimizeBool);
+    case 'SS'
+        % Under construction
+    case 'ARMAX'
+        bestHyp(1) = mOrder.na;
+        bestHyp(2) = mOrder.nb;
+        bestHyp(3) = mOrder.nc;
+        bestHyp(4) = mOrder.nk;
+end
 %% Generate Machine Learning Model
 disp('Generating Machine Learning Model')
 
