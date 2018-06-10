@@ -109,8 +109,8 @@ for waveformSelected = 1:4
                                                             Dt, -1,...
                                                             mlMethod);
                                                         
-                                UDC = mean(trainingSubset.InputData)';
-                                YDC = mean(trainingSubset.OutputData)';
+                                UDC = mean(testSubset.InputData)';
+                                YDC = mean(testSubset.OutputData)';
                                 
                                 [UOffset] = ml_remove_offset(mlParameters{2},UDC,numInputs);
                                 [YOffset] = ml_remove_offset(mlParameters{3},YDC,numOutputs);
