@@ -37,10 +37,10 @@ switch mlParamsStruct.mlMethod
     case 'SS'
         % Under construction
     case 'ARMAX'
-        bestHyp(1) = mOrder.na;
-        bestHyp(2) = mOrder.nb;
-        bestHyp(3) = mOrder.nc;
-        bestHyp(4) = mOrder.nk;
+        bestHyp(1) = mOrderStruct.na;
+        bestHyp(2) = mOrderStruct.nb;
+        bestHyp(3) = mOrderStruct.nc;
+        bestHyp(4) = mOrderStruct.nk;
 end
 %% Generate Machine Learning Model
 disp('Generating Machine Learning Model')
