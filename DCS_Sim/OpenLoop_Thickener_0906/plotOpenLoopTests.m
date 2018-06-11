@@ -1,8 +1,8 @@
 %% Plots
 % Load previous .mat for display
-clear all;
+% clear all;
 clc;
-load('stepTestDV_SS_75_25.mat');
+% load('stepTestDV_SS_75_25.mat');
 [torqueSteps(1,1) yieldStressSteps(1,1) Cp_uSteps(1,1) Cp_eSteps(1,1) bedLevelSteps(1,1) p1_uSteps(1,1)];
 lololo = [num2str(torqueSteps(1,1)) ',' num2str(yieldStressSteps(1,1)) ','  num2str(Cp_uSteps(1,1)) ',' num2str(Cp_eSteps(1,1))...
      ',' num2str(bedLevelSteps(1,1)) ',' num2str(p1_uSteps(1,1))]
@@ -12,7 +12,7 @@ for i = 1:length(options.stepSizes)
     stepSizesStr{i} = num2str(options.stepSizes(i));
 end
 figurePath = 'figures\';
-imprint = true;
+imprint = false;
 samples = length(torqueSteps(1,:));
 time = linspace(0,options.simTime,samples)/3600; % In hours
 timeToWatch = length(time);

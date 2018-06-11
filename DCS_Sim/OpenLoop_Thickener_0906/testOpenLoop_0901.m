@@ -18,17 +18,21 @@ startThickener = 0;
 % Could try to estimate a correlation function from Excel data of the noise
 % that comes with each DV (fft of time series of Data-avg)
 % Excel visual fit of normal
-Cf_avg = 30/100; % [0,1]
+
+% % D0 = [325.1 0.3143 0.356];
+% % U0 = [111 26]; 
+% % Y0 = [21.02  0.737   2.126 0];
+Cf_avg = 0.3143; % [0,1]
 Cf_sigma = Cf_avg*0.01/3;
 Cf_sigma = 0;
 Cf_seed = 30;
 
-Qf_avg = 259.77/3600; % m3/s
+Qf_avg = 325.1/3600; % m3/s
 % Qf_sigma = Qf_avg*0.01/3;
 Qf_sigma = 0;
 Qf_seed = 15;
 
-p1_avg = 0.45; % percentage
+p1_avg = 0.356; % percentage
 % p1_sigma = p1_avg*0.01/3;
 p1_sigma = 0;
 p1_seed = 1035;
@@ -46,7 +50,7 @@ noiseSampleTime = Dt;
 
 %% Structure of Test
 % Will aid in analysis
-simTime = 1e4;
+simTime = 1.5e5;
 options.simTime = simTime;
 options.initialConditions = [Qu_0 gpt_0]';
 options.startThickener = startThickener;
@@ -67,8 +71,8 @@ auxString = [typeOfTest '_SS_' QuStr '_' gptStr];
 options.stepTestType = auxString;
 options.stepSizes = stepSizes;
 % options.stepSizes = 0.033*[Qf_avg Cf_avg p1_avg];
-options.stepDuration = 9.98*simTime/10;
-options.stepInitTime = 1*simTime/100;
+options.stepDuration = 10*simTime/10;
+options.stepInitTime = 1.5*simTime/100;
 options.timeGap = 4*simTime/10;
 
 DVToGenerate = 1*eye(3);
@@ -86,10 +90,11 @@ for i = 1:length(options.stepSizes)
     p1_f = myStepTest(simTime,Dt,options.stepSizes(i),options.stepDuration,...
         options.stepInitTime,0,p1_avg,options.timeGap);
     run parametrosEmpty.m
-    SS = ['SS_UF' QuStr '_FF_' gptStr '.mat'];
-    load(SS,'phi0','w0','u10','u20','u30');
+%     SS = ['SS_UF' QuStr '_FF_' gptStr '.mat'];
+    load('Agosto_SimResults_1304_State.mat');
+
     tic;
-    sim('espesadorOL_0901.slx');
+    sim('espesadorOL_1202.slx');
     options.ticToc(1,i) = toc;
     % Outputs
     torqueSteps(i,:) = torque.signals.values';
@@ -112,6 +117,39 @@ for i = 1:length(options.stepSizes)
     p1_fControl(i,:) = p1_f.signals.values';
 end
 %%
+% SimResults.CV(1).TimeSeries = torque.signals.values(1:end-1)';
+% SimResults.CV(2).TimeSeries = Cp_u.signals.values(1:end-1)';
+% SimResults.CV(3).TimeSeries = bedLevel.signals.values(1:end-1)';
+% SimResults.CV(4).TimeSeries = Cp_e.signals.values(1:end-1)';
+% SimResults.CV(5).TimeSeries = filloutliers(residenceTime.signals.values(1:end-2)','clip','median');
+% SimResults.CV(6).TimeSeries = solidFlux.signals.values(1:end-2)';
+% SimResults.CV(7).TimeSeries = p1_u.signals.values(1:end-1)';
+% SimResults.CV(8).TimeSeries = Q_e.signals.values(1:end-2)'*3600;
+% SimResults.CV(1).Name = 'Torque';
+% SimResults.CV(2).Name = 'CpUf';
+% SimResults.CV(3).Name = 'BdLvl';
+% SimResults.CV(4).Name = 'CpEf';
+% SimResults.CV(5).Name = 'TauRd';
+% SimResults.CV(6).Name = 'SFlux';
+% SimResults.CV(7).Name = 'P1Uf';
+% SimResults.CV(8).Name = 'EfFlow';
+% startYield(1,:) = 0;
+% % MV
+% 
+% SimResults.MV(1).TimeSeries = Q_u.signals.values';
+% SimResults.MV(2).TimeSeries = gpt.signals.values';
+% SimResults.MV(1).Name = 'UFlow';
+% SimResults.MV(2).Name = 'Gpt';
+% % DV
+% 
+% SimResults.DV(1).TimeSeries = Q_f.signals.values'*3600;
+% SimResults.DV(2).TimeSeries = Cp_f.signals.values';
+% SimResults.DV(3).TimeSeries = p1_f.signals.values;
+% SimResults.DV(1).Name = 'FeedFlow';
+% SimResults.DV(2).Name = 'CpFeed';
+% SimResults.DV(3).Name = 'P1Feed';
+
+%%
 % Sanity check
 % torque.signals.values(end)
 % yieldStress.signals.values(end)
@@ -125,9 +163,9 @@ end
 %% Analysis
 % startYield = max(find(isnan(yieldStress.signals.values)),2);
 % difference = startYield
-% matFile = ['stepTest' options.stepTestType];
-% save(matFile,'torqueSteps','yieldStressSteps','Cp_uSteps','Cp_eSteps','bedLevelSteps','solidFluxSteps','residenceTimeSteps',...
-%     'Q_eSteps','p1_uSteps','options','startYield','Q_uControl','gptControl','Cp_fControl','Q_fControl','p1_fControl');
+matFile = ['stepTest' options.stepTestType];
+save(matFile,'torqueSteps','yieldStressSteps','Cp_uSteps','Cp_eSteps','bedLevelSteps','solidFluxSteps','residenceTimeSteps',...
+    'Q_eSteps','p1_uSteps','options','startYield','Q_uControl','gptControl','Cp_fControl','Q_fControl','p1_fControl');
 % save('steadyState_UF85_FF25.mat','phi0','w0','u10','u20','u30');
 
 
