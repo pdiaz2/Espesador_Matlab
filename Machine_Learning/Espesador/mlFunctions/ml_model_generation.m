@@ -36,6 +36,7 @@ switch mlParamsStruct.mlMethod
                                         mlParamsStruct.optimizeParams.optimizeBool);
     case 'SS'
         % Under construction
+        bestHyp(1) = -1;
     case 'ARMAX'
         bestHyp(1) = mOrderStruct.na;
         bestHyp(2) = mOrderStruct.nb;

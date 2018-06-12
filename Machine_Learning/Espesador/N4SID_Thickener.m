@@ -3,10 +3,10 @@ close all;
 clc;
 %% Test Plant Specifics
 load('Agosto_SimResults_1304_rawData.mat');
-saveToMatFile = false;
-matFileName = 'ResultsARMAX_0506';
+saveToMatFile = true;
+matFileName = 'ResultsN4SID_0506';
 optimizeMLHyperparameters = false;
-mlMethod = 'ARMAX';
+mlMethod = 'SS';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
 generateOne = false;
@@ -44,21 +44,16 @@ controlParamsStruct.nSamples = nSamples;
 controlParamsStruct.Dt = Dt;
 controlParamsStruct.tau_R = 10;
 controlParamsStruct.N_y = N_y;
-
 %% Machine Learning - Structural Parameters
-mlParamsStruct.trainingParamsArray = {'estimate','I_DC?','O_DC?',false,'off','Focus?',true};
+mlParamsStruct.trainingParamsArray = {'best','I_DC?','O_DC?','auto',false,'prediction','off'};
 mlParamsStruct.offsetOptions = {'NA','R_DC';'NA','R_DC'};
 mlParamsStruct.focusOptions = {'prediction','simulation'};
+mlParamsStruct.stabilityOptions = {true,false};
 mlParamsStruct.optimizeParams.maxMinLS = 40;
 mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         [1,mlParamsStruct.optimizeParams.maxMinLS],...
                                         'Type','integer');
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
-% Specific for ARMAX
-mlParamsStruct.NA = [0 2 4];
-mlParamsStruct.NB = [1:3];
-mlParamsStruct.NC = [0:1];
-mlParamsStruct.NK = [0 2 4];
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
 mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;
@@ -82,16 +77,15 @@ testBatch = 8; %Backward Compatibility
 if generateOne
     mlParamsStruct.trainingParamsArray{2} = mlParamsStruct.offsetOptions{1,offsetChoice};
     mlParamsStruct.trainingParamsArray{3} = mlParamsStruct.offsetOptions{2,offsetChoice};
+    mlParamsStruct.trainingParamsArray{5} = mlParamsStruct.stabilityOptions{stabilityChoice};
     mlParamsStruct.trainingParamsArray{6} = mlParamsStruct.focusOptions{focusChoice};
-    mOrder.nb = mlParamsStruct.NB(nb);
-    mOrder.na = mlParamsStruct.NA(na);
-    mOrder.nc = mlParamsStruct.NC(nc);
-    mOrder.nk = mlParamsStruct.NK(nk);
-    printInConsole = sprintf("OffsetChoice %d, focusChoice %d and orders %d,%d,%d,%d"...
-                                    ,offsetChoice,focusChoice,...
-                                    na,nb,nc,nk);
+    mOrder.na = -1;
+    mOrder.nb = -1;
+    printInConsole = sprintf("Stability Choice %, OffsetChoice %d, focusChoice %d",...
+                                    stabilityChoice,offsetChoice,focusChoice);
     disp(printInConsole)
     pause(1)
+    
     %% Generate RF Model
     [resultsIter,ML_Model,trainingTime] = ml_model_generation(trainingBigSet,...
                                                         testBigSet,...
@@ -100,46 +94,39 @@ if generateOne
                                                         mOrder);
 else
     ML_Results = struct;
-    for offsetChoice = 1:2
+    for stabilityChoice = 1:2
+        for offsetChoice = 1:2
             for focusChoice = 1:2
-                for na = 1:length(mlParamsStruct.NA)
-                    for nb = 1:length(mlParamsStruct.NB)
-                        for nc = 1:length(mlParamsStruct.NC)
-                            for nk = 1:length(mlParamsStruct.NK)
-                                mlParamsStruct.trainingParamsArray{2} = mlParamsStruct.offsetOptions{1,offsetChoice};
-                                mlParamsStruct.trainingParamsArray{3} = mlParamsStruct.offsetOptions{2,offsetChoice};
-                                mlParamsStruct.trainingParamsArray{6} = mlParamsStruct.focusOptions{focusChoice};
-                                mOrder.nb = mlParamsStruct.NB(nb);
-                                mOrder.na = mlParamsStruct.NA(na);
-                                mOrder.nc = mlParamsStruct.NC(nc);
-                                mOrder.nk = mlParamsStruct.NK(nk);
-                                printInConsole = sprintf("OffsetChoice %d, focusChoice %d and orders %d,%d,%d,%d"...
-                                                                ,offsetChoice,focusChoice,...
-                                                                na,nb,nc,nk);
-                                disp(printInConsole)
-                                pause(1)
-                                %% Generate RF Model
-                                [resultsIter,ML_Model,trainingTime] = ml_model_generation(trainingBigSet,...
-                                                                                    testBigSet,...
-                                                                                    controlParamsStruct,...
-                                                                                    mlParamsStruct,...
-                                                                                    mOrder);
-                                %% Save results
-                                [ML_Results] = ml_save_results(ML_Results,...
-                                                                resultsIter,...
-                                                                controlParamsStruct,...
-                                                                mlParamsStruct,...
-                                                                [1 offsetChoice...
-                                                                focusChoice...
-                                                                na nb nc nk]);
-                            end
-                        end
-                    end
-                end
+                mlParamsStruct.trainingParamsArray{2} = mlParamsStruct.offsetOptions{1,offsetChoice};
+                mlParamsStruct.trainingParamsArray{3} = mlParamsStruct.offsetOptions{2,offsetChoice};
+                mlParamsStruct.trainingParamsArray{5} = mlParamsStruct.stabilityOptions{stabilityChoice};
+                mlParamsStruct.trainingParamsArray{6} = mlParamsStruct.focusOptions{focusChoice};
+                mOrder.na = -1;
+                mOrder.nb = -1;
+                printInConsole = sprintf("Stability Choice %d, OffsetChoice %d, focusChoice %d",...
+                                            stabilityChoice,offsetChoice,focusChoice);
+                disp(printInConsole)
+                pause(1)
+                
+                %% Generate RF Model
+                [resultsIter,ML_Model,trainingTime] = ml_model_generation(trainingBigSet,...
+                                                                    testBigSet,...
+                                                                    controlParamsStruct,...
+                                                                    mlParamsStruct,...
+                                                                    mOrder);
+                                                                
+                %% Save results
+                [ML_Results] = ml_save_results(ML_Results,...
+                                                resultsIter,...
+                                                controlParamsStruct,...
+                                                mlParamsStruct,...
+                                                [stabilityChoice ...
+                                                offsetChoice...
+                                                focusChoice...
+                                                ]);
             end
+        end
     end
-
-    
 end
 %% Save
 if (saveToMatFile)

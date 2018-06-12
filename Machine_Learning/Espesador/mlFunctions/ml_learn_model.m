@@ -65,8 +65,8 @@ function [ Output ] = ml_learn_model(numOutputs,trainingSubset,bestHyp,mlParamsS
         opt.OutputOffset = YOffset;
         opt.N4Weight = mlParamsArray{4};
         opt.EnforceStability = mlParamsArray{5};
-        opt.Display = mlParamsArray{6};
-        opt.Focus = mlParamsArray{7};
+        opt.Focus = mlParamsArray{6};
+        opt.Display = mlParamsArray{7};
         Output.Model = n4sid(trainingSubset,mlParamsArray{1},opt);
     elseif strcmp(mlMethod,'ARMAX')
         opt = armaxOptions();
