@@ -5,6 +5,7 @@ close all;
 N_y = 10;
 N_u = 3;
 kappaControl = 5;
+optimizationMethod = 'PSO';
 Dt = 1;
 simTime = 1.3e5;
 
@@ -17,7 +18,7 @@ dvRealData = false;
 imprint = false;
 controlClosedLoop = 1;
 startPlotTime = 1; %Wait for noise filter to stabilize
-dateMatFileStr = '0706';
+dateMatFileStr = '1306';
 figurePath = 'figures\';
 %%
 %% Reference Values Struct
@@ -41,7 +42,7 @@ parametersFileArray = {delayParametersFile,fixedParametersFileName,designParamet
 % Fixed parameters
 mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime);
 % Design parameters
-mpc_generate_design_parameters(dateMatFileStr,N_y,N_u);
+mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMethod);
 %% Filter Design
 bFilter = fir1(10,0.8,kaiser(11,6));
 % freqz(bFilter,1);

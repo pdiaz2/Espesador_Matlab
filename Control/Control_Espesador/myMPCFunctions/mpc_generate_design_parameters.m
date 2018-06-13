@@ -1,4 +1,4 @@
-function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
+function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMethod)
     %% Mat File Handling
     fixedParametersFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
     designParametersFileName = ['mpc_design_parameters_' dateMatFileStr '.mat'];
@@ -42,24 +42,46 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u)
     uLims = cat(3,uLowLims,uHighLims);
     
     
-    %% MPC GA Parameters
+    %% MPC Optimization Solver Parameters
     pop = 200;% 200
     gens = 100;
     eliteFraction = 0.05;
-    championCounterFraction = 0.25;
-    GAParameters = [pop; % nPopulation 
-                    gens; % maxGens
-                    floor(0.75*gens); % maxStallGens
-                    0.5e-3; % functionTolerance
-                    0.001*stabilityFactor;    % fitnessLimit
-                    ceil(eliteFraction*pop);
-                    1; % Use OutputFcn
-                    0; %Plot Progress within Generations. 1 => plot; 2 => verbose
-                    1e-3; % Champion distance tolerance
-                    ceil(championCounterFraction*gens); % Champion break tolerance limit
-                    numMV*N_u % nVars
-                    ];
-                     
+    championCounterFraction = 0.4; % 0.25 for GA
+    OptimSolverStruct.GAParameters = [pop; % nPopulation 
+                                    gens; % maxGens
+                                    floor(0.75*gens); % maxStallGens
+                                    0.5e-3; % functionTolerance
+                                    0.001*stabilityFactor;    % fitnessLimit
+                                    ceil(eliteFraction*pop); % Elitism fraction
+                                    1e-3; % Champion distance tolerance
+                                    ceil(championCounterFraction*gens); % Champion tolerance break counter
+                                    1; %Plot Progress within Generations. 1 => plot; 2 => verbose (end-3) always
+                                    1; % Use OutputFcn, (end-2 always);
+                                    1; % 1 => GA is being used (end-1 always)
+                                    numMV*N_u % nVars (end always)
+                                    ];
+    OptimSolverStruct.PSOParameters = [pop; % SwarmSize
+                                    gens; % MaxIterations
+                                    floor(0.75*gens); % MaxStallIterations
+                                    0.5e-3; % FunctionTolerance
+                                    0.001*stabilityFactor; %ObjectiveLimit
+                                    1e-3; % Champion distance tolerance
+                                    ceil(championCounterFraction*gens); % Champion tolerance break counter
+                                    1; %Plot Progress within Generations. 1 => plot; 2 => verbose (end-3) always
+                                    0; % Use OutputFcn, (end-2 always);
+                                    2; % 2 => PSO is being used (end-1 always)
+                                    numMV*N_u % nVars (end always)
+                                    ];
+    switch optimizationMethod
+        case 'GA'
+            OptimSolverParameters = OptimSolverStruct.GAParameters;
+            OptimSolverParameters(end-1) = 1;
+        case 'PSO'
+            OptimSolverParameters = OptimSolverStruct.PSOParameters;
+            OptimSolverParameters(end-1) = 2;
+        case 'PattS'
+            
+    end
     %% Save
     save(designParametersFileName);
 end
