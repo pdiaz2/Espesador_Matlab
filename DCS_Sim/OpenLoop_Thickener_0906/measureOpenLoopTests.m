@@ -1,14 +1,15 @@
 clear;
 clc;
 close all;
-opPointCell = {'65','25';
-                '75','22';
-                '75','25';
-                '75','26';
-                '75','29';
-                '85','25';
-                '95','25';
-                };
+% opPointCell = {'65','25';
+%                 '75','22';
+%                 '75','25';
+%                 '75','26';
+%                 '75','29';
+%                 '85','25';
+%                 '95','25';
+%                 };
+opPointCell = {'111','26'};
 [opPoints garbage] = size(opPointCell);
 for opPointIndex = 1:opPoints
     for stepTestIndex = 1:2
@@ -27,18 +28,25 @@ end
 save('resultsCompleteOpenLoop.mat','openLoopMeasurements');
 %%
 clear all;
-opPointCell = {'65','25';
-                '75','22';
-                '75','25';
-                '75','26';
-                '75','29';
-                '85','25';
-                '95','25';
-                };
+% opPointCell = {'65','25';
+%                 '75','22';
+%                 '75','25';
+%                 '75','26';
+%                 '75','29';
+%                 '85','25';
+%                 '95','25';
+%                 };
+opPointCell = {'111','26'};
 [opPoints garbage] = size(opPointCell);
 load('resultsCompleteOpenLoop.mat');
 [numCV garbage1 totalMetrics] = size(openLoopMeasurements(1,1).measurements);
+% for opPoint = 1:opPoints
+%     openLoopMeasurements(opPoint,1).measurements = openLoopMeasurements(opPoint,1).measurements(:,[1 3 4],:);
+% end
 for opPoint = 1:opPoints
-    openLoopMeasurements(opPoint,1).measurements = openLoopMeasurements(opPoint,1).measurements(:,[1 3 4],:);
+    for stepType = 1:2
+        % Skip 9, which is no step at all
+        openLoopMeasurements(opPoint,stepType).measurements = openLoopMeasurements(opPoint,stepType).measurements(:,[[1:5] [7:8] [10:end]],:);
+    end
 end
 save('resultsCompleteOpenLoop.mat','openLoopMeasurements');

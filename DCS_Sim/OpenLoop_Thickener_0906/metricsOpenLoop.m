@@ -1,7 +1,8 @@
-clear all;
+% clear all;
 clc;
 tic;
-load('stepTestUF_SS_85_25.mat');
+
+% load('stepTestUF_SS_111_26.mat');
 moveMeanWindow = 1e5;
 bedLevelSoft = movmean(bedLevelSteps(:,:),moveMeanWindow,2);
 CV = cat(3,torqueSteps,yieldStressSteps,Cp_uSteps,Cp_eSteps,bedLevelSoft);
@@ -28,7 +29,7 @@ end
 %% K_DC
 K_DC = zeros(numCV,numberOfSteps);
 for i = 1:numberOfSteps
-    if length(options.stepSizes) == 4
+    if strcmp(options.stepTestType(1:2),'UF')
         % If steps were UF
         for j = 1:numCV
             K_DC(j,i) = (CV(i,end,j)-opPoint(j,1))/(Q_uControl(i,end)-opPoint(numCV+1,1));
@@ -42,10 +43,10 @@ end
 %% Delay
 % Try with one with known and visible delay
 delay = zeros(numCV,numberOfSteps);
-startEstimateDelay = options.stepInitTime;
-delayWindowSize = 5e5;
+startEstimateDelay = options.stepInitTime-250;
+delayWindowSize = 1e5;
 for i = 1:numCV
-    if length(options.stepSizes) == 4
+    if strcmp(options.stepTestType(1:2),'UF')
         delay(i,:)= finddelay(linearQ_u(:,startEstimateDelay:startEstimateDelay+delayWindowSize)',...
             linearCV(:,startEstimateDelay:startEstimateDelay+delayWindowSize,i)')/3600;
     else
