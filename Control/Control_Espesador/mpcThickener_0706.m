@@ -3,11 +3,11 @@ clc;
 close all;
 %% 
 N_y = 15;
-N_u = 3;
-kappaControl = 5;
+N_u = 4;
+kappaControl = 3;
 optimizationMethod = 'PSO';
 Dt = 1;
-simTime = 1.3e6;
+simTime = 2.5e5;
 
 groupBy = 60; % This should be automatic
 tau_R = 10*groupBy;
@@ -19,7 +19,8 @@ imprint = false;
 controlClosedLoop = 1;
 startPlotTime = 1; %Wait for noise filter to stabilize
 dateMatFileStr = '1306';
-figurePath = 'figures\trialsPSO\SS_FFS_';
+figurePath = 'figures\trialsPSO\SS_AllMVS_4_';
+figurePath = 'figures\mpc_rf_comparisons\open_loop_benchmark';
 % Code for names:
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
     % - SS: SmallSearch. Small pop (100-) and small gens (50-)
@@ -176,5 +177,7 @@ for hyp = 1:hyperResults
 end
 %% Save Specific Parameters
 saveTuningName = [figurePath 'mpc_rf_' dateMatFileStr '.mat'];
-save(saveTuningName,'qMatrix','rMatrix','lambdaMatrix','N_y','N_u','OptimSolverStruct',...
-                    'bFilter','tau_C');
+if imprint
+    save(saveTuningName,'qMatrix','rMatrix','lambdaMatrix','N_y','N_u','OptimSolverStruct',...
+                        'bFilter','tau_C','kappaControl');
+end

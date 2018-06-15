@@ -14,7 +14,7 @@ else
 end
 Dt = 1; % 5 seconds sampling time
 % simTime = BigData.manual.timeLimit;
-simTime = 1.4e6;
+simTime = 2.5e6;
 amplitude = 20;
 [numMakes ~] = size(makeMatrix);
 stepInitTime = 120;
@@ -24,7 +24,7 @@ dateMatFileStr = '0706';
 delayParametersFile = ['delayParameters_' dateMatFileStr '.mat'];
 startPlotTime = 1;
 imprint = true;
-
+figurePath = 'figures\mpc_rf_comparisons\open_loop_benchmark';
 %% Noise
 noisePower = [0.05 0.001 0.03 0.00001];
 noiseSeed = [1231235 456345 93894 748563];
