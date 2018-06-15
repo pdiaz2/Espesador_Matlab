@@ -8,11 +8,11 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMetho
     qMatrix = qNormMatrix*ones(numCV,N_y-1)*1/((N_y-1)*numCV);
 %     qMatrix(1,:) = 10*qMatrix(1,:);
 %     qMatrix(2,:) = 100*qMatrix(2,:);
-    qMatrix(3,:) = 10*qMatrix(3,:); % 0.01 lets bdlvl down. 10 compensates
+    qMatrix(3,:) = 100*qMatrix(3,:); % 0.01 lets bdlvl down. 10 compensates
 %     qMatrix(4,:) = 0.00001*qMatrix(4,:);
     rMatrix = rNormMatrix*ones(numMV,N_u); % 0.001 bad results
-    rMatrix(1,:) = 0.001*rMatrix(1,:);
-    rMatrix(2,:) = 1*rMatrix(2,:); % 1 is very very good. 10 very similar
+    rMatrix(1,:) = 1*rMatrix(1,:); % 0.001
+    rMatrix(2,:) = 0.001*rMatrix(2,:); % 1 is very very good. 10 very similar
     betaCost = betaNormMatrix*ones(numCV,1)*1/(numCV);
     lambdaMatrix = lambdaNormMatrix*ones(numCV,N_y)*1/((N_y)*numCV);
 %     lambdaMatrix(1,:) = 0.00001*lambdaMatrix(1,:);
@@ -43,10 +43,10 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMetho
     
     
     %% MPC Optimization Solver Parameters
-    pop = 200;% 200
-    gens = 100;
+    pop = 100;% 200
+    gens = 30;% 100 for GA
     eliteFraction = 0.05;
-    championCounterFraction = 0.4; % 0.25 for GA
+    championCounterFraction = 1; % 0.25 for GA
     OptimSolverStruct.GAParameters = [pop; % nPopulation 
                                     gens; % maxGens
                                     floor(0.75*gens); % maxStallGens
@@ -67,8 +67,8 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMetho
                                     0.001*stabilityFactor; %ObjectiveLimit
                                     1e-3; % Champion distance tolerance
                                     ceil(championCounterFraction*gens); % Champion tolerance break counter
-                                    1; %Plot Progress within Generations. 1 => plot; 2 => verbose (end-3) always
-                                    0; % Use OutputFcn, (end-2 always);
+                                    0; %Plot Progress within Generations. 1 => plot; 2 => verbose (end-3) always
+                                    1; % Use OutputFcn, (end-2 always);
                                     2; % 2 => PSO is being used (end-1 always)
                                     numMV*N_u % nVars (end always)
                                     ];

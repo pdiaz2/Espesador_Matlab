@@ -46,21 +46,23 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
     yHighLims(1,:) = 1.2*Y0(1);
     yLowLims(2,:) = 0.97*Y0(2);
     yHighLims(2,:) = 1.03*Y0(2);
-    yLowLims(3,:) = 1.8;
+    yLowLims(3,:) = 1.5;
     yHighLims(3,:) = 8;
     yLowLims(4,:) = 0;
     yHighLims(4,:) = 0.1;
     
     
-    % Constraints on U are free according to CIC2017
+    
     uLowLims(1,:) = 70;
     uHighLims(1,:) = 125;
-    uLowLims(2,:) = 23;
-    uHighLims(2,:) = 29;
+    uLowLims(2,:) = 18; %23
+    uHighLims(2,:) = 31; % 29
     %% Normalization Parameters
     % Factor that multiplies cost matrixes of MPC to normalize the error
     % w.r.t the setpoints/dynamic range of each variable
-    qNormMatrix = diag([10 100 1 1000]);
+    % Another idea is to normalize between 0 and 100% w.r.t each variable
+    % high and low lims. That would mean to substract (y(k)-y_Low)/yHigh-yLow)
+    qNormMatrix = diag([1 100 1 1000]);
     rNormMatrix = diag([1 1]);
     betaNormMatrix = qNormMatrix;
     lambdaNormMatrix = qNormMatrix;

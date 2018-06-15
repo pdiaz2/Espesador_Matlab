@@ -2,12 +2,12 @@ clear all;
 clc;
 close all;
 %% 
-N_y = 10;
+N_y = 15;
 N_u = 3;
 kappaControl = 5;
 optimizationMethod = 'PSO';
 Dt = 1;
-simTime = 1.3e5;
+simTime = 1.3e6;
 
 groupBy = 60; % This should be automatic
 tau_R = 10*groupBy;
@@ -19,7 +19,11 @@ imprint = false;
 controlClosedLoop = 1;
 startPlotTime = 1; %Wait for noise filter to stabilize
 dateMatFileStr = '1306';
-figurePath = 'figures\';
+figurePath = 'figures\trialsPSO\SS_FFS_';
+% Code for names:
+    % - BS: BigSearch. Big pop (100+) and big gens (100+)
+    % - SS: SmallSearch. Small pop (100-) and small gens (50-)
+    % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
 %%
 %% Reference Values Struct
 wValuesStruct.delta = [0 0.01 2 0];
@@ -115,6 +119,7 @@ for cv = 1:numCV-1
     if imprint
         printName = [figurePath 'mpc_rf_CV_' dateMatFileStr];
         print(printName,'-depsc');
+        print(printName,'-djpeg');
     end
 end
 figure(2)
@@ -132,6 +137,7 @@ for dv = 1:numDV
     if imprint
         printName = [figurePath 'mpc_rf_DV_' dateMatFileStr];
         print(printName,'-depsc');
+        print(printName,'-djpeg');
     end
 end
 figure(3)
@@ -149,6 +155,7 @@ for mv = 1:numMV
     if imprint
         printName = [figurePath 'mpc_rf_MV_' dateMatFileStr];
         print(printName,'-depsc');
+        print(printName,'-djpeg');
     end
 end
 figure(4)
@@ -164,5 +171,10 @@ for hyp = 1:hyperResults
     if imprint
         printName = [figurePath 'mpc_rf_GA_' dateMatFileStr];
         print(printName,'-depsc');
+        print(printName,'-djpeg');
     end
 end
+%% Save Specific Parameters
+saveTuningName = [figurePath 'mpc_rf_' dateMatFileStr '.mat'];
+save(saveTuningName,'qMatrix','rMatrix','lambdaMatrix','N_y','N_u','OptimSolverStruct',...
+                    'bFilter','tau_C');
