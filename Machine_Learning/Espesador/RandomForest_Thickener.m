@@ -3,9 +3,10 @@ clear all;
 close all;
 clc;
 %% Boolean control
-load('Agosto_SimResults_1304_rawData.mat');
-saveToMatFile = false;
-matFileName = 'ResultsRF_0806';
+% load('Agosto_SimResults_1304_rawData.mat');
+load('PRBS_1606.mat');
+saveToMatFile = true;
+matFileName = 'ResultsRF_PRBS_1606';
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
 seed = rng(1231231); % For reproducibility (should look into this after)
