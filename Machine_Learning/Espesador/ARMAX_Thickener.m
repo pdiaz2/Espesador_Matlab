@@ -2,9 +2,10 @@ clear all;
 close all;
 clc;
 %% Test Plant Specifics
-load('Agosto_SimResults_1304_rawData.mat');
-saveToMatFile = false;
-matFileName = 'ResultsARMAX_0506';
+% load('Agosto_SimResults_1304_rawData.mat');
+load('PRBS_1606.mat');
+saveToMatFile = true;
+matFileName = 'ResultsARMAX_PRBS_1606';
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 seed = rng(1231231); % For reproducibility (should look into this after)
@@ -42,7 +43,7 @@ Dt = 1;
 controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.nSamples = nSamples;
 controlParamsStruct.Dt = Dt;
-controlParamsStruct.tau_R = 10;
+controlParamsStruct.tau_R = 5;
 controlParamsStruct.N_y = N_y;
 
 %% Machine Learning - Structural Parameters
@@ -56,7 +57,7 @@ mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
 % Specific for ARMAX
 mlParamsStruct.NA = [0 2 4];
-mlParamsStruct.NB = [1:3];
+mlParamsStruct.NB = [1:5];
 mlParamsStruct.NC = [0:1];
 mlParamsStruct.NK = [0 2 4];
 

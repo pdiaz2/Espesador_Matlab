@@ -1,6 +1,6 @@
-close all;
-clear all;
-clc;
+% close all;
+% clear all;
+% clc;
 %%
 matFileName = 'Agosto_SimResults_1304_rawData.mat';
 figurePath = 'figures\';
@@ -8,7 +8,7 @@ imprint = false;
 plotFigures = true;
 granularity = 's';
 %%
-load(matFileName)
+% load(matFileName)
 % CV
 CVNames = {'Torque','Concentración de Descarga','Nivel de Interfaz','Concentración de Rebose','Tiempo de Residencia',...
             'Flujo de Sólidos','Granulometría Descarga','Flujo de Rebalse'};
