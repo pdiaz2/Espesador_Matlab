@@ -3,7 +3,7 @@ clear all;
 close all;
 clc;
 %%
-load('ResultsARMAX_0506.mat');
+load('ResultsARMAX_PRBS_1606.mat');
 ml_Type = 'ARMAX';
 %%
 
@@ -27,6 +27,15 @@ J_Handy = build_j_handy(ResultsStupidFix,ml_Type,J,numOutputs,J_i);
 %     fprintf("MSE_20: %4.4f\r\n",MSE_Ny(end));
 % end
 
+for cv = 1:numOutputs
+    fprintf("Best coeffs for variable %d: ",cv)
+    fprintf("%d   ",J_Handy(cv,:,1))
+    fprintf("\r\n")
+    fprintf("MSE Values for %d variable\r\n",cv)
+    MSE_Ny = ML_Results.Output(cv).Performance(J_Handy(cv,1,1),J_Handy(cv,2,1),J_Handy(cv,3,1)).MSE;
+    fprintf("MSE_1: %4.4f\r\n",MSE_Ny(1));
+    fprintf("MSE_20: %4.4f\r\n",MSE_Ny(end));
+end
 %% Building delayParameters Mat File
 delayU = J_Handy(:,2,1);
 delayY = J_Handy(:,3,1);
