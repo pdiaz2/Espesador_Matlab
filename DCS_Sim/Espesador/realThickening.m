@@ -6,7 +6,7 @@ run parametrosEmpty.m
 
 month = 'Agosto';
 % outputMatFileName = [month '_SimResults_1304_rawData'];
-outputMatFileName = ['PRBS_1606'];
+outputMatFileName = ['PRBS_1606_rawData'];
 matFileName = ['ThickenerOperation_' month '_rawData.mat'];
 saveToMatFile = true;
 typeOfTest = 'prbs';
@@ -84,7 +84,7 @@ SimResults.DV(2).TimeSeries = [];
 SimResults.DV(3).TimeSeries = [];
 %% Sim
 rng(231094134);
-for input = 3:5
+for input = 1:5
     switch typeOfTest
         case 'realThickening'
             Q_u.signals.values = BigData.PreProcessed(4,1:simTime)';

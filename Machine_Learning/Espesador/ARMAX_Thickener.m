@@ -3,7 +3,7 @@ close all;
 clc;
 %% Test Plant Specifics
 % load('Agosto_SimResults_1304_rawData.mat');
-load('PRBS_1606.mat');
+load('PRBS_1606_rawData.mat');
 saveToMatFile = true;
 matFileName = 'ResultsARMAX_PRBS_1606';
 optimizeMLHyperparameters = false;
