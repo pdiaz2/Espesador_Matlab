@@ -14,7 +14,7 @@ else
 end
 Dt = 1; % 5 seconds sampling time
 % simTime = BigData.manual.timeLimit;
-simTime = 2.5e6;
+simTime = 0.4e6;
 amplitude = 20;
 [numMakes ~] = size(makeMatrix);
 stepInitTime = 120;
@@ -24,7 +24,7 @@ dateMatFileStr = '0706';
 delayParametersFile = ['delayParameters_' dateMatFileStr '.mat'];
 startPlotTime = 1;
 imprint = true;
-figurePath = 'figures\mpc_rf_comparisons\open_loop_benchmark';
+figurePath = 'figures\mpc_rf_comparisons\ACCA_Sept_';
 %% Noise
 noisePower = [0.05 0.001 0.03 0.00001];
 noiseSeed = [1231235 456345 93894 748563];
@@ -55,7 +55,7 @@ titlesDV = {'Flujo de Alimentación','Concentración de Alimentación','Granulometr
 CVUnits = {'%','%','m','%'};
 MVUnits = {'m3/hr','gpt'};
 DVUnits = {'m3/s','%','N/A'};
-for m = 1:numMakes
+for m = [1 4 5]
     make = makeMatrix(m,:);
     if stepTests
         Q_fVals = myStepTest(simTime,Dt,1/2,simTime/3,stepInitTime,1,0,simTime/4);
@@ -70,11 +70,11 @@ for m = 1:numMakes
         Q_uVals = Q_uVals.signals.values;
         gptVals = gptVals.signals.values;
         %%
-        Q_fAmplitude = 2*D0(1)*0.2;
-        Cp_fAmplitude = 2*D0(2)*0.2;
-        p1_fAmplitude = 2*D0(3)*0.2;
-        Q_uAmplitude = 2*U0(1)*0.2;
-        gptAmplitude = 2*U0(2)*0.2;
+        Q_fAmplitude = 1.4*D0(1)*0.2;
+        Cp_fAmplitude = 1.4*D0(2)*0.2;
+        p1_fAmplitude = 1.4*D0(3)*0.2;
+        Q_uAmplitude = 1.4*U0(1)*0.2;
+        gptAmplitude = 1.4*U0(2)*0.2;
         %%
         Q_f.time = linspace(0,simTime-Dt,simTime/Dt)';
         Q_f.signals.dimensions = [1];
@@ -119,18 +119,18 @@ for m = 1:numMakes
     
     
     figure(1)
-    for cv = 1:numCV
+    for cv = 1:numCV-1
         caca = yHat.signals.values(cv,1,:);
         yHatVector(:,cv) = reshape(caca,simTime+1,1);
-        subplot(numCV,1,cv)
+        subplot(numCV-1,1,cv)
         plot(downsample(t(1:simTime),tau_R),downsample(y.signals.values(1:simTime,cv),tau_R),'LineWidth',1)
         hold on
-        plot(downsample(t(1:simTime),tau_R),downsample(yHatVector(1:simTime,cv),tau_R)','LineWidth',1)
-        title(titlesCV{cv})
+        plot(downsample(t(1:simTime),tau_R),downsample(yHatVector(1:simTime,cv),tau_R)','--','LineWidth',1)
+%         title(titlesCV{cv})
         ylabel(CVUnits{cv})
         xlabel('Tiempo (hr)')
-        yLegend = ['$y_' num2str(cv) '$'];
-        yHatLegend = ['$\hat{y}_' num2str(cv) '$'];
+        yLegend = ['$y_' num2str(cv) '(k)$'];
+        yHatLegend = ['RF - $y_' num2str(cv) '(k)$'];
         legend({yLegend,yHatLegend},'Interpreter','latex');
         grid on
         hold off
@@ -143,10 +143,10 @@ for m = 1:numMakes
     for dv = 1:numDV
         subplot(numDV,1,dv)
         plot(t(startPlotTime:simTime),inputs.signals.values(startPlotTime:simTime,dv),'LineWidth',1)
-        title(titlesDV{dv})
+%         title(titlesDV{dv})
         ylabel(DVUnits{dv})
         xlabel('Tiempo (hr)')
-        dLegend = ['$d_' num2str(dv) '$'];
+        dLegend = ['$d_' num2str(dv) '(k)$'];
         legend({dLegend},'Interpreter','latex');
         grid on
         if imprint
@@ -158,10 +158,10 @@ for m = 1:numMakes
     for mv = 1:numMV
         subplot(numMV,1,mv)
         plot(t(startPlotTime:simTime),inputs.signals.values(startPlotTime:simTime,mv+numDV),'LineWidth',1)
-        title(titlesMV{mv})
+%         title(titlesMV{mv})
         ylabel(MVUnits{mv})
         xlabel('Tiempo (hr)')
-        mLegend = ['$u_' num2str(mv) '$'];
+        mLegend = ['$u_' num2str(mv) '(k)$'];
         legend({mLegend},'Interpreter','latex');
         grid on
         if imprint

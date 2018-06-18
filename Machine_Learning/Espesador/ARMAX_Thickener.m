@@ -4,25 +4,25 @@ clc;
 %% Test Plant Specifics
 % load('Agosto_SimResults_1304_rawData.mat');
 load('PRBS_1606_rawData.mat');
-saveToMatFile = true;
+saveToMatFile = false;
 matFileName = 'ResultsARMAX_PRBS_1606';
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
-generateOne = false;
+generateOne = true;
 if generateOne
     % Input wave
-    cvToGenerate = 4;
+    cvToGenerate = 1;
 %     experiment = 1;
 %     delayUCases = 1;
 %     delayYCases = 4;
-    na = -1;
-    nb = -1;
-    nc = -1
-    nk = -1;
-    offsetChoice = -1;
-    focusChoice = -1;
+    na = 2;
+    nb = 3;
+    nc = 2;
+    nk = 1;
+    offsetChoice = 1;
+    focusChoice = 1;
 else
    waveVector = 1:4;
    cvToGenerate = -1; %Not used in this case

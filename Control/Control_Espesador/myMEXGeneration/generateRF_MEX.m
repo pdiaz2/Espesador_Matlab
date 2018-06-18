@@ -1,7 +1,7 @@
 %% Check version of RF
 numOutputs = 4;
 numTrees = [100 100 100 100];
-numPredictors = [10 10 9 9];
+numPredictors = [10 10 10 10];
 for y = 1:numOutputs
     PredictorVector(y).X = 30+rand(1,numPredictors(y));
 end

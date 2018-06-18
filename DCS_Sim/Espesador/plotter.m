@@ -35,6 +35,9 @@ end
 time = linspace(0,options.simTime/3600,samples+1);
 timeToWatch = length(time)-1;
 SimResults.CV(5).TimeSeries = filloutliers(SimResults.CV(5).TimeSeries,'clip','median');
+dynamicRangeCV = zeros(numel(CVNames),3);
+dynamicRangeMV = zeros(numel(MVNames),3);
+dynamicRangeDV = zeros(numel(DVNames),3);
 %% Plotting
 if (plotFigures)
     % CV Plots
@@ -55,6 +58,9 @@ if (plotFigures)
             print(printName,'-depsc');
         end
         hold off
+        dynamicRange(cv,1) = min(SimResults.CV(cv).TimeSeries(1:timeToWatch));
+        dynamicRange(cv,2) = max(SimResults.CV(cv).TimeSeries(1:timeToWatch));
+        dynamicRange(cv,3) = dynamicRange(cv,2)-dynamicRange(cv,1);
     end
     % MV Plots
     for mv = 1:length(MVNames)
@@ -74,6 +80,9 @@ if (plotFigures)
             print(printName,'-depsc');
         end
         hold off
+        dynamicRange(mv,1) = min(SimResults.CV(mv).TimeSeries(1:timeToWatch));
+        dynamicRange(mv,2) = max(SimResults.CV(mv).TimeSeries(1:timeToWatch));
+        dynamicRange(mv,3) = dynamicRange(mv,2)-dynamicRange(mv,1);
     end
     % DV Plots
     for dv = 1:length(DVNames)
@@ -93,6 +102,9 @@ if (plotFigures)
             print(printName,'-depsc');
         end
         hold off
+        dynamicRange(dv,1) = min(SimResults.CV(dv).TimeSeries(1:timeToWatch));
+        dynamicRange(dv,2) = max(SimResults.CV(dv).TimeSeries(1:timeToWatch));
+        dynamicRange(dv,3) = dynamicRange(dv,2)-dynamicRange(dv,1);
     end
 end
 %% Info

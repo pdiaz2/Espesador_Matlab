@@ -13,16 +13,10 @@ N_y = 20;
 generateOne = false;
 if generateOne
     % Input wave
-    cvToGenerate = 4;
-%     experiment = 1;
-%     delayUCases = 1;
-%     delayYCases = 4;
-    na = -1;
-    nb = -1;
-    nc = -1
-    nk = -1;
-    offsetChoice = -1;
-    focusChoice = -1;
+    cvToGenerate = 1;
+    stabilityChoice = 1;
+    offsetChoice = 2;
+    focusChoice = 2;
 else
    waveVector = 1:4;
    cvToGenerate = -1; %Not used in this case
@@ -43,7 +37,7 @@ Dt = 1;
 controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.nSamples = nSamples;
 controlParamsStruct.Dt = Dt;
-controlParamsStruct.tau_R = 10;
+controlParamsStruct.tau_R = 5;
 controlParamsStruct.N_y = N_y;
 %% Machine Learning - Structural Parameters
 mlParamsStruct.trainingParamsArray = {'best','I_DC?','O_DC?','auto',false,'prediction','off'};
