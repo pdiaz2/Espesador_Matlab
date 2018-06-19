@@ -128,7 +128,7 @@ for m = [1 4 5]
         plot(downsample(t(1:simTime),tau_R),downsample(yHatVector(1:simTime,cv),tau_R)','--','LineWidth',1)
 %         title(titlesCV{cv})
         ylabel(CVUnits{cv})
-        xlabel('Tiempo (hr)')
+        xlabel('Time (hr)')
         yLegend = ['$y_' num2str(cv) '(k)$'];
         yHatLegend = ['RF - $y_' num2str(cv) '(k)$'];
         legend({yLegend,yHatLegend},'Interpreter','latex');
@@ -145,7 +145,7 @@ for m = [1 4 5]
         plot(t(startPlotTime:simTime),inputs.signals.values(startPlotTime:simTime,dv),'LineWidth',1)
 %         title(titlesDV{dv})
         ylabel(DVUnits{dv})
-        xlabel('Tiempo (hr)')
+        xlabel('Time (hr)')
         dLegend = ['$d_' num2str(dv) '(k)$'];
         legend({dLegend},'Interpreter','latex');
         grid on
@@ -160,7 +160,7 @@ for m = [1 4 5]
         plot(t(startPlotTime:simTime),inputs.signals.values(startPlotTime:simTime,mv+numDV),'LineWidth',1)
 %         title(titlesMV{mv})
         ylabel(MVUnits{mv})
-        xlabel('Tiempo (hr)')
+        xlabel('Time(hr)')
         mLegend = ['$u_' num2str(mv) '(k)$'];
         legend({mLegend},'Interpreter','latex');
         grid on

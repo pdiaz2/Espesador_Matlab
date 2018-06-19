@@ -1,24 +1,16 @@
-function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMethod)
+function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMethod,...
+                                        qCostValues,rCostValues,betaCostValues,lambdaCostValues)
     %% Mat File Handling
     fixedParametersFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
     designParametersFileName = ['mpc_design_parameters_' dateMatFileStr '.mat'];
     load(fixedParametersFileName);
     %% MPC Design Parameters
     % Weight Matrices (Design)
-    qMatrix = qNormMatrix*ones(numCV,N_y-1)*1/((N_y-1)*numCV); % 1
-%     qMatrix(1,:) = 10*qMatrix(1,:);
-    qMatrix(2,:) = 110*qMatrix(2,:); % 10
-    qMatrix(3,:) = 100*qMatrix(3,:); % 0.01 lets bdlvl down. 10 compensates
-%     qMatrix(4,:) = 0.00001*qMatrix(4,:);
-    rMatrix = rNormMatrix*ones(numMV,N_u); % 0.001 bad results
-    rMatrix(1,:) = 1e8*rMatrix(1,:); % 0.001
-    rMatrix(2,:) = 1e8*rMatrix(2,:); % 0.02;
-    betaCost = betaNormMatrix*ones(numCV,1)*1/(numCV);
-    lambdaMatrix = lambdaNormMatrix*ones(numCV,N_y)*1/((N_y)*numCV);
-%     lambdaMatrix(1,:) = 0.00001*lambdaMatrix(1,:);
-%     lambdaMatrix(2,:) = 0.00001*lambdaMatrix(2,:);
-%     lambdaMatrix(3,:) = 0.00001*lambdaMatrix(3,:);
-%     lambdaMatrix(4,:) = 0.00001*lambdaMatrix(4,:);
+    qMatrix = diag(qCostValues)*qNormMatrix*ones(numCV,N_y-1)*1/((N_y-1)*numCV); % 1
+    rMatrix = diag(rCostValues)*rNormMatrix*ones(numMV,N_u); % 0.001 bad results
+    betaCost = diag(betaCostValues)*betaNormMatrix*ones(numCV,1)*1/(numCV);
+    lambdaMatrix = diag(lambdaCostValues)*lambdaNormMatrix*ones(numCV,N_y)*1/((N_y)*numCV);
+
     %% Stability for Numeric Method
     qMatrix = stabilityFactor*qMatrix;
     rMatrix = stabilityFactor*rMatrix;

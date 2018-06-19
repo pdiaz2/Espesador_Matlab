@@ -154,7 +154,7 @@ for iterationSim = 1
         plot(downTime(1:end-1),armaxPredict(2:end,cv)','k-.','LineWidth',1)
 %         title(titlesCV{cv})
         ylabel(CVUnits{cv})
-        xlabel('Tiempo (hr)')
+        xlabel('Time (hr)')
         yLegend = ['$y_' num2str(cv) '(k)$'];
         yHatLegend = ['RF - $y_' num2str(cv) '(k)$'];
         armaxLegend = ['ARIMAX - $y_' num2str(cv) '(k)$'];
@@ -173,7 +173,7 @@ for iterationSim = 1
         plot(t(startPlotTime:simTime),inputs.signals.values(startPlotTime:simTime,dv),'LineWidth',1)
 %         title(titlesDV{dv})
         ylabel(DVUnits{dv})
-        xlabel('Tiempo (hr)')
+        xlabel('Time (hr)')
         dLegend = ['$d_' num2str(dv) '(k)$'];
         legend({dLegend},'Interpreter','latex');
         grid on
@@ -189,7 +189,7 @@ for iterationSim = 1
         plot(t(startPlotTime:simTime),inputs.signals.values(startPlotTime:simTime,mv+numDV),'LineWidth',1)
 %         title(titlesMV{mv})
         ylabel(MVUnits{mv})
-        xlabel('Tiempo (hr)')
+        xlabel('Time (hr)')
         mLegend = ['$u_' num2str(mv) '(k)$'];
         legend({mLegend},'Interpreter','latex');
         grid on
