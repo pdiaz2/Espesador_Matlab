@@ -27,10 +27,10 @@ figurePath = 'figures\SemTeleco_Comparison_';
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
 %% Cost Values
 totalSimulations = 2;
-qCostValuesIterations = [1 1 100 1;
-               0.001 0.0001 0.0001 0.0001]; % Open Loop
-rCostValuesIterations = [0.001 0.01;
-                1e10 1e10];
+qCostValuesIterations = [0.001 0.0001 0.0001 0.0001;
+                        1 1 100 1]; % Open Loop
+rCostValuesIterations = [1e10 1e10;
+                        0.001 0.01];
 betaCostValuesIterations = repmat([1 1 1 1],2,1);
 lambdaCostValuesIterations = repmat([1 1 1 1],2,1);
 %% Reference Values Struct
@@ -121,6 +121,8 @@ titlesHyp = {'ExitFlags','F.O. Values'};
 CVUnits = {'%','%','m','%'};
 MVUnits = {'m3/hr','gpt'};
 DVUnits = {'m3/s','%','N/A'};
+% Colors
+CVColors = {'r','b'};
 % Y Axis Limits
 CVLims = [15 22;
          0.65 0.75;
@@ -133,20 +135,23 @@ movegui(fig,'southwest')
 for cv = 1:numCV-1
     subplot(numCV-1,1,cv)
     for simIter = 1:totalSimulations
-        plot(t(startPlotTime:end),ySimulation(startPlotTime:end,cv,simIter),'LineWidth',1)
+        plot(t(startPlotTime:end),ySimulation(startPlotTime:end,cv,simIter),...
+               'LineWidth',1,...
+               'Color',CVColors{simIter})
         hold on
     end
-%     title(titlesCV{cv})
-    plot(t(startPlotTime:end),wRef.signals.values(startPlotTime:end,cv),'r','LineWidth',1);
+    title(titlesCV{cv})
+    plot(t(startPlotTime:end),wRef.signals.values(startPlotTime:end,cv),'g','LineWidth',1);
 %     plot(t(startPlotTime:end),yFiltered.signals.values(startPlotTime:end,cv),'g','LineWidth',1);
     ylabel(CVUnits{cv})
     xlabel('Time (hr)')
     ylim(CVLims(cv,:));
 %     ylim auto
-    yLegend = ['$y_' num2str(cv) '$'];
+    yLegend_1 = ['$y_' num2str(cv) '$ Open Loop'];
+    yLegend_2 = ['$y_' num2str(cv) '$ Closed Loop'];
     wLegend = ['$w_' num2str(cv) '$'];
 %     yFiltLegend = ['$\tilde{y}_' num2str(cv) '$'];
-    legend({yLegend,wLegend},'Interpreter','latex');
+    legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex');
     grid on
     hold off
 end
@@ -180,7 +185,7 @@ for mv = 1:numMV
     subplot(numMV,1,mv)
     % Add for
     plot(t(startPlotTime:end),inputs.signals.values(startPlotTime:end,mv+numDV),'LineWidth',1)
-%     title(titlesMV{mv})
+    title(titlesMV{mv})
     ylabel(MVUnits{mv})
     xlabel('Time (hr)')
     ylim(MVLims(mv,:));
