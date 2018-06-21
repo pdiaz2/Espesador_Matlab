@@ -6,13 +6,19 @@ run parametrosEmpty.m
 
 month = 'Agosto';
 % outputMatFileName = [month '_SimResults_1304_rawData'];
-outputMatFileName = ['PRBS_1606_rawData'];
+outputMatFileName = ['PRBS_1606_Noise_rawData'];
 matFileName = ['ThickenerOperation_' month '_rawData.mat'];
 saveToMatFile = true;
 typeOfTest = 'prbs';
 makePRBs = eye(5);
 prbsStrArray = {'Qu','gpt','Qf','Cf','p1f'};
-prbsAmplitude = [10,4,40/3600,0.1,0.1];
+prbsAmplitude = [15,4,40/3600,0.1,0.1];
+%% Noise for CV
+cvSNR = [20 20 20 20]; % DB
+cvVariance = [10 0.3 3 0.000001];
+% noisePower = [0.05 0.001 0.03 0.00001];
+cvNoisePower = cvSNR./10.^(cvSNR/10);
+cvNoiseSeeds = [11051993 5031995 8061958 1111960];
 %%
 startThickener = 0;
 load(matFileName);
@@ -58,9 +64,11 @@ noiseSampleTime = Dt;
 options.simTime = simTime;
 options.startThickener = startThickener;
 options.noiseSampleTime = noiseSampleTime;
-options.noiseSeeds = [Cf_seed Qf_seed p1_seed]';
-options.noiseParameters = [Cf_avg Cf_sigma;Qf_avg Qf_sigma;p1_avg p1_sigma];
-
+options.dvNoiseSeeds = [Cf_seed Qf_seed p1_seed]';
+options.dvNoisePower = [Cf_avg Cf_sigma;Qf_avg Qf_sigma;p1_avg p1_sigma];
+options.cvNoiseSeeds = cvNoiseSeeds;
+options.cvSNR = cvSNR;
+options.cvVariance = cvVariance;
 options.stepTestType = outputMatFileName;
 options.stepSizes = 1;
 options.stepDuration = 9.98*simTime/10;
@@ -120,7 +128,7 @@ for input = 1:5
             gpt_0 = FlocculantNew(1,simTime)';
             Qf_avg = BigData.PreProcessed(7,simTime)/3600;
             Cf_avg = wt_f(simTime)/100;
-            %
+            % Make no step in operation point specified before
             Q_u = myStepTest(simTime,Dt,0,options.stepDuration,...
             options.stepInitTime,0,Qu_0,options.timeGap);
             gpt = myStepTest(simTime,Dt,0,options.stepDuration,...
