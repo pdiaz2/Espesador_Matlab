@@ -14,7 +14,7 @@ else
 end
 Dt = 1; % 5 seconds sampling time
 % simTime = BigData.manual.timeLimit;
-simTime = 0.4e6;
+simTime = 0.4e4;
 amplitude = 20;
 [numMakes ~] = size(makeMatrix);
 stepInitTime = 120;
