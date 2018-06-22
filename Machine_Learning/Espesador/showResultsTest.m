@@ -3,8 +3,8 @@ clear all;
 close all;
 clc;
 %%
-load('ResultsN4SID_PRBS_1606.mat');
-ml_Type = 'N4SID';
+load('ResultsARMAX_0506.mat');
+ml_Type = 'ARMAX';
 %%
 
 ResultsStupidFix = fix_stupid_me(ML_Results,ml_Type,...

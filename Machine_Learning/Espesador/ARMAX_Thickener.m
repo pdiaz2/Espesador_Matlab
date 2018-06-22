@@ -3,9 +3,10 @@ close all;
 clc;
 %% Test Plant Specifics
 % load('Agosto_SimResults_1304_rawData.mat');
-load('PRBS_1606_rawData.mat');
+load('Agosto_SimResults_1304_Noise_rawData.mat');
+% load('PRBS_1606_NoNoise_rawData.mat');
 saveToMatFile = false;
-matFileName = 'ResultsARMAX_PRBS_1606';
+matFileName = 'ResultsARMAX_NoNoise_1606';
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 seed = rng(1231231); % For reproducibility (should look into this after)

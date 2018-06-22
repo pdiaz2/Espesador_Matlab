@@ -2,15 +2,15 @@ clear all;
 close all;
 clc;
 %% Test Plant Specifics
-% load('Agosto_SimResults_1304_rawData.mat');
-load('PRBS_1606_NoNoise_rawData.mat');
-saveToMatFile = true;
-matFileName = 'ResultsN4SID_PRBS_2206';
+load('Agosto_SimResults_1304_Noise_rawData.mat');
+% load('PRBS_1606_Noise_rawData.mat');
+saveToMatFile = false;
+matFileName = 'ResultsN4SID_Noise_1606';
 optimizeMLHyperparameters = false;
 mlMethod = 'SS';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
-generateOne = false;
+generateOne = true;
 if generateOne
     % Input wave
     cvToGenerate = 1;
