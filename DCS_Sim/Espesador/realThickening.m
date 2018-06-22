@@ -15,9 +15,9 @@ prbsStrArray = {'Qu','gpt','Qf','Cf','p1f'};
 prbsAmplitude = [15,4,40/3600,0.1,0.1];
 %% Noise for CV
 cvSNR = [20 20 20 20]; % DB
-cvVariance = [10 0.3 3 0.000001];
+cvVariance = [10 0.1 3 0.000001];
 % noisePower = [0.05 0.001 0.03 0.00001];
-cvNoisePower = cvSNR./10.^(cvSNR/10);
+cvNoisePower = cvVariance./10.^(cvSNR/10);
 cvNoiseSeeds = [11051993 5031995 8061958 1111960];
 %%
 startThickener = 0;
