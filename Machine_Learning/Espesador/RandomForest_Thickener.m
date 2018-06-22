@@ -4,7 +4,7 @@ close all;
 clc;
 %% Boolean control
 % load('Agosto_SimResults_1304_rawData.mat');
-load('PRBS_1606_rawData.mat');
+load('PRBS_1606_NoNoise_rawData.mat');
 saveToMatFile = false;
 matFileName = 'ResultsRF_PRBS_1606';
 optimizeMLHyperparameters = false;
@@ -95,7 +95,7 @@ if generateOne
     if strcmp(mlParamsStruct.trainingParamsArray{7},'TBagger')
         RF.OOBPermutedPredictorDeltaError
     else
-        matFileName = ['RF_Y' num2str(cvToGenerate) '_PRBS_16006.mat' ];
+        matFileName = ['RF_Y' num2str(cvToGenerate) '_PRBS_NoNoise_2206.mat' ];
         save(matFileName,'RF');
     end
 else
