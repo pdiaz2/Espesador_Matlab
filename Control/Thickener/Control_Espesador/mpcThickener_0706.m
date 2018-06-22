@@ -7,7 +7,7 @@ N_u = 3;%4
 kappaControl = 5;
 optimizationMethod = 'PSO';
 Dt = 1;
-simTime = 2.4e3;
+simTime = 2.4e5;
 
 groupBy = 60; % This should be automatic
 tau_R = 10*groupBy;
@@ -81,7 +81,7 @@ for simIter = 1:totalSimulations
     load(parametersFileArray{3}); 
     %% Sim
     rng(120938103);
-%     load('ThickenerOperation_Septiembre_rawData.mat');
+    load('ThickenerOperation_Septiembre_rawData.mat');
     Q_f.time = linspace(0,simTime,simTime/Dt)';
     Cp_f.time = linspace(0,simTime,simTime/Dt)';
     p1_f.time = linspace(0,simTime,simTime/Dt)';
