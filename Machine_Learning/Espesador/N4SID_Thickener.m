@@ -3,9 +3,9 @@ close all;
 clc;
 %% Test Plant Specifics
 % load('Agosto_SimResults_1304_rawData.mat');
-load('PRBS_1606_rawData.mat');
+load('PRBS_1606_NoNoise_rawData.mat');
 saveToMatFile = true;
-matFileName = 'ResultsN4SID_PRBS_1606';
+matFileName = 'ResultsN4SID_PRBS_2206';
 optimizeMLHyperparameters = false;
 mlMethod = 'SS';
 seed = rng(1231231); % For reproducibility (should look into this after)

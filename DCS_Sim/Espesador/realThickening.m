@@ -6,11 +6,11 @@ run parametrosEmpty.m
 
 month = 'Agosto';
 % outputMatFileName = [month '_SimResults_1304_rawData'];
-outputMatFileName = ['PRBS_1606_Noise_rawData'];
+outputMatFileName = ['Agosto_SimResults_1304_Noise_rawData'];
 matFileName = ['ThickenerOperation_' month '_rawData.mat'];
 saveToMatFile = true;
-typeOfTest = 'prbs';
-makePRBs = eye(5);
+typeOfTest = 'realThickening';
+makePRBS = eye(5);
 prbsStrArray = {'Qu','gpt','Qf','Cf','p1f'};
 prbsAmplitude = [15,4,40/3600,0.1,0.1];
 %% Noise for CV
@@ -26,7 +26,7 @@ numVars = length(BigData.varsIndex);
 [numSamples garbage] = size(BigData.RawData');
 Dt = 1;
 simTime = BigData.manual.timeLimit;
-simTime = 2.4e5;
+% simTime = 2.4e5;
 % simTime = 1e5;
 % simTime = 1e5;
 % Noise generation
@@ -91,8 +91,8 @@ SimResults.DV(1).TimeSeries = [];
 SimResults.DV(2).TimeSeries = [];
 SimResults.DV(3).TimeSeries = [];
 %% Sim
-rng(231094134);
-for input = 1:5
+% rng(231094134);
+for input = 1:1
     switch typeOfTest
         case 'realThickening'
             Q_u.signals.values = BigData.PreProcessed(4,1:simTime)';
@@ -152,8 +152,8 @@ for input = 1:5
     end
     run parametrosEmpty.m
 
-    % load('Agosto_SimResults_1304_State.mat');
-    load('Permanent_1606_State.mat');
+%     load('Agosto_SimResults_1304_State.mat');
+%     load('Permanent_1606_State.mat');
     tic;
     sim('espesadorReal_1202.slx');
     SimResults.executionTime = toc;
