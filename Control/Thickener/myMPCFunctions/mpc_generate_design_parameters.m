@@ -64,12 +64,16 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMetho
                                     2; % 2 => PSO is being used (end-1 always)
                                     numMV*N_u % nVars (end always)
                                     ];
-%     OptimSolverStruct.PattPrameters = [;
-%                                         1; %Plot Progress within Generations. 1 => plot; 2 => verbose (end-3) always
-%                                         1; % Use OutputFcn, (end-2 always);
-%                                         3; % 1 => Pattern is being used (end-1 always)
-%                                         numMV*N_u % nVars (end always)
-%                                         ];
+    % Pattern Search Options: Missing F.O Limit (ball around optimum)
+    OptimSolverStruct.PattPrameters = [pop*20*numMV*N_u; % MaxFunctionEvaluations (Matlab default is this)
+                                    gens*numMV*N_u; % MaxIterations (Matlab default is this)
+                                    0.5e-3; % FunctionTolerance
+                                    1e-3; % StepTolerance (analog to champion distance tolerance)
+                                    1; %Plot Progress within Generations. 1 => plot; 2 => verbose (end-3) always
+                                    1; % Use OutputFcn, (end-2 always);
+                                    3; % 1 => Pattern is being used (end-1 always)
+                                    numMV*N_u % nVars (end always)
+                                    ];
     switch optimizationMethod
         case 'GA'
             OptimSolverParameters = OptimSolverStruct.GAParameters;
@@ -78,7 +82,8 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMetho
             OptimSolverParameters = OptimSolverStruct.PSOParameters;
             OptimSolverParameters(end-1) = 2;
         case 'PattS'
-            
+            OptimSolverParameters = OptimSolverStruct.PattParameters;
+            OptimSolverParameters(end-1) = 3;
     end
     %% Save
     save(designParametersFileName);
