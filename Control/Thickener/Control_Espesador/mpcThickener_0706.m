@@ -5,7 +5,7 @@ close all;
 N_y = 15;
 N_u = 3;%4
 kappaControl = 5;
-optimizationMethod = 'PSO';
+optimizationMethod = 'PattS';
 Dt = 1;
 simTime = 1.2e5;
 
