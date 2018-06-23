@@ -3,10 +3,11 @@ close all;
 clc;
 %% Test Plant Specifics
 % load('Agosto_SimResults_1304_rawData.mat');
-load('Agosto_SimResults_1304_Noise_rawData.mat');
+% load('Agosto_SimResults_1304_rawData.mat');
+load('Septiembre_Real_2206_rawData.mat');
 % load('PRBS_1606_NoNoise_rawData.mat');
 saveToMatFile = false;
-matFileName = 'ResultsARMAX_NoNoise_1606';
+matFileName = 'ResultsARMAX_NoNoise_2206';
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 seed = rng(1231231); % For reproducibility (should look into this after)
@@ -18,9 +19,9 @@ if generateOne
 %     experiment = 1;
 %     delayUCases = 1;
 %     delayYCases = 4;
-    na = 2;
-    nb = 3;
-    nc = 2;
+    na = 3;
+    nb = 1;
+    nc = 1;
     nk = 1;
     offsetChoice = 1;
     focusChoice = 1;
@@ -44,7 +45,7 @@ Dt = 1;
 controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.nSamples = nSamples;
 controlParamsStruct.Dt = Dt;
-controlParamsStruct.tau_R = 5;
+controlParamsStruct.tau_R = 30;
 controlParamsStruct.N_y = N_y;
 
 %% Machine Learning - Structural Parameters
@@ -131,7 +132,7 @@ else
                                                                 resultsIter,...
                                                                 controlParamsStruct,...
                                                                 mlParamsStruct,...
-                                                                [1 offsetChoice...
+                                                                [offsetChoice...
                                                                 focusChoice...
                                                                 na nb nc nk]);
                             end

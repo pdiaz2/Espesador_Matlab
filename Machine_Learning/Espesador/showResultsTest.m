@@ -3,8 +3,8 @@ clear all;
 close all;
 clc;
 %%
-load('ResultsARMAX_0506.mat');
-ml_Type = 'ARMAX';
+load('ResultsRF_0506.mat');
+ml_Type = 'RF';
 %%
 
 ResultsStupidFix = fix_stupid_me(ML_Results,ml_Type,...
@@ -24,6 +24,9 @@ for cv = 1:numOutputs
     fprintf("\r\n")
     fprintf("MSE Values for %d variable\r\n",cv)
     MSE_Ny = ML_Results.Output(cv).Performance(J_Handy(cv,1,1),J_Handy(cv,2,1),J_Handy(cv,3,1)).MSE;
+%     MSE_Ny = ML_Results.Output(cv).Performance(J_Handy(cv,1,1),J_Handy(cv,2,1),J_Handy(cv,3,1),...
+%                                                J_Handy(cv,4,1),J_Handy(cv,5,1),J_Handy(cv,6,1),...
+%                                                J_Handy(cv,7,1)).MSE;
     fprintf("MSE_1: %4.4f\r\n",MSE_Ny(1));
     fprintf("MSE_5: %4.4f\r\n",MSE_Ny(5));
     fprintf("MSE_10: %4.4f\r\n",MSE_Ny(10));
@@ -36,8 +39,8 @@ numDV = 3;
 numMV = 2;
 numInputs = numDV+numDV;
 
-save('delayParameters_0706.mat','delayU','delayY','controlParamsStruct','numDV','numInputs',...
-     'numOutputs','numMV','mlParamsStruct');
+% save('delayParameters_0706.mat','delayU','delayY','controlParamsStruct','numDV','numInputs',...
+%      'numOutputs','numMV','mlParamsStruct');
 %% Plotting
 % Y1Predicted = predict(RandomForestY1,InputDataFinalY1);
 % Y2Predicted = predict(RandomForestY2,InputDataFinalY2);

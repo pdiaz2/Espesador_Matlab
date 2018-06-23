@@ -64,6 +64,12 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMetho
                                     2; % 2 => PSO is being used (end-1 always)
                                     numMV*N_u % nVars (end always)
                                     ];
+%     OptimSolverStruct.PattPrameters = [;
+%                                         1; %Plot Progress within Generations. 1 => plot; 2 => verbose (end-3) always
+%                                         1; % Use OutputFcn, (end-2 always);
+%                                         3; % 1 => Pattern is being used (end-1 always)
+%                                         numMV*N_u % nVars (end always)
+%                                         ];
     switch optimizationMethod
         case 'GA'
             OptimSolverParameters = OptimSolverStruct.GAParameters;

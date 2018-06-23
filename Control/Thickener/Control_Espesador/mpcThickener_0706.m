@@ -18,8 +18,8 @@ dvRealData = false;
 imprint = false;
 controlClosedLoop = 1;
 startPlotTime = 1; %Wait for noise filter to stabilize
-dateMatFileStr = '1306';
-figurePath = 'figures\SemTeleco_Comparison_';
+dateMatFileStr = '2206';
+figurePath = 'figures\paper_ACCA';
 % figurePath = 'figures\mpc_rf_comparisons\open_loop_benchmark';
 % Code for names:
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
@@ -68,7 +68,7 @@ yRef = mpc_generate_input(wValuesStruct);
 %% Sensor Input for MPC
 yValuesStruct.IC = Y0;
 ySensor = mpc_generate_input(yValuesStruct);
-for simIter = 1:totalSimulations
+for simIter = 2:totalSimulations
     %% Generate Design Parameters
     % Design parameters
     mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMethod,...

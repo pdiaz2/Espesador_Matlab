@@ -3,8 +3,8 @@ clear all;
 close all;
 clc;
 %% Boolean control
-% load('Agosto_SimResults_1304_rawData.mat');
-load('PRBS_1606_NoNoise_rawData.mat');
+load('Septiembre_Real_2206_rawData.mat');
+% load('PRBS_1606_NoNoise_rawData.mat');
 saveToMatFile = false;
 matFileName = 'ResultsRF_PRBS_1606';
 optimizeMLHyperparameters = false;
@@ -14,7 +14,7 @@ N_y = 20;
 generateOne = true;
 if generateOne
     % Input wave
-    cvToGenerate = 4;
+    cvToGenerate = 2;
     experiment = 1;
     delayUCases = 1;
     delayYCases = 2;
@@ -37,12 +37,12 @@ Dt = 1;
 controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.nSamples = nSamples;
 controlParamsStruct.Dt = Dt;
-controlParamsStruct.tau_R = 5; % 10
+controlParamsStruct.tau_R = 10; % 10
 controlParamsStruct.N_y = N_y;
 
 %% Machine Learning - Structural Parameters
 
-mlParamsStruct.trainingParamsArray = {100,1,'on',10,'on','curvature','Ensemble'};
+mlParamsStruct.trainingParamsArray = {100,1,'on',10,'on','curvature','TBagger'};
 mlParamsStruct.optimizeParams.maxMinLS = 40;
 mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         [1,mlParamsStruct.optimizeParams.maxMinLS],...
