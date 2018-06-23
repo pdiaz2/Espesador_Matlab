@@ -7,7 +7,7 @@ N_u = 3;%4
 kappaControl = 5;
 optimizationMethod = 'PSO';
 Dt = 1;
-simTime = 2.4e5;
+simTime = 1.2e5;
 
 groupBy = 60; % This should be automatic
 tau_R = 10*groupBy;
