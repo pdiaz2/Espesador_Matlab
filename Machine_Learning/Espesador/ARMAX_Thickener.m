@@ -4,7 +4,8 @@ clc;
 %% Test Plant Specifics
 % load('Agosto_SimResults_1304_rawData.mat');
 % load('Agosto_SimResults_1304_rawData.mat');
-load('Septiembre_Real_2206_rawData.mat');
+% load('Septiembre_Real_2206_rawData.mat');
+load('ThreeMonths_Real_2406_rawData.mat');
 % load('PRBS_1606_NoNoise_rawData.mat');
 saveToMatFile = false;
 matFileName = 'ResultsARMAX_NoNoise_2206';
@@ -45,7 +46,7 @@ Dt = 1;
 controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.nSamples = nSamples;
 controlParamsStruct.Dt = Dt;
-controlParamsStruct.tau_R = 30;
+controlParamsStruct.tau_R = 5;
 controlParamsStruct.N_y = N_y;
 
 %% Machine Learning - Structural Parameters

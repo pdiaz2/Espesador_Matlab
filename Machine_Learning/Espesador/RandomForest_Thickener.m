@@ -3,7 +3,8 @@ clear all;
 close all;
 clc;
 %% Boolean control
-load('Septiembre_Real_2206_rawData.mat');
+load('Agosto_Real_2206_rawData.mat');
+% load('ThreeMonths_Real_2406_rawData.mat');
 % load('PRBS_1606_NoNoise_rawData.mat');
 saveToMatFile = false;
 matFileName = 'ResultsRF_PRBS_1606';
@@ -37,19 +38,19 @@ Dt = 1;
 controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.nSamples = nSamples;
 controlParamsStruct.Dt = Dt;
-controlParamsStruct.tau_R = 10; % 10
+controlParamsStruct.tau_R = 5; % 10
 controlParamsStruct.N_y = N_y;
 
 %% Machine Learning - Structural Parameters
 
-mlParamsStruct.trainingParamsArray = {100,1,'on',10,'on','curvature','TBagger'};
+mlParamsStruct.trainingParamsArray = {300,1,'on',10,'on','curvature','TBagger'};
 mlParamsStruct.optimizeParams.maxMinLS = 40;
 mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         [1,mlParamsStruct.optimizeParams.maxMinLS],...
                                         'Type','integer');
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
 
-mlParamsStruct.DelayMatrix.U = repmat([1:3]',1,numInputs);
+mlParamsStruct.DelayMatrix.U = repmat([20]',1,numInputs);
 [mlParamsStruct.sizeUMatrix garbage] = size(mlParamsStruct.DelayMatrix.U);
 
 mlParamsStruct.DelayMatrix.Y = repmat([4:5]',1,numOutputs);
@@ -94,6 +95,8 @@ if generateOne
     RF.PredictorNames
     if strcmp(mlParamsStruct.trainingParamsArray{7},'TBagger')
         RF.OOBPermutedPredictorDeltaError
+%         matFileName = ['RF_Y' num2str(cvToGenerate) '_RealData_2406.mat' ];
+%         save(matFileName,'ML_Model','mOrder');
     else
         matFileName = ['RF_Y' num2str(cvToGenerate) '_PRBS_NoNoise_2206.mat' ];
         save(matFileName,'RF');

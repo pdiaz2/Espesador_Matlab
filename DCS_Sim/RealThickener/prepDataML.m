@@ -4,20 +4,8 @@ groupBy = 60; % Samples in seconds to group by
 % load(matFileName);
 SimResults.groupBy = groupBy;
 numSamples = length(SimResults.CV(1).TimeSeries);
-for cv = 4:length(SimResults.CV)
-   SimResults.CV(cv).TimeSeries = padarray(SimResults.CV(cv).TimeSeries',...
-                                    numSamples-length(SimResults.CV(cv).TimeSeries),...
-                                    0,'post');
-                                            
-end
-for dv = 3:length(SimResults.DV)
-   SimResults.DV(dv).TimeSeries = padarray(SimResults.DV(dv).TimeSeries,...
-                                    numSamples-length(SimResults.DV(dv).TimeSeries),...
-                                    0,'post');
-                                            
-end
 % CV Preparation
-for cv = 1:length(SimResults.CV) % This -5 for real data only
+for cv = 1:length(SimResults.CV)
    B = reshape(SimResults.CV(cv).TimeSeries,[groupBy,numSamples/groupBy]);
    B = mean(B);
    SimResults.CV(cv).GroupedTimeSeries = B;
