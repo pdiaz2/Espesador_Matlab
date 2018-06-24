@@ -5,7 +5,7 @@ clc;
 % load('Agosto_SimResults_1304_rawData.mat');
 % load('Agosto_SimResults_1304_rawData.mat');
 % load('Septiembre_Real_2206_rawData.mat');
-load('ThreeMonths_Real_2406_rawData.mat');
+load('ThreeMonths_Real_2406_BF.mat');
 % load('PRBS_1606_NoNoise_rawData.mat');
 saveToMatFile = false;
 matFileName = 'ResultsARMAX_NoNoise_2206';
@@ -17,9 +17,6 @@ generateOne = true;
 if generateOne
     % Input wave
     cvToGenerate = 1;
-%     experiment = 1;
-%     delayUCases = 1;
-%     delayYCases = 4;
     na = 3;
     nb = 1;
     nc = 1;
