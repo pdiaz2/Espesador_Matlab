@@ -3,7 +3,7 @@ clear all;
 close all;
 clc;
 %% Boolean control
-load('Agosto_Real_2206_rawData.mat');
+load('Agosto_Real_2206_BF.mat');
 % load('ThreeMonths_Real_2406_rawData.mat');
 % load('PRBS_1606_NoNoise_rawData.mat');
 saveToMatFile = false;
@@ -43,14 +43,14 @@ controlParamsStruct.N_y = N_y;
 
 %% Machine Learning - Structural Parameters
 
-mlParamsStruct.trainingParamsArray = {300,1,'on',10,'on','curvature','TBagger'};
+mlParamsStruct.trainingParamsArray = {100,1,'on',10,'on','curvature','TBagger'};
 mlParamsStruct.optimizeParams.maxMinLS = 40;
 mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         [1,mlParamsStruct.optimizeParams.maxMinLS],...
                                         'Type','integer');
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
 
-mlParamsStruct.DelayMatrix.U = repmat([20]',1,numInputs);
+mlParamsStruct.DelayMatrix.U = repmat([1:2]',1,numInputs);
 [mlParamsStruct.sizeUMatrix garbage] = size(mlParamsStruct.DelayMatrix.U);
 
 mlParamsStruct.DelayMatrix.Y = repmat([4:5]',1,numOutputs);
