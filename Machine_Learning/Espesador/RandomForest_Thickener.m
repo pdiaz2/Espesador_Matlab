@@ -3,9 +3,10 @@ clear all;
 close all;
 clc;
 %% Boolean control
-load('Agosto_Real_2206_BF.mat');
+% load('Agosto_Real_2206_BF.mat');
 % load('ThreeMonths_Real_2406_rawData.mat');
 % load('PRBS_1606_NoNoise_rawData.mat');
+load('Agosto_SimResults_1304_BF.mat');
 saveToMatFile = false;
 matFileName = 'ResultsRF_PRBS_1606';
 optimizeMLHyperparameters = false;
@@ -95,8 +96,8 @@ if generateOne
     RF.PredictorNames
     if strcmp(mlParamsStruct.trainingParamsArray{7},'TBagger')
         RF.OOBPermutedPredictorDeltaError
-%         matFileName = ['RF_Y' num2str(cvToGenerate) '_RealData_2406.mat' ];
-%         save(matFileName,'ML_Model','mOrder');
+        matFileName = ['RF_Y' num2str(cvToGenerate) '_SimResults_2706.mat' ];
+        save(matFileName,'ML_Model','mOrder');
     else
         matFileName = ['RF_Y' num2str(cvToGenerate) '_PRBS_NoNoise_2206.mat' ];
         save(matFileName,'RF');
