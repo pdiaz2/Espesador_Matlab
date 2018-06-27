@@ -1,9 +1,46 @@
-init_sys = idpoly([1 -0.99],[1],[]);
-opt = simOptions('AddNoise',false);
-u = iddata([],[1:6]',1);
+clear all;
+clc;
+close all
+
+%%
+init_sys = idpoly([1 -0.5],[1],[]);
+opt = simOptions('AddNoise',true);
+u = iddata([],ones(1,10)',1);
 data = sim(init_sys,u,opt);
 data.InputData = u.InputData;
 data.OutputData
+figure
+plot(data.OutputData)
+hold on
+%% K = 0
+K = 0;
+[yp,x0,sys_pred] = predict(init_sys,data,K);
+yp.OutputData
+plot(yp.OutputData);
+sys_pred
+%% K = 1
+K = 1;
+[yp,x0,sys_pred] = predict(init_sys,data,K);
+yp.OutputData
+plot(yp.OutputData);
+sys_pred
+%% K = 2
+K = 2;
+[yp,x0,sys_pred] = predict(init_sys,data,K);
+yp.OutputData
+plot(yp.OutputData);
+sys_pred
+%% K = 3
+K = 3;
+[yp,x0,sys_pred] = predict(init_sys,data,K);
+yp.OutputData
+plot(yp.OutputData);
+sys_pred
+legend('Sim','0','1','2','5')
+%% Comparison
+figure
+compare(init_sys,data,K);
+%{
 % data.OutputData(2) = 10;
 % s.Input = u.InputData(1);
 % s.Output = data.OutputData(1);
@@ -27,3 +64,4 @@ yp.OutputData
 % 
 % K = 4;
 % yp = predict(sys,data,K);
+%}
