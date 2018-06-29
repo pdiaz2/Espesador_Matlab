@@ -5,9 +5,9 @@ clc;
 % load('Agosto_SimResults_1304_rawData.mat');
 % load('Agosto_SimResults_1304_rawData.mat');
 % load('Septiembre_Real_2206_rawData.mat');
-load('ThreeMonths_Real_2706_BF.mat');
+% load('ThreeMonths_Real_2706_BF.mat');
 % load('PRBS_1606_NoNoise_rawData.mat');
-% load('Agosto_SimResults_1304_Noise_BF.mat');
+load('Agosto_SimResults_1304_Noise_BF.mat');
 
 saveToMatFile = false;
 matFileName = 'ResultsARMAX_NoNoise_2206';
@@ -15,7 +15,7 @@ optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
-useDelayMV_CV = true;
+useDelayMV_CV = false;
 generateOne = true;
 if generateOne
     % Input wave
@@ -80,8 +80,8 @@ mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;
 mlParamsStruct.trainingSamples = floor(0.85*nSamples);
 % Modification by force because of bad data in the end
 
-mlParamsStruct.limitTestDataIndex = 24177;
-% mlParamsStruct.limitTestDataIndex = controlParamsStruct.nSamples;
+% mlParamsStruct.limitTestDataIndex = 24177;
+mlParamsStruct.limitTestDataIndex = controlParamsStruct.nSamples;
 mlParamsStruct.validationSamples = mlParamsStruct.limitTestDataIndex -...
                                 mlParamsStruct.trainingSamples;
 mlParamsStruct.delayMV_CV = controlParamsStruct.delayMV_CV;
