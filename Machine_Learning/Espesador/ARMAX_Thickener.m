@@ -15,6 +15,7 @@ optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
+useDelayMV_CV = true;
 generateOne = true;
 if generateOne
     % Input wave
@@ -47,8 +48,13 @@ controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.Dt = Dt;
 controlParamsStruct.tau_R = 5; % 10
 controlParamsStruct.N_y = N_y;
-controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
-% controlParamsStruct.delayMV_CV = zeros(3,5);
+if useDelayMV_CV
+    controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
+    ioDT_ARMAX = 'ioDT_';
+else
+    controlParamsStruct.delayMV_CV = zeros(3,5);
+    ioDT_ARMAX = '';
+end
 %% DownSamplig for tau_R
 SimResults = ml_downsampling(SimResults,controlParamsStruct,'d');
 controlParamsStruct.nSamples = length(SimResults.CV(1).GroupedTimeSeries);
@@ -71,10 +77,11 @@ mlParamsStruct.NK = [0 2 4];
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
 mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;
-mlParamsStruct.trainingSamples = floor(0.9*nSamples);
+mlParamsStruct.trainingSamples = floor(0.85*nSamples);
 % Modification by force because of bad data in the end
-% mlParamsStruct.limitTestDataIndex = 24177;
-mlParamsStruct.limitTestDataIndex = controlParamsStruct.nSamples;
+
+mlParamsStruct.limitTestDataIndex = 24177;
+% mlParamsStruct.limitTestDataIndex = controlParamsStruct.nSamples;
 mlParamsStruct.validationSamples = mlParamsStruct.limitTestDataIndex -...
                                 mlParamsStruct.trainingSamples;
 mlParamsStruct.delayMV_CV = controlParamsStruct.delayMV_CV;

@@ -3,14 +3,21 @@ clc;
 close all;
 %%
 % load('Agosto_Real_2206_rawData.mat');
-load('ThreeMonths_Real_2406_BF.mat');
+% load('ThreeMonths_Real_2706_BF.mat');
+nameDataset = 'ThreeMonths_';
+typeOfData = 'Real_';
+dateTest = '2906';
+matFileName = [nameDataset typeOfData dateTest '_BF.mat'];
+figurePath = ['figures\' typeOfData '\'];
+%%
+load(matFileName);
 %%
 saveToMatFile = false;
-matFileName = 'ResultsRF_PRBS_1606';
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
+useDelayMV_CV = true;
 generateOne = true;
 if generateOne
     % Input wave
@@ -27,19 +34,33 @@ end
 %% Plant specifics
 m = length(SimResults.MV);
 d = length(SimResults.DV);
+% d = 3;
 numInputs = d+m;
-n = length(SimResults.CV);
+% n = length(SimResults.CV);
+% n = length(SimResults.CV)-1;
+n = 3;
 numOutputs = n;
-nSamples = length(SimResults.CV(1).GroupedTimeSeries);
 Dt = 1;
 %% Structure definitions
 % Plant and control params definition
 controlParamsStruct.dimsSystem = [n m d];
-controlParamsStruct.nSamples = nSamples;
 controlParamsStruct.Dt = Dt;
 controlParamsStruct.tau_R = 5; % 10
 controlParamsStruct.N_y = N_y;
+if useDelayMV_CV
+    controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
+    ioDT_RF = 'ioDT_';
+    ioDT_ARMAX = 'IODT_';
+else
+    controlParamsStruct.delayMV_CV = zeros(3,5);
+    ioDT_RF = '';
+    ioDT_ARMAX = '';
+end
 
+%% DownSamplig for tau_R
+SimResults = ml_downsampling(SimResults,controlParamsStruct,'d');
+controlParamsStruct.nSamples = length(SimResults.CV(1).GroupedTimeSeries);
+nSamples = controlParamsStruct.nSamples;
 %% Machine Learning - Structural Parameters
 
 mlParamsStruct.trainingParamsArray = {100,1,'on',10,'on','curvature','TBagger'};
@@ -49,16 +70,19 @@ mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         'Type','integer');
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
 
-mlParamsStruct.DelayMatrix.U = repmat([1:3]',1,numInputs);
+mlParamsStruct.DelayMatrix.U = repmat([1]',1,numInputs);
 [mlParamsStruct.sizeUMatrix garbage] = size(mlParamsStruct.DelayMatrix.U);
+mlParamsStruct.delayMV_CV = controlParamsStruct.delayMV_CV;
 
 mlParamsStruct.DelayMatrix.Y = repmat([4:5]',1,numOutputs);
 [mlParamsStruct.sizeYMatrix garbage] = size(mlParamsStruct.DelayMatrix.Y);
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
 mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;
-mlParamsStruct.trainingSamples = floor(0.9*nSamples);
-mlParamsStruct.validationSamples = controlParamsStruct.nSamples -...
+mlParamsStruct.trainingSamples = floor(0.85*nSamples);
+% mlParamsStruct.limitTestDataIndex = 24177;
+mlParamsStruct.limitTestDataIndex = controlParamsStruct.nSamples;
+mlParamsStruct.validationSamples = mlParamsStruct.limitTestDataIndex -...
                                 mlParamsStruct.trainingSamples;
 mlParamsStruct.mlMethod = mlMethod;
 mlParamsStruct.generateOneBool = generateOne;
@@ -70,34 +94,37 @@ trainingBigSet = struct;
                                                                     testBigSet,...
                                                                     SimResults,...
                                                                     controlParamsStruct,...
-                                                                    mlParamsStruct.trainingSamples);
+                                                                    mlParamsStruct);
+testBatch = 8; %Backward Compatibility
+
                                                                 
 % %% RF Models
-% for cv = 2:2
-%     rfFileName = ['RF_Y' num2str(cv) '_RealData_2406_BF.mat'];
-%     load(rfFileName);
-%     %% Predict with RF
-%     [testSubset,~] = ml_prepare_IO_data(testBigSet,...
-%                                     controlParamsStruct.nameInputs,...
-%                                     controlParamsStruct.nameOutputs,...
-%                                     1, controlParamsStruct.tau_R,...
-%                                     mlParamsStruct.validationSamples,...
-%                                     mOrder.na, mOrder.nb,....
-%                                     mlParamsStruct.mlMethod);
-% 
-%     results = ml_validate_model(testSubset,ML_Model,...
-%                                 controlParamsStruct.dimsSystem(1),...
-%                                 controlParamsStruct.N_y,...
-%                                 controlParamsStruct.tau_R,...
-%                                 mOrder.na,...
-%                                 mlParamsStruct);
-%     RFPredictionStruct(cv).yHat = results.yHat;
-%     RFPredictionStruct(cv).MSE = results.MSE;
-%     RFPredictionStruct(cv).Correlation = results.Correlation;
-%     RFPredictionStruct(cv).OOBError = results.OOBError;
-% end
+for cv = 1:n
+    rfFileName = ['RF_Y' num2str(cv) '_' typeOfData ioDT_RF dateTest '.mat'];
+    load(rfFileName);
+    %% Predict with RF
+    [testSubset,~] = ml_prepare_IO_data(testBigSet,...
+                                    controlParamsStruct.nameInputs,...
+                                    controlParamsStruct.nameOutputs,...
+                                    1, controlParamsStruct.tau_R,...
+                                    mlParamsStruct.validationSamples,...
+                                    mOrder.na, mOrder.nb,....
+                                    mlParamsStruct);
+
+    results = ml_validate_model(testSubset,ML_Model,...
+                                controlParamsStruct.dimsSystem(1),...
+                                controlParamsStruct.N_y,...
+                                controlParamsStruct.tau_R,...
+                                mOrder.na,...
+                                mlParamsStruct);
+    RFPredictionStruct(cv).yHat = results.yHat;
+    RFPredictionStruct(cv).MSE = results.MSE;
+    RFPredictionStruct(cv).Correlation = results.Correlation;
+    RFPredictionStruct(cv).OOBError = results.OOBError;
+end
 %% ARMAX Models
-load('ARMAX_MDL_REAL_2406.mat');
+armaxFileName = ['ARMAX_MDL_' typeOfData dateTest '.mat'];
+load(armaxFileName);
 modelOrder = order(armaxModel);
 mlMethod = 'ARMAX';
 [trainingData,~] = ml_prepare_IO_data(trainingBigSet,...
@@ -106,7 +133,7 @@ mlMethod = 'ARMAX';
                     1, controlParamsStruct.tau_R,...
                     mlParamsStruct.validationSamples,...
                     mOrder.na, mOrder.nb,....
-                    mlMethod);
+                    mlParamsStruct);
 [testData,~] = ml_prepare_IO_data(testBigSet,...
                     controlParamsStruct.nameInputs,...
                     controlParamsStruct.nameOutputs,...
