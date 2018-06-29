@@ -1,5 +1,4 @@
-function [ SimResultsPreProc] = data_preprocessing(lpFilt,SimResultsRawStruct,...
-                                                groupBy)
+function [ SimResultsPPStruct] = data_preprocessing(SimResultsRawStruct,lpFilt)
 %DATA_PREPROCESSING Summary of this function goes here
 %   Detailed explanation goes here
 numCV = size(SimResultsRawStruct.CV,2);
@@ -7,63 +6,44 @@ numMV = size(SimResultsRawStruct.MV,2);
 numDV = size(SimResultsRawStruct.DV,2);
 %% LP-Filt
 for cv = 1:numCV
-    SimResultsPreProc.CV(cv).FilteredTimeSeries = filter(lpFilt,SimResultsRawStruct.CV(cv).TimeSeries);
-    originalEnergy = norm(SimResultsRawStruct.CV(cv).TimeSeries);
-    filteredEnergy = norm(SimResultsPreProc.CV(cv).FilteredTimeSeries);
-    SimResultsPreProc.CV(cv).FilteredTimeSeries = SimResultsPreProc.CV(cv).FilteredTimeSeries*...
-                                                    originalEnergy/filteredEnergy;
+    SimResultsPPStruct.CV(cv).TimeSeries = dp_lowpass_filter(...
+                                        SimResultsRawStruct.CV(cv).TimeSeries,...
+                                        lpFilt);
 end
 for mv = 1:numMV
-    SimResultsPreProc.MV(mv).FilteredTimeSeries = filter(lpFilt,SimResultsRawStruct.MV(mv).TimeSeries);
-    originalEnergy = norm(SimResultsRawStruct.MV(mv).TimeSeries);
-    filteredEnergy = norm(SimResultsPreProc.MV(mv).FilteredTimeSeries);
-    SimResultsPreProc.MV(mv).FilteredTimeSeries = SimResultsPreProc.MV(mv).FilteredTimeSeries*...
-                                                    originalEnergy/filteredEnergy;
+    SimResultsPPStruct.MV(mv).TimeSeries = dp_lowpass_filter(...
+                                        SimResultsRawStruct.MV(mv).TimeSeries,...
+                                        lpFilt);
 end
 for dv = 1:numDV
-    SimResultsPreProc.DV(dv).FilteredTimeSeries = filter(lpFilt,SimResultsRawStruct.DV(dv).TimeSeries);
-    originalEnergy = norm(SimResultsRawStruct.DV(dv).TimeSeries);
-    filteredEnergy = norm(SimResultsPreProc.DV(dv).FilteredTimeSeries);
-    SimResultsPreProc.DV(dv).FilteredTimeSeries = SimResultsPreProc.DV(dv).FilteredTimeSeries*...
-                                                    originalEnergy/filteredEnergy;
+    SimResultsPPStruct.DV(dv).TimeSeries = dp_lowpass_filter(...
+                                        SimResultsRawStruct.DV(dv).TimeSeries,...
+                                        lpFilt);
 end
+SimResultsPPStruct.compensatePhase = finddelay(SimResultsRawStruct.CV(2).TimeSeries(floor(277*3600):floor(279*3600)),...
+                                              SimResultsPPStruct.CV(2).TimeSeries(floor(277*3600):floor(279*3600)));
 %% Reducing Time-Sampling (Lp Filt and Downsampling)
-SimResultsPreProc.groupBy = groupBy;
-numSamples = length(SimResultsRawStruct.CV(1).TimeSeries);
-% CV Preparation
-for cv = 1:length(SimResultsRawStruct.CV) % This -5 for real data only
-   B = reshape(SimResultsRawStruct.CV(cv).TimeSeries,[groupBy,numSamples/groupBy]);
-   B = mean(B);
-   SimResultsPreProc.CV(cv).GroupedTimeSeries = B;
-   B = reshape(SimResultsPreProc.CV(cv).FilteredTimeSeries,[groupBy,numSamples/groupBy]);
-   SimResultsPreProc.CV(cv).LearningData = B;
-end
-
-% MV Preparation
-for mv = 1:length(SimResultsRawStruct.MV)
-   B = reshape(SimResultsRawStruct.MV(mv).TimeSeries,[groupBy,numSamples/groupBy]);
-   B = mean(B);
-   SimResultsPreProc.MV(mv).GroupedTimeSeries = B;
-   B = reshape(SimResultsPreProc.MV(mv).FilteredTimeSeries,[groupBy,numSamples/groupBy]);
-   SimResultsPreProc.MV(mv).LearningData = B;
-end
-
-% DV Preparation
-for dv = 1:length(SimResultsRawStruct.DV)
-   B = reshape(SimResultsRawStruct.DV(dv).TimeSeries,[groupBy,numSamples/groupBy]);
-   B = mean(B);
-   SimResultsPreProc.DV(dv).GroupedTimeSeries = B;
-   B = reshape(SimResultsPreProc.DV(dv).FilteredTimeSeries,[groupBy,numSamples/groupBy]);
-   SimResultsPreProc.DV(dv).LearningData = B;
-end
+SimResultsPPStruct.groupBy = SimResultsRawStruct.groupBy;
+SimResultsPPStruct = dp_group_time_series(SimResultsPPStruct);
 %% Delay Estimation
-estDelayWindow = 15*3600/60:30*3600/60;
-SimResultsPreProc.delayMV_CV = -1*ones(3,2);
+estDelayWindowMV = 262*3600/60:264*3600/60;
+estDelayWindowCV = 262*3600/60:274*3600/60;
+SimResultsPPStruct.delayMV_CV = -1*ones(3,5);
+% Fliped because im stupid
 for cv = 1:3
     for mv = 1:2
-       SimResultsPreProc.delayMV_CV(cv,mv) =  finddelay(SimResultsPreProc.MV(mv).LearningData(estDelayWindow),...
-                                    SimResultsPreProc.CV(cv).LearningData(estDelayWindow));
+        SimResultsPPStruct.delayMV_CV(cv,3+mv) =  finddelay(SimResultsPPStruct.MV(mv).GroupedTimeSeries(estDelayWindowMV),...
+                                    SimResultsPPStruct.CV(cv).GroupedTimeSeries(estDelayWindowCV));
+    end    
+end
+for cv = 1:3
+    % Assuming residence time for feed disturbances
+    for dv = 1:3
+        SimResultsPPStruct.delayMV_CV(cv,dv) = SimResultsPPStruct.delayMV_CV(3,5);
     end
 end
-end
 
+% for cv = 4:7
+%     SimResultsPPStruct.delayMV_CV(cv,:) = SimResultsPPStruct.delayMV_CV(3,:);
+% end
+end

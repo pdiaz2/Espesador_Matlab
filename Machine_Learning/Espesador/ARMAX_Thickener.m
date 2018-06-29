@@ -5,8 +5,10 @@ clc;
 % load('Agosto_SimResults_1304_rawData.mat');
 % load('Agosto_SimResults_1304_rawData.mat');
 % load('Septiembre_Real_2206_rawData.mat');
-load('ThreeMonths_Real_2406_BF.mat');
+load('ThreeMonths_Real_2706_BF.mat');
 % load('PRBS_1606_NoNoise_rawData.mat');
+% load('Agosto_SimResults_1304_Noise_BF.mat');
+
 saveToMatFile = false;
 matFileName = 'ResultsARMAX_NoNoise_2206';
 optimizeMLHyperparameters = false;
@@ -16,7 +18,7 @@ N_y = 20;
 generateOne = true;
 if generateOne
     % Input wave
-    cvToGenerate = 1;
+    cvToGenerate = 2;
     na = 3;
     nb = 1;
     nc = 1;
@@ -32,19 +34,25 @@ end
 %% Plant specifics
 m = length(SimResults.MV);
 d = length(SimResults.DV);
+% d = 3;
 numInputs = d+m;
-n = length(SimResults.CV);
+% n = length(SimResults.CV);
+% n = length(SimResults.CV)-1;
+n = 3;
 numOutputs = n;
-nSamples = length(SimResults.CV(1).GroupedTimeSeries);
-% Dt = SimResults.groupBy;
 Dt = 1;
 %% Structure definitions
 % Plant and control params definition
 controlParamsStruct.dimsSystem = [n m d];
-controlParamsStruct.nSamples = nSamples;
 controlParamsStruct.Dt = Dt;
-controlParamsStruct.tau_R = 5;
+controlParamsStruct.tau_R = 5; % 10
 controlParamsStruct.N_y = N_y;
+controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
+% controlParamsStruct.delayMV_CV = zeros(3,5);
+%% DownSamplig for tau_R
+SimResults = ml_downsampling(SimResults,controlParamsStruct,'d');
+controlParamsStruct.nSamples = length(SimResults.CV(1).GroupedTimeSeries);
+nSamples = controlParamsStruct.nSamples;
 
 %% Machine Learning - Structural Parameters
 mlParamsStruct.trainingParamsArray = {'estimate','I_DC?','O_DC?',false,'off','Focus?',true};
@@ -64,8 +72,12 @@ mlParamsStruct.NK = [0 2 4];
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
 mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;
 mlParamsStruct.trainingSamples = floor(0.9*nSamples);
-mlParamsStruct.validationSamples = controlParamsStruct.nSamples -...
+% Modification by force because of bad data in the end
+% mlParamsStruct.limitTestDataIndex = 24177;
+mlParamsStruct.limitTestDataIndex = controlParamsStruct.nSamples;
+mlParamsStruct.validationSamples = mlParamsStruct.limitTestDataIndex -...
                                 mlParamsStruct.trainingSamples;
+mlParamsStruct.delayMV_CV = controlParamsStruct.delayMV_CV;
 mlParamsStruct.mlMethod = mlMethod;
 mlParamsStruct.generateOneBool = generateOne;
 mlParamsStruct.cvToGenerate = cvToGenerate;
@@ -77,8 +89,7 @@ SimResults.CV(7).GroupedTimeSeries = fillmissing(SimResults.CV(7).GroupedTimeSer
                                                                     testBigSet,...
                                                                     SimResults,...
                                                                     controlParamsStruct,...
-                                                                    mlParamsStruct.trainingSamples);
-
+                                                                    mlParamsStruct);
 testBatch = 8; %Backward Compatibility
 if generateOne
     mlParamsStruct.trainingParamsArray{2} = mlParamsStruct.offsetOptions{1,offsetChoice};

@@ -1,22 +1,22 @@
 clear all
 clc;
 close all;
-%%5
+%%
 load('Septiembre_SimResults_1304_BF')
 
 %%
 nameDataset = 'ThreeMonths';
 typeOfData = 'Real';
 dateTest = '2706';
-matFileName = [nameDataset '_' typeOfData '_' dateTest '_Trials_BF.mat'];
+outputMatFileName = [nameDataset '_' typeOfData '_' dateTest '_BF.mat'];
 figurePath = ['figures\' typeOfData '\'];
-imprint = false;
-plotFigures = true;
-granularity = 's';
-viewFreq = 100;
-% matFileName = ['ThickenerOperation_' month '_rawData.mat'];
 saveToMatFile = false;
 imprint = false;
+plotFigures = true;
+%%
+granularity = 's';
+viewFreq = 100;
+compensatePhase = 4;
 startThickener = 0;
 %%
 months = {'Agosto','Septiembre','Octubre'};
@@ -56,13 +56,13 @@ numSamples = length(SimResults.CV(1).TimeSeries);
 for cv = 4:length(SimResults.CV)
    SimResults.CV(cv).TimeSeries = padarray(SimResults.CV(cv).TimeSeries',...
                                     numSamples-length(SimResults.CV(cv).TimeSeries),...
-                                    0,'post');
+                                    'replicate','post');
                                             
 end
 for dv = 3:length(SimResults.DV)
    SimResults.DV(dv).TimeSeries = padarray(SimResults.DV(dv).TimeSeries,...
                                     numSamples-length(SimResults.DV(dv).TimeSeries),...
-                                    0,'post');
+                                    'replicate','post');
                                             
 end
 %% FFT of Signals
@@ -88,18 +88,28 @@ for dv = 1:3
     SimResults.DV(dv).FFT = fft(SimResults.DV(dv).TimeSeries(fftWindow));
 end
 %% Filter Design
-lpFilt = designfilt('lowpassiir','FilterOrder',5, ...
-         'PassbandFrequency',5e-4,'PassbandRipple',0.2, ...
+lpFilt = designfilt('lowpassiir','FilterOrder',2, ...
+         'PassbandFrequency',4e-4,...
+         'PassbandRipple',0.01, ...
          'SampleRate',1);
-fvtool(lpFilt);
+% fvtool(lpFilt);
 %%
 SimResultsRaw = SimResults;
+SimResultsRaw = dp_group_time_series(SimResultsRaw);
 %% PreProcessing
-groupBy = 60;
-SimResults = data_preprocessing(lpFilt,SimResultsRaw,groupBy);
-
+SimResultsRaw.groupBy = 60;
+SimResults = data_preprocessing(SimResultsRaw,lpFilt);
 options.stepTestType = '_Real';
-
+%% Manual Adjustments
+SimResultsRaw.filterWarmUp = 10;
+SimResults.filterWarmUp = SimResultsRaw.filterWarmUp;
+SimResultsRaw = dp_compensate_filter_warmup(SimResultsRaw);
+SimResults = dp_compensate_filter_warmup(SimResults);
+SimResults.compensatePhase = compensatePhase;
+SimResults = dp_compensate_phase(SimResults);
+%%
+badCp_u = find(SimResults.CV(2).GroupedTimeSeries(:) > 79);
+badBedLevel = find(SimResults.CV(3).GroupedTimeSeries(:) > 11.5);
 %% Plot
 CVNames = {'Torque','Underflow Concentration','Interface Level','Overflow Concentration','Residence Time',...
             'Solid Throughput','Underflow Particle Diameter','Overflow'};
@@ -118,12 +128,12 @@ if strcmp('s',granularity)
     figAppendName = '';
     divisorTime = 1;
 else
-    samples = length(SimResults.CV(1).GroupedTimeSeries);
+    samples = length(SimResultsRaw.CV(1).GroupedTimeSeries);
     figAppendName = '_g';
     divisorTime = SimResults.groupBy;
 end
 % options.simTime/3600 = in hours
-time = linspace(0,options.simTime/3600,samples+1);
+time = linspace(0,options.simTime*length(months)/3600,samples+1);
 timeToWatch = length(time)-1;
 SimResultsRaw.CV(5).TimeSeries = filloutliers(SimResultsRaw.CV(5).TimeSeries,'clip','median');
 dynamicRangeCV = zeros(numel(CVNames),3);
@@ -131,17 +141,17 @@ dynamicRangeMV = zeros(numel(MVNames),3);
 dynamicRangeDV = zeros(numel(DVNames),3);
 
 if (plotFigures)
-    % CV Plots
+    % CV Plots5
     for cv = 1:3%length(CVNames)
         figure
         title(CVNames{cv})
         hold on
         if strcmp('s',granularity)
             plot(time(1:timeToWatch),SimResultsRaw.CV(cv).TimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.CV(cv).FilteredTimeSeries(1:timeToWatch)) 
+            plot(time(1:timeToWatch),SimResults.CV(cv).TimeSeries(1:timeToWatch)) 
         else
-            plot(time(1:timeToWatch),SimResults.CV(cv).GroupedTimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.CV(cv).LearningData(1:timeToWatch))
+            plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.CV(cv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+            plot(time(1:timeToWatch-compensatePhase),SimResults.CV(cv).GroupedTimeSeries(1:end))
         end
         ylabel(CVUnits{cv})
         xlabel('Hours [hr]')
@@ -164,10 +174,10 @@ if (plotFigures)
         hold on
         if strcmp('s',granularity)
             plot(time(1:timeToWatch),SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.MV(mv).FilteredTimeSeries(1:timeToWatch)) 
+            plot(time(1:timeToWatch),SimResults.MV(mv).TimeSeries(1:timeToWatch)) 
         else
-            plot(time(1:timeToWatch),SimResults.MV(mv).GroupedTimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.MV(mv).LearningData(1:timeToWatch))
+            plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.MV(mv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+            plot(time(1:timeToWatch-compensatePhase),SimResults.MV(mv).GroupedTimeSeries(1:end))
         end
         grid on
         ylabel(MVUnits{mv})
@@ -180,8 +190,8 @@ if (plotFigures)
         end
         hold off
         
-        dynamicRange(mv,1) = min(SimResultsRaw.CV(mv).TimeSeries(1:timeToWatch));
-        dynamicRange(mv,2) = max(SimResultsRaw.CV(mv).TimeSeries(1:timeToWatch));
+        dynamicRange(mv,1) = min(SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch));
+        dynamicRange(mv,2) = max(SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch));
         dynamicRange(mv,3) = dynamicRange(mv,2)-dynamicRange(mv,1);
     end
     % DV Plots
@@ -191,10 +201,10 @@ if (plotFigures)
         hold on
         if strcmp('s',granularity)
             plot(time(1:timeToWatch),SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.DV(dv).FilteredTimeSeries(1:timeToWatch))
+            plot(time(1:timeToWatch),SimResults.DV(dv).TimeSeries(1:timeToWatch))
         else
-            plot(time(1:timeToWatch),SimResults.DV(dv).GroupedTimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.DV(dv).LearningData(1:timeToWatch))
+            plot(time(1:timeToWatch-compensatePhase),SimResults.DV(dv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+            plot(time(1:timeToWatch-compensatePhase),SimResults.DV(dv).GroupedTimeSeries(1:end))
         end
         grid on
         ylabel(DVUnits{dv})
@@ -206,8 +216,8 @@ if (plotFigures)
             print(printName,'-depsc');
         end
         hold off
-        dynamicRange(dv,1) = min(SimResultsRaw.CV(dv).TimeSeries(1:timeToWatch));
-        dynamicRange(dv,2) = max(SimResultsRaw.CV(dv).TimeSeries(1:timeToWatch));
+        dynamicRange(dv,1) = min(SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch));
+        dynamicRange(dv,2) = max(SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch));
         dynamicRange(dv,3) = dynamicRange(dv,2)-dynamicRange(dv,1);
     end
 end
@@ -254,7 +264,16 @@ if imprint
     % Latex
     print(printName,'-depsc');
 end
-
+%%
+for cv = 1:length(CVNames)
+    SimResults.CV(cv).Name = SimResultsRaw.CV(cv).Name;
+end
+for mv = 1:length(MVNames)
+    SimResults.MV(mv).Name = SimResultsRaw.MV(mv).Name;
+end
+for dv = 1:length(DVNames)
+    SimResults.DV(dv).Name = SimResultsRaw.DV(dv).Name;
+end
 %%
 if saveToMatFile
     save(outputMatFileName,'SimResults','options','startYield');

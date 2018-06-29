@@ -4,6 +4,7 @@ mlMethod = mlParamsStruct.mlMethod;
 generateOneBool = mlParamsStruct.generateOneBool;
 cvToGenerate = mlParamsStruct.cvToGenerate;
 tBagOrEnsemble = mlParamsStruct.trainingParamsArray{7};
+deadTimeMV_CV = mlParamsStruct.delayMV_CV;
 switch mlMethod
     case 'RF'
         if generateOneBool
@@ -14,7 +15,7 @@ switch mlMethod
                                                 testData(cv).InputData, ...
                                                 validationOutputs,...
                                                 N_y,tau_R,na(cv),...
-                                                mlMethod,-1);
+                                                mlParamsStruct,-1);
             Results(1).MSE = MSE_Ny;
             Results(1).Correlation = corr(yHat_1,validationOutputs);
             Results(1).yHat = yHat;
@@ -34,7 +35,7 @@ switch mlMethod
                                                     testData(cv).InputData, ...
                                                     validationOutputs,...
                                                     N_y,tau_R,na(cv),...
-                                                    mlMethod,-1);
+                                                    mlParamsStruct,-1);
                 Results(cv).MSE = MSE_Ny;
                 Results(cv).Correlation = corr(yHat_1,validationOutputs);
                 Results(cv).yHat = yHat;
@@ -67,7 +68,7 @@ switch mlMethod
                                     testData.InputData,...
                                     testData.OutputData,...
                                     N_y,tau_R,-1,...
-                                    mlMethod,pOptions);
+                                    mlParamsStruct,pOptions);
         for cv = 1:numOutputs
             Correlation(cv) = corr(yHat_Ny(:,cv,1),testData.OutputData(:,cv));
         end
@@ -80,7 +81,7 @@ switch mlMethod
     case 'ARMAX'
         UDC = mean(testData.InputData)';
         YDC = mean(testData.OutputData)';
-
+        maxDeadTime = max(max(deadTimeMV_CV));
         [UOffset] = ml_remove_offset(mlParamsStruct.trainingParamsArray{2},UDC,numel(UDC));
         [YOffset] = ml_remove_offset(mlParamsStruct.trainingParamsArray{3},YDC,numel(YDC));
         pOptions = ml_generate_pOptions(ML_Model.Model,...
@@ -92,9 +93,9 @@ switch mlMethod
                                     testData.InputData,...
                                     testData.OutputData,...
                                     N_y,tau_R,-1,...
-                                    mlMethod,pOptions);
+                                    mlParamsStruct,pOptions);
         for cv = 1:numOutputs
-            Correlation(cv) = corr(yHat_Ny(:,cv,1),testData.OutputData(:,cv));
+            Correlation(cv) = corr(yHat_Ny(maxDeadTime+1:end,cv,1),testData.OutputData(maxDeadTime+1:end,cv));
         end
         Results.MSE = MSE_Ny;
         Results.yHat = yHat_Ny;
