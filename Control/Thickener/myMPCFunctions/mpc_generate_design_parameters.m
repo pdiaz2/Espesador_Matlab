@@ -6,8 +6,8 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMetho
     load(fixedParametersFileName);
     %% MPC Design Parameters
     % Weight Matrices (Design)
-    qMatrix = diag(qCostValues)*qNormMatrix*ones(numCV,N_y-1)*1/((N_y-1)*numCV); % 1
-    rMatrix = diag(rCostValues)*rNormMatrix*ones(numMV,N_u); % 0.001 bad results
+    qMatrix = diag(qCostValues)*qNormMatrix*ones(numCV,N_y-1)*1/((N_y-1)*numCV); 
+    rMatrix = diag(rCostValues)*rNormMatrix*ones(numMV,N_u); 
     betaCost = diag(betaCostValues)*betaNormMatrix*ones(numCV,1)*1/(numCV);
     lambdaMatrix = diag(lambdaCostValues)*lambdaNormMatrix*ones(numCV,N_y)*1/((N_y)*numCV);
 

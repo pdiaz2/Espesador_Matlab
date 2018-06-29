@@ -160,9 +160,9 @@ for input = 1:1
     %% Output Handling
     % CV
     SimResults.CV(1).TimeSeries = [SimResults.CV(1).TimeSeries torque.signals.values(1:end-1)'];
-    SimResults.CV(2).TimeSeries = [SimResults.CV(2).TimeSeries Cp_u.signals.values(1:end-1)'];
+    SimResults.CV(2).TimeSeries = [SimResults.CV(2).TimeSeries Cp_u.signals.values(1:end-1)'*100];
     SimResults.CV(3).TimeSeries = [SimResults.CV(3).TimeSeries bedLevel.signals.values(1:end-1)'];
-    SimResults.CV(4).TimeSeries = [SimResults.CV(4).TimeSeries Cp_e.signals.values(1:end-1)'];
+    SimResults.CV(4).TimeSeries = [SimResults.CV(4).TimeSeries Cp_e.signals.values(1:end-1)'*100];
     SimResults.CV(5).TimeSeries = [SimResults.CV(5).TimeSeries filloutliers(residenceTime.signals.values(1:end-2)','clip','median')];
     SimResults.CV(6).TimeSeries = [SimResults.CV(6).TimeSeries solidFlux.signals.values(1:end-2)'];
     SimResults.CV(7).TimeSeries = [SimResults.CV(7).TimeSeries p1_u.signals.values(1:end-1)'];

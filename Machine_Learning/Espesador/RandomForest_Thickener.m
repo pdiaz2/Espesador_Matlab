@@ -4,9 +4,13 @@ close all;
 clc;
 %% Boolean control
 % load('Agosto_Real_2206_BF.mat');
-load('ThreeMonths_Real_2706_BF.mat');
+% load('ThreeMonths_Real_2706_BF.mat');
 % load('PRBS_1606_NoNoise_rawData.mat');
-% load('Agosto_SimResults_1304_Noise_BF.mat');
+nameDataset = 'Agosto_';
+typeOfData = 'Sim_';
+dateTest = '2906';
+
+
 saveToMatFile = false;
 matFileName = 'ResultsRF_PRBS_1606';
 optimizeMLHyperparameters = false;
@@ -14,9 +18,12 @@ mlMethod = 'RF';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
 generateOne = true;
+useDelayMV_CV = false;
+noiseyData = true;
+%% Bool Handling
 if generateOne
     % Input wave
-    cvToGenerate = 1;
+    cvToGenerate = 3;
     experiment = 1;
     delayUCases = 1;
     delayYCases = 2;
@@ -24,6 +31,17 @@ else
    waveVector = 1:4;
    cvToGenerate = -1; %Not used in this case
 end
+
+if noiseyData
+    noiseStr = 'Noise_';
+else
+    noiseStr = '';
+end
+matFileName = [nameDataset typeOfData noiseStr dateTest '_BF.mat'];
+load(matFileName);
+
+
+
 
 
 %% Plant specifics
@@ -42,8 +60,13 @@ controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.Dt = Dt;
 controlParamsStruct.tau_R = 5; % 10
 controlParamsStruct.N_y = N_y;
-controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
-% controlParamsStruct.delayMV_CV = zeros(3,5);
+if useDelayMV_CV
+    controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
+    ioDTStr = 'ioDT_';
+else
+    controlParamsStruct.delayMV_CV = zeros(3,5);
+    ioDTStr = '';
+end
 %% DownSamplig for tau_R
 SimResults = ml_downsampling(SimResults,controlParamsStruct,'d');
 controlParamsStruct.nSamples = length(SimResults.CV(1).GroupedTimeSeries);
@@ -67,8 +90,11 @@ mlParamsStruct.DelayMatrix.Y = repmat([4:5]',1,numOutputs);
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
 mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;
 mlParamsStruct.trainingSamples = floor(0.85*nSamples);
-% mlParamsStruct.limitTestDataIndex = 24177;
-mlParamsStruct.limitTestDataIndex = controlParamsStruct.nSamples;
+if strcmp(typeOfData,'Real_')
+    mlParamsStruct.limitTestDataIndex = 24177;
+else
+    mlParamsStruct.limitTestDataIndex = controlParamsStruct.nSamples;
+end
 mlParamsStruct.validationSamples = mlParamsStruct.limitTestDataIndex -...
                                 mlParamsStruct.trainingSamples;
 mlParamsStruct.mlMethod = mlMethod;
@@ -104,11 +130,11 @@ if generateOne
     RF.PredictorNames
     if strcmp(mlParamsStruct.trainingParamsArray{7},'TBagger')
         RF.OOBPermutedPredictorDeltaError
-        matFileName = ['RF_Y' num2str(cvToGenerate) '_Real_ioDT_2906.mat' ];
-        save(matFileName,'ML_Model','mOrder');
+        matFileName = ['RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr dateTest '.mat' ];
+        save(matFileName,'ML_Model','mOrder','mlParamsStruct','controlParamsStruct');
     else
         matFileName = ['RF_Y' num2str(cvToGenerate) '_SimResults_2906.mat' ];
-        save(matFileName,'RF');
+        save(matFileName,'RF','mlParamsStruct','controlParamsStruct');
     end
 else
     ML_Results = struct;

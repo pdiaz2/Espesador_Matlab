@@ -7,8 +7,11 @@ clc;
 % load('Septiembre_Real_2206_rawData.mat');
 % load('ThreeMonths_Real_2706_BF.mat');
 % load('PRBS_1606_NoNoise_rawData.mat');
-load('Agosto_SimResults_1304_Noise_BF.mat');
+% load('Agosto_SimResults_1304_Noise_BF.mat');
 
+nameDataset = 'Agosto_';
+typeOfData = 'Sim_';
+dateTest = '2906';
 saveToMatFile = false;
 matFileName = 'ResultsARMAX_NoNoise_2206';
 optimizeMLHyperparameters = false;
@@ -16,7 +19,9 @@ mlMethod = 'ARMAX';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
 useDelayMV_CV = false;
+noiseyData = true;
 generateOne = true;
+%% Bool Handling
 if generateOne
     % Input wave
     cvToGenerate = 2;
@@ -30,6 +35,15 @@ else
    waveVector = 1:4;
    cvToGenerate = -1; %Not used in this case
 end
+
+if noiseyData
+    noiseStr = 'Noise_';
+else
+    noiseStr = '';
+end
+matFileName = [nameDataset typeOfData noiseStr dateTest '_BF.mat'];
+load(matFileName);
+
 
 
 %% Plant specifics
@@ -50,10 +64,10 @@ controlParamsStruct.tau_R = 5; % 10
 controlParamsStruct.N_y = N_y;
 if useDelayMV_CV
     controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
-    ioDT_ARMAX = 'ioDT_';
+    ioDTStr = 'ioDT_';
 else
     controlParamsStruct.delayMV_CV = zeros(3,5);
-    ioDT_ARMAX = '';
+    ioDTStr = '';
 end
 %% DownSamplig for tau_R
 SimResults = ml_downsampling(SimResults,controlParamsStruct,'d');
@@ -79,9 +93,11 @@ mlParamsStruct.optimizeParams.bayOptIterations = 30;
 mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;
 mlParamsStruct.trainingSamples = floor(0.85*nSamples);
 % Modification by force because of bad data in the end
-
-% mlParamsStruct.limitTestDataIndex = 24177;
-mlParamsStruct.limitTestDataIndex = controlParamsStruct.nSamples;
+if strcmp(typeOfData,'Real_')
+    mlParamsStruct.limitTestDataIndex = 24177;
+else
+    mlParamsStruct.limitTestDataIndex = controlParamsStruct.nSamples;
+end
 mlParamsStruct.validationSamples = mlParamsStruct.limitTestDataIndex -...
                                 mlParamsStruct.trainingSamples;
 mlParamsStruct.delayMV_CV = controlParamsStruct.delayMV_CV;
@@ -117,6 +133,9 @@ if generateOne
                                                         controlParamsStruct,...
                                                         mlParamsStruct,...
                                                         mOrder);
+    armaxModel = ML_Model.Model;
+    matFileModel = ['ARMAX_MDL_' typeOfData ioDTStr dateTest '.mat'];
+    save(matFileModel,'armaxModel','mOrder','controlParamsStruct','mlParamsStruct');
 else
     ML_Results = struct;
     for offsetChoice = 1:2
