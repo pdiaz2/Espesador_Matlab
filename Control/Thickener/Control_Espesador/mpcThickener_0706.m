@@ -7,71 +7,106 @@ N_u = 3;%4
 kappaControl = 5;
 optimizationMethod = 'PSO';
 Dt = 1;
-% simTime = 2.4e4;
-simTime = 3600;
-
+simTime = 100*3600;
+% simTime = 3600;
+simControlFrom = 1;
+simControlTo = 5;
 groupBy = 60; % This should be automatic
 tau_R = 10*groupBy;
 tau_C = kappaControl*tau_R;
-stepInDV = false;
-dvStepSize = [0 0 0];
+stepInDVArray = [false;
+            false;
+            false;
+            true;
+            true];
+dvStepSizeArray = [
+                0 0 0;
+                0 0 0;
+                0 0 0;
+                0 -0.1 0;
+                30 0 0
+                ];
 dvRealData = false;
-imprint = false;
+imprint = true;
 controlClosedLoop = 1;
 startPlotTime = 1; %Wait for noise filter to stabilize
-dateMatFileStr = '2206';
-figurePath = 'figures\paper_ACCA';
+dateMatFileStr = '2906';
+figurePath = 'figures\controlCompare\';
 % figurePath = 'figures\mpc_rf_comparisons\open_loop_benchmark';
 % Code for names:
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
     % - SS: SmallSearch. Small pop (100-) and small gens (50-)
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
 %% MPC Cost Values
-totalSimulations = 2;
-qCostValuesIterations = [
-                        1 1 100 1;
-                        1 1 100 1];
+
+qCostValuesIterations = repmat([1 1 100 1],simControlTo,1);
+%                         [
+%                         1 1 100 1;
+%                         1 1 100 1;
+%                         1 1 100 1];
 % qCostValuesIterations = [0.001 0.0001 0.0001 0.0001;
 %                         1 1 100 1]; 
 
-rCostValuesIterations = [
-                        0.001 0.01;
-                        0.001 0.01];
+rCostValuesIterations = repmat([0.001 0.01],simControlTo,1);
+%                         [
+%                         0.001 0.01;
+%                         0.001 0.01;
+%                         ];
 % rCostValuesIterations = [1e10 1e10;
 %                         0.001 0.01];
-betaCostValuesIterations = repmat([1 1 1 1],2,1);
-lambdaCostValuesIterations = repmat([1 1 1 1],2,1);
+betaCostValuesIterations = repmat([1 1 1 1],simControlTo,1);
+lambdaCostValuesIterations = repmat([1 1 1 1],simControlTo,1);
 %% PI Tuning
-KpArray = [
-            90 3;
-            90 3
-            ];
-KiArray = [
-            3.6 1e-4;
-            3.6 1e-4
-            ];
-KdArray = [
-            0 0;
-            0 0;
-            ];
+KpArray = repmat([90 3],simControlTo,1);
+%             [
+%             90 3;
+%             90 3
+%             ];
+KiArray = repmat([3.6 1e-4],simControlTo,1);
+%             [
+%             3.6 1e-4;
+%             3.6 1e-4
+%             ];
+KdArray = repmat([0 0],simControlTo,1);
+%             [
+%             0 0;
+%             0 0;
+%             ];
 %% Reference Values Struct
 wValuesStruct.delta = [
                         0 0 0 0;
-                        0 0.01 4 0;
+                        0 0 4 0;
+                        0 -0.004 0 0;
+                        0 0 0 0;
+                        0 0 0 0;
                        ];
 wValuesStruct.changeBool = logical([
                                     0 0 0 0;
-                                    0 0 1 0]);
+                                    0 0 1 0;
+                                    0 1 0 0;
+                                    0 0 0 0;
+                                    0 0 0 0
+                                    ]);
 wValuesStruct.shape = {
+                        'step','step','step','step';
+                        'step','step','step','step';
+                        'step','step','step','step';
                         'step','step','step','step';
                         'step','step','step','step'
                         };
 wValuesStruct.timeToChange = [
                                 -1 -1 -1 -1;
-                                -1 floor(simTime/22) floor(simTime/100) -1];
+                                -1 -1 floor(simTime/1e3) -1;
+                                -1 floor(simTime/1e2) -1 -1;
+                                -1 -1 -1 -1;
+                                -1 -1 -1 -1
+                                ];
 wValuesStruct.addNoiseBool = [
                                 false; %always false for w
-                                false
+                                false;
+                                false;
+                                false;
+                                false;
                                 ];
 %% Sensor Values Struct
 yValuesStruct.delta = [0 0 0 0];
@@ -86,7 +121,7 @@ designParametersFileName = ['mpc_design_parameters_' dateMatFileStr '.mat'];
 parametersFileArray = {delayParametersFile,fixedParametersFileName,designParametersFileName};
 %% Generate Fixed parameters
 % Fixed parameters
-mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime);
+mpc_generate_fixed_parameters(dateMatFileStr);
 %% Load Parameters
 for strFile = 1:2
    load(parametersFileArray{strFile}); 
@@ -97,8 +132,8 @@ bFilter = fir1(10,0.8,kaiser(11,6));
 bFilter = 1;
 
 %% Reference for MPC
-wValuesStruct.IC = repmat(Y0,totalSimulations,1);
-for simIter = 1:totalSimulations
+wValuesStruct.IC = repmat(Y0,simControlTo,1);
+for simIter = simControlFrom:simControlTo
     wValuesIterStruct.delta = wValuesStruct.delta(simIter,:);
     wValuesIterStruct.changeBool = wValuesStruct.changeBool(simIter,:);
     wValuesIterStruct.shape = wValuesStruct.shape(simIter,:);
@@ -111,9 +146,18 @@ end
 yValuesStruct.IC = Y0;
 ySensor = mpc_generate_input(yValuesStruct);
 %% Control Simulation
-for simIter = 1:totalSimulations
-    %% Generate Design Parameters
-    
+for simIter = simControlFrom:simControlTo
+    %% DV Design
+    if (stepInDVArray(simIter))
+        stepTimeDV(1) = floor(simTime/10);
+        stepTimeDV(2) = floor(simTime/10);
+        stepTimeDV(3) = simTime;
+    else
+        stepTimeDV(1) = simTime;
+        stepTimeDV(2) = simTime;
+        stepTimeDV(3) = simTime;
+    end
+    dvStepSize = dvStepSizeArray(simIter,:);
     %% Sim
     
     load('ThickenerOperation_Septiembre_BF.mat');
@@ -172,10 +216,12 @@ for simIter = 1:totalSimulations
     yPID(:,:,simIter) = y.signals.values(:,:);
     uPID(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
     dPID(:,:,simIter) = inputs.signals.values(:,1:numDV);
+    %% MPC - ARMAX
     
     % Store references
     wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
     wRefSimulink(:,:,simIter) = wRef.signals.values(:,:);
+    
 end
 % For the time being, multiply Cp_u by 100
 % wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
@@ -210,7 +256,7 @@ CVLims = [15 22;
          0 10];
 MVLims = [80 120;
           20 30];
-for simIter = 1:totalSimulations
+for simIter = simControlFrom:simControlTo
     f1 = figure(1+(simIter-1)*4);
     fig = gcf;
     movegui(fig,'southwest')
@@ -219,12 +265,12 @@ for simIter = 1:totalSimulations
 
         plot(t(startPlotTime:end),yMPC_RF(startPlotTime:end,cv,simIter),...
                'LineWidth',1,...
-               'Color',controlColors{simIter},...
+               'Color',controlColors{1},...
                'LineStyle',controlLineStyle{1})
         hold on
         plot(t(startPlotTime:end),yPID(startPlotTime:end,cv,simIter),...
                'LineWidth',1,...
-               'Color',controlColors{simIter},...
+               'Color',controlColors{2},...
                'LineStyle',controlLineStyle{2})
         title(titlesCV{cv})
         plot(t(startPlotTime:end),wRefSimulink(startPlotTime:end,cv,simIter),...
@@ -235,15 +281,15 @@ for simIter = 1:totalSimulations
     %     ylim(CVLims(cv,:));
         ylim auto
         yLegend_1 = ['$y_' num2str(cv) '$ MPC-RF'];
-        yLegend_2 = ['$y_' num2str(cv) '$ PID'];
+        yLegend_2 = ['$y_' num2str(cv) '$ PI'];
         wLegend = ['$w_' num2str(cv) '$'];
     %     yFiltLegend = ['$\tilde{y}_' num2str(cv) '$'];
-        legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex');
+%         legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex');
         grid on
         hold off
     end
     if imprint
-            printName = [figurePath 'control_CV_IT_' num2str(simIter) '_' dateMatFileStr];
+            printName = [figurePath 'control_CV_IT_' num2str(simIter) '_nl_' dateMatFileStr];
             print(printName,'-depsc');
             print(printName,'-djpeg');
     end
@@ -255,21 +301,21 @@ for simIter = 1:totalSimulations
 
         plot(t(startPlotTime:end),dMPC_RF(startPlotTime:end,dv,simIter),...
                'LineWidth',1,...
-               'Color',controlColors{simIter},...
+               'Color',controlColors{1},...
                'LineStyle',controlLineStyle{1})
         hold on
         plot(t(startPlotTime:end),dPID(startPlotTime:end,dv,simIter),...
                'LineWidth',1,...
-               'Color',controlColors{simIter},...
+               'Color',controlColors{1},...
                'LineStyle',controlLineStyle{2})
         title(titlesDV{dv})
         ylabel(DVUnits{dv})
         xlabel('Time (hr)')
         dLegend = ['$d_' num2str(dv) '$'];
-        legend({dLegend},'Interpreter','latex');
+%         legend({dLegend},'Interpreter','latex');
         grid on
         if imprint
-            printName = [figurePath 'control_DV_IT_' num2str(simIter) '_' dateMatFileStr];
+            printName = [figurePath 'control_DV_IT_' num2str(simIter) '_nl_' dateMatFileStr];
             print(printName,'-depsc');
             print(printName,'-djpeg');
         end
@@ -282,23 +328,24 @@ for simIter = 1:totalSimulations
         % Add for
         plot(t(startPlotTime:end),uMPC_RF(startPlotTime:end,mv,simIter),...
                'LineWidth',1,...
-               'Color',controlColors{simIter},...
+               'Color',controlColors{1},...
                'LineStyle',controlLineStyle{1})
         hold on
         plot(t(startPlotTime:end),uPID(startPlotTime:end,mv,simIter),...
                'LineWidth',1,...
-               'Color',controlColors{simIter},...
+               'Color',controlColors{2},...
                'LineStyle',controlLineStyle{2})
         title(titlesMV{mv})
         ylabel(MVUnits{mv})
         xlabel('Time (hr)')
         ylim(MVLims(mv,:));
         ylim auto
-        mLegend = ['$u_' num2str(mv) '$'];
-        legend({mLegend},'Interpreter','latex');
+        mLegend_1 = ['$u_' num2str(mv) '$ MPC'];
+        mLegend_2 = ['$u_' num2str(mv) '$ PI'];
+%         legend({mLegend_1,mLegend_2},'Interpreter','latex');
         grid on
         if imprint
-            printName = [figurePath 'control_MV_IT_' num2str(simIter) '_' dateMatFileStr];
+            printName = [figurePath 'control_MV_IT_' num2str(simIter) '_nl_' dateMatFileStr];
             print(printName,'-depsc');
             print(printName,'-djpeg');
         end
@@ -310,13 +357,13 @@ for simIter = 1:totalSimulations
     for hyp = 1:hyperResults
         subplot(hyperResults,1,hyp)
         plot(t,optMPC_RF(:,hyp,simIter),'*',...
-            'Color',controlColors{simIter},...
+            'Color',controlColors{1},...
             'LineWidth',1)
         title(titlesHyp{hyp})
         xlabel('Time (hr)')
         grid on
         if imprint
-            printName = [figurePath 'control_OP_IT_' num2str(simIter) '_' dateMatFileStr];
+            printName = [figurePath 'control_OP_IT_' num2str(simIter) '_nl_' dateMatFileStr];
             print(printName,'-depsc');
             print(printName,'-djpeg');
         end

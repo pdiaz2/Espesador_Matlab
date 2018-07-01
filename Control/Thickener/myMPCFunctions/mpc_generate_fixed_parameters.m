@@ -1,4 +1,4 @@
-function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
+function mpc_generate_fixed_parameters(dateMatFileStr);
     %% Mat File Handling
     matFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
     delayParametersFile = ['delayParameters_' dateMatFileStr '.mat'];
@@ -15,16 +15,7 @@ function mpc_generate_fixed_parameters(dateMatFileStr,stepInDV,simTime)
     cvNoisePower = cvVariance./10.^(cvSNR/10);
     cvNoiseSeed = [11051993 5031995 8061958 1111960];
 %     cvNoisePower = zeros(1,numCV);
-    %% DV Design
-    if (stepInDV)
-        stepTimeDV(1) = floor(simTime/10);
-        stepTimeDV(2) = simTime;
-        stepTimeDV(3) = simTime;
-    else
-        stepTimeDV(1) = simTime;
-        stepTimeDV(2) = simTime;
-        stepTimeDV(3) = simTime;
-    end
+    
     %% Random Forest MEX Parameters
     [na,nb,nc,maxDelay] = generate_rf_model_orders(delayParametersFile,numCV);
     maxYDelay = maxDelay(1);

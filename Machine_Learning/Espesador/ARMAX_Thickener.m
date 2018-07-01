@@ -87,7 +87,7 @@ mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.
 mlParamsStruct.NA = [0 2 4];
 mlParamsStruct.NB = [1:5];
 mlParamsStruct.NC = [0:1];
-mlParamsStruct.NK = [0 2 4];
+mlParamsStruct.NK = [1 2 4]; % [0 2 4];
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
 mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;
@@ -134,6 +134,7 @@ if generateOne
                                                         mlParamsStruct,...
                                                         mOrder);
     armaxModel = ML_Model.Model;
+    dateTest = '3006';
     matFileModel = ['ARMAX_MDL_' typeOfData ioDTStr dateTest '.mat'];
     save(matFileModel,'armaxModel','mOrder','controlParamsStruct','mlParamsStruct');
 else
