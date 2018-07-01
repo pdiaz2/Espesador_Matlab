@@ -3,11 +3,11 @@ clear all;
 clc;
 %%
 % matFileName = 'Agosto_SimResults_1304_rawData.mat';
-nameDataset = 'Septiembre_';
+nameDataset = 'Agosto_';
 typeOfData = 'Sim_';
 dateTest = '1304';
-matFileName = [nameDataset typeOfData dateTest '_BF.mat'];
-figurePath = ['figures\' typeOfData '\'];
+matFileName = [nameDataset typeOfData dateTest '_Noise_BF.mat'];
+figurePath = ['figures\' typeOfData '\' nameDataset];
 imprint = true;
 plotFigures = true;
 granularity = 'g';
@@ -33,7 +33,7 @@ if strcmp('s',granularity)
     divisorTime = 1;
 else
     samples = length(SimResults.CV(1).GroupedTimeSeries);
-    figAppendName = '_g';
+    figAppendName = 'g';
     divisorTime = SimResults.groupBy;
 end
 % options.simTime/3600 = in hours
