@@ -2,7 +2,7 @@ clear all
 clc;
 close all;
 %%
-load('Septiembre_SimResults_1304_BF')
+load('Septiembre_Sim_1304_BF')
 
 %%
 nameDataset = 'ThreeMonths';
@@ -163,9 +163,9 @@ if (plotFigures)
             print(printName,'-depsc');
         end
         hold off
-        dynamicRange(cv,1) = min(SimResultsRaw.CV(cv).TimeSeries(1:timeToWatch));
-        dynamicRange(cv,2) = max(SimResultsRaw.CV(cv).TimeSeries(1:timeToWatch));
-        dynamicRange(cv,3) = dynamicRange(cv,2)-dynamicRange(cv,1);
+        dynamicRangeCV(cv,1) = min(SimResultsRaw.CV(cv).TimeSeries(1:timeToWatch));
+        dynamicRangeCV(cv,2) = max(SimResultsRaw.CV(cv).TimeSeries(1:timeToWatch));
+        dynamicRangeCV(cv,3) = dynamicRangeCV(cv,2)-dynamicRangeCV(cv,1);
     end
     % MV Plots
     for mv = 1:length(MVNames)
@@ -190,9 +190,9 @@ if (plotFigures)
         end
         hold off
         
-        dynamicRange(mv,1) = min(SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch));
-        dynamicRange(mv,2) = max(SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch));
-        dynamicRange(mv,3) = dynamicRange(mv,2)-dynamicRange(mv,1);
+        dynamicRangeMV(mv,1) = min(SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch));
+        dynamicRangeMV(mv,2) = max(SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch));
+        dynamicRangeMV(mv,3) = dynamicRangeMV(mv,2)-dynamicRangeMV(mv,1);
     end
     % DV Plots
     for dv = 1:length(DVNames)
@@ -216,9 +216,9 @@ if (plotFigures)
             print(printName,'-depsc');
         end
         hold off
-        dynamicRange(dv,1) = min(SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch));
-        dynamicRange(dv,2) = max(SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch));
-        dynamicRange(dv,3) = dynamicRange(dv,2)-dynamicRange(dv,1);
+        dynamicRangeDV(dv,1) = min(SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch));
+        dynamicRangeDV(dv,2) = max(SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch));
+        dynamicRangeDV(dv,3) = dynamicRangeDV(dv,2)-dynamicRangeDV(dv,1);
     end
 end
 %% Frequency plots

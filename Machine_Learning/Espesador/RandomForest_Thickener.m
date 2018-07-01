@@ -18,12 +18,12 @@ mlMethod = 'RF';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
 generateOne = true;
-useDelayMV_CV = false;
+useDelayMV_CV = true;
 noiseyData = true;
 %% Bool Handling
 if generateOne
     % Input wave
-    cvToGenerate = 3;
+    cvToGenerate = 2;
     experiment = 1;
     delayUCases = 1;
     delayYCases = 2;
@@ -131,7 +131,7 @@ if generateOne
     if strcmp(mlParamsStruct.trainingParamsArray{7},'TBagger')
         RF.OOBPermutedPredictorDeltaError
         matFileName = ['RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr dateTest '.mat' ];
-        save(matFileName,'ML_Model','mOrder','mlParamsStruct','controlParamsStruct');
+%         save(matFileName,'ML_Model','mOrder','mlParamsStruct','controlParamsStruct');
     else
         matFileName = ['RF_Y' num2str(cvToGenerate) '_SimResults_2906.mat' ];
         save(matFileName,'RF','mlParamsStruct','controlParamsStruct');

@@ -10,7 +10,7 @@ matFileName = [nameDataset typeOfData dateTest '_BF.mat'];
 figurePath = ['figures\' typeOfData '\'];
 imprint = true;
 plotFigures = true;
-granularity = 's';
+granularity = 'g';
 %%
 load(matFileName)
 options.stepTestType = 'Sim_';
@@ -38,8 +38,8 @@ else
 end
 % options.simTime/3600 = in hours
 time = linspace(0,options.simTime/3600,samples+1);
-% timeToWatch = length(time)-1;
-timeToWatch = 100*3600;
+timeToWatch = length(time)-1;
+% timeToWatch = 100*60;
 SimResults.CV(5).TimeSeries = filloutliers(SimResults.CV(5).TimeSeries,'clip','median');
 dynamicRangeCV = zeros(numel(CVNames),3);
 dynamicRangeMV = zeros(numel(MVNames),3);
