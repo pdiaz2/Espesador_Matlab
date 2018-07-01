@@ -3,16 +3,17 @@ clear all;
 clc;
 %%
 % matFileName = 'Agosto_SimResults_1304_rawData.mat';
-nameDataset = 'ThreeMonths';
-typeOfData = 'Real';
-dateTest = '2706';
-matFileName = [nameDataset '_' typeOfData '_' dateTest '_Trials_BF.mat'];
+nameDataset = 'Septiembre_';
+typeOfData = 'Sim_';
+dateTest = '1304';
+matFileName = [nameDataset typeOfData dateTest '_BF.mat'];
 figurePath = ['figures\' typeOfData '\'];
-imprint = false;
+imprint = true;
 plotFigures = true;
 granularity = 's';
 %%
 load(matFileName)
+options.stepTestType = 'Sim_';
 % CV
 CVNames = {'Torque','Underflow Concentration','Interface Level','Overflow Concentration','Residence Time',...
             'Solid Throughput','Underflow Particle Diameter','Overflow'};
@@ -37,7 +38,8 @@ else
 end
 % options.simTime/3600 = in hours
 time = linspace(0,options.simTime/3600,samples+1);
-timeToWatch = length(time)-1;
+% timeToWatch = length(time)-1;
+timeToWatch = 100*3600;
 SimResults.CV(5).TimeSeries = filloutliers(SimResults.CV(5).TimeSeries,'clip','median');
 dynamicRangeCV = zeros(numel(CVNames),3);
 dynamicRangeMV = zeros(numel(MVNames),3);
@@ -51,14 +53,12 @@ if (plotFigures)
         hold on
         if strcmp('s',granularity)
             plot(time(1:timeToWatch),SimResults.CV(cv).TimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.CV(cv).FilteredTimeSeries(1:timeToWatch)) 
         else
             plot(time(1:timeToWatch),SimResults.CV(cv).GroupedTimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.CV(cv).LearingData(1:timeToWatch))
         end
         ylabel(CVUnits{cv})
         xlabel('Hours [hr]')
-        legend('Semi-Raw','PreProcessed')
+%         legend('Semi-Raw','PreProcessed')
         grid on
         printName = [figurePath CVSaveName{cv} options.stepTestType figAppendName];
         if imprint
@@ -77,15 +77,13 @@ if (plotFigures)
         hold on
         if strcmp('s',granularity)
             plot(time(1:timeToWatch),SimResults.MV(mv).TimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.MV(mv).FilteredTimeSeries(1:timeToWatch)) 
         else
             plot(time(1:timeToWatch),SimResults.MV(mv).GroupedTimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.MV(mv).LearingData(1:timeToWatch))
         end
         grid on
         ylabel(MVUnits{mv})
         xlabel('Hours [hr]')
-        legend('Semi-Raw','PreProcessed')
+%         legend('Semi-Raw','PreProcessed')
         printName = [figurePath MVSaveName{mv} options.stepTestType figAppendName];
         if imprint
             % Latex
@@ -104,10 +102,8 @@ if (plotFigures)
         hold on
         if strcmp('s',granularity)
             plot(time(1:timeToWatch),SimResults.DV(dv).TimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.DV(dv).FilteredTimeSeries(1:timeToWatch))
         else
             plot(time(1:timeToWatch),SimResults.DV(dv).GroupedTimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.DV(dv).LearingData(1:timeToWatch))
         end
         grid on
         ylabel(DVUnits{dv})
