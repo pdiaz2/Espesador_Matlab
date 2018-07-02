@@ -3,10 +3,10 @@ clear all;
 clc;
 %%
 % matFileName = 'Agosto_SimResults_1304_rawData.mat';
-nameDataset = 'Agosto_';
+nameDataset = 'Septiembre_';
 typeOfData = 'Sim_';
 dateTest = '1304';
-matFileName = [nameDataset typeOfData dateTest '_Noise_BF.mat'];
+matFileName = [nameDataset typeOfData dateTest '_BF.mat'];
 figurePath = ['figures\' typeOfData '\' nameDataset];
 imprint = true;
 plotFigures = true;
@@ -38,8 +38,8 @@ else
 end
 % options.simTime/3600 = in hours
 time = linspace(0,options.simTime/3600,samples+1);
-timeToWatch = length(time)-1;
-% timeToWatch = 100*60;
+% timeToWatch = length(time)-1;
+timeToWatch = 100*60;
 SimResults.CV(5).TimeSeries = filloutliers(SimResults.CV(5).TimeSeries,'clip','median');
 dynamicRangeCV = zeros(numel(CVNames),3);
 dynamicRangeMV = zeros(numel(MVNames),3);
