@@ -80,7 +80,7 @@ function [JMatrix] = Evaluate_Performance(Results,typeML,nameInputs,nameOutputs)
     if strcmp(typeML,'RF')
         % Negative numbers for dimensions
         % Huge numbers for MSE
-        JDimensions = 3;
+        JDimensions = 7;
     elseif strcmp(typeML,'N4SID')
         JDimensions = 5;
     elseif strcmp(typeML,'ARMAX')
@@ -98,6 +98,14 @@ function [JMatrix] = Evaluate_Performance(Results,typeML,nameInputs,nameOutputs)
                         JMatrix(y,dim,2) = JMatrix(y,dim,2)*sign(Results.Output(y).Correlation(JMatrix(y,dim,1)));
                     case 3
                         [JMatrix(y,dim,2),JMatrix(y,dim,1)] = min(Results.Output(y).OOBError(:));
+                    case 4
+                        [JMatrix(y,dim,2),JMatrix(y,dim,1)] = min(Results.Output(y).NMSE(:));
+                    case 5
+                        [JMatrix(y,dim,2),JMatrix(y,dim,1)] = min(Results.Output(y).RNMSE(:));
+                    case 6
+                        [JMatrix(y,dim,2),JMatrix(y,dim,1)] = max(Results.Output(y).BFR(:));
+                    case 7
+                        [JMatrix(y,dim,2),JMatrix(y,dim,1)] = min(Results.Output(y).FPE(:));
                 end
             end
         end
@@ -185,6 +193,14 @@ function [ResultsFixedStruct] = fix_stupid_me(ML_Results,typeML,nameOutputs)
                                 ML_Results.Output(y).Performance(e,du,dy).Correlation(1);
                         ResultsFixedStruct.Output(y).OOBError(e,du,dy) = ...
                                 ML_Results.Output(y).Performance(e,du,dy).OOBError(1);
+                        ResultsFixedStruct.Output(y).NMSE(e,du,dy) = ...
+                                ML_Results.Output(y).Performance(e,du,dy).NMSE(1);
+                        ResultsFixedStruct.Output(y).RNMSE(e,du,dy) = ...
+                                ML_Results.Output(y).Performance(e,du,dy).RNMSE(1);
+                        ResultsFixedStruct.Output(y).BFR(e,du,dy) = ...
+                                ML_Results.Output(y).Performance(e,du,dy).BFR(1);
+                        ResultsFixedStruct.Output(y).FPE(e,du,dy) = ...
+                                ML_Results.Output(y).Performance(e,du,dy).FPE(1);
                     end
                 end
             end

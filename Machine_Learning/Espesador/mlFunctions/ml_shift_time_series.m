@@ -1,6 +1,6 @@
 function [predictorData, predictorNames] = ml_shift_time_series(expData, NameVars, nVars,...
                                                 predictorData, predictorNames,...
-                                                tau_R, numSamplesPerExp,...
+                                                numSamplesPerExp,...
                                                 delayMaxInTime, delayCoeffs,...
                                                 deadTimeVar,deadTimeMax)
 % ML_SHIFT_TIME_SERIES
@@ -10,7 +10,8 @@ function [predictorData, predictorNames] = ml_shift_time_series(expData, NameVar
         deadTimeDiff = deadTimeMax-deadTime;
         for shifts = 1:d
             % Selects shifted versions of tData time series for the predictor.
-            % Since 1 <= shifts <= d, all tData adjusted time series start from
+            % Since 1 <= shifts <= d (unless only AR model is sought),
+            % all tData adjusted time series start from
             % ONE tau_R before 1+delayMaxInTime (which is the first output used
             % for validation). Therefore, the model is of y(t) =
             % f({y(t-k*tau_R)},{u(t-k*tau_R)} with k >= 1.

@@ -5,6 +5,9 @@ generateOneBool = mlParamsStruct.generateOneBool;
 cvToGenerate = mlParamsStruct.cvToGenerate;
 tBagOrEnsemble = mlParamsStruct.trainingParamsArray{7};
 deadTimeMV_CV = mlParamsStruct.delayMV_CV;
+%%
+assessmentValues = ml_assessment_values(testData);
+%%
 switch mlMethod
     case 'RF'
         if generateOneBool
@@ -17,6 +20,10 @@ switch mlMethod
                                                 N_y,tau_R,na(cv),...
                                                 mlParamsStruct,-1);
             Results(1).MSE = MSE_Ny;
+            Results(1).NMSE = MSE_Ny/assessmentValues(cv,2);
+            Results(1).RNMSE = sqrt(Results(1).NMSE);
+            Results(1).BFR = (1-Results(1).RNMSE)*100;
+            Results(1).FPE = (1+assessmentValues(cv,4))/(1-assessmentValues(cv,4))*MSE_Ny;
             Results(1).Correlation = corr(yHat_1,validationOutputs);
             Results(1).yHat = yHat;
             switch tBagOrEnsemble
@@ -37,6 +44,10 @@ switch mlMethod
                                                     N_y,tau_R,na(cv),...
                                                     mlParamsStruct,-1);
                 Results(cv).MSE = MSE_Ny;
+                Results(cv).NMSE = MSE_Ny/assessmentValues(cv,2);
+                Results(cv).RNMSE = sqrt(Results(cv).NMSE);
+                Results(cv).BFR = (1-Results(cv).RNMSE)*100;
+                Results(cv).FPE = (1+assessmentValues(cv,3))/(1-assessmentValues(cv,3))*MSE_Ny;
                 Results(cv).Correlation = corr(yHat_1,validationOutputs);
                 Results(cv).yHat = yHat;
                 switch tBagOrEnsemble
@@ -99,6 +110,9 @@ switch mlMethod
         end
         Results.MSE = MSE_Ny;
         Results.yHat = yHat_Ny;
+        Results.NMSE = MSE_Ny./assessmentValues(:,2)';
+        Results.RNMSE = sqrt(Results.NMSE);
+        Results.BFR = (1-Results.RNMSE)*100;
         Results.Correlation = Correlation;
         Results.Fit.FPE = ML_Model.Model.Report.Fit.FPE;
         Results.Fit.AIC = ML_Model.Model.Report.Fit.AIC;

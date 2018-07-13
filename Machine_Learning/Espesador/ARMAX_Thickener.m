@@ -12,15 +12,15 @@ clc;
 nameDataset = 'Agosto_';
 typeOfData = 'Sim_';
 dateTest = '2906';
-saveToMatFile = false;
-matFileName = 'ResultsARMAX_NoNoise_2206';
+saveToMatFile = true;
+% matFileName = 'ResultsARMAX_NoNoise_2206';
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
 useDelayMV_CV = false;
 noiseyData = true;
-generateOne = true;
+generateOne = false;
 %% Bool Handling
 if generateOne
     % Input wave
@@ -84,9 +84,9 @@ mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         'Type','integer');
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
 % Specific for ARMAX
-mlParamsStruct.NA = [0 2 4];
-mlParamsStruct.NB = [1:5];
-mlParamsStruct.NC = [0:1];
+mlParamsStruct.NA = [4 6 10];
+mlParamsStruct.NB = [1:3];
+mlParamsStruct.NC = [0 2 4];
 mlParamsStruct.NK = [1 2 4]; % [0 2 4];
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
@@ -181,6 +181,7 @@ else
     
 end
 %% Save
+outputmatFileName = ['ResultsARMAX_' typeOfData ioDTStr dateTest '.mat'];
 if (saveToMatFile)
-    save(matFileName,'ML_Results','controlParamsStruct','mlParamsStruct','trainingTime');
+    save(outputmatFileName,'ML_Results','controlParamsStruct','mlParamsStruct','trainingTime');
 end

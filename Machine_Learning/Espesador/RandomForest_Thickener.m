@@ -11,14 +11,14 @@ typeOfData = 'Sim_';
 dateTest = '2906';
 
 
-saveToMatFile = false;
-matFileName = 'ResultsRF_PRBS_1606';
+saveToMatFile = true;
+% matFileName = 'blah';
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
-generateOne = true;
-useDelayMV_CV = true;
+generateOne = false;
+useDelayMV_CV = false;
 noiseyData = true;
 %% Bool Handling
 if generateOne
@@ -80,11 +80,11 @@ mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         'Type','integer');
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
 
-mlParamsStruct.DelayMatrix.U = repmat([1]',1,numInputs);
+mlParamsStruct.DelayMatrix.U = repmat([0:1]',1,numInputs);
 [mlParamsStruct.sizeUMatrix garbage] = size(mlParamsStruct.DelayMatrix.U);
 mlParamsStruct.delayMV_CV = controlParamsStruct.delayMV_CV;
 
-mlParamsStruct.DelayMatrix.Y = repmat([4:5]',1,numOutputs);
+mlParamsStruct.DelayMatrix.Y = repmat([5,15,25,35,45,60]',1,numOutputs);
 [mlParamsStruct.sizeYMatrix garbage] = size(mlParamsStruct.DelayMatrix.Y);
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
@@ -130,11 +130,11 @@ if generateOne
     RF.PredictorNames
     if strcmp(mlParamsStruct.trainingParamsArray{7},'TBagger')
         RF.OOBPermutedPredictorDeltaError
-        matFileName = ['RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr dateTest '.mat' ];
-%         save(matFileName,'ML_Model','mOrder','mlParamsStruct','controlParamsStruct');
+        outputmatFileName = ['RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr dateTest '.mat' ];
+%         save(outputmatFileName,'ML_Model','mOrder','mlParamsStruct','controlParamsStruct');
     else
-        matFileName = ['RF_Y' num2str(cvToGenerate) '_SimResults_2906.mat' ];
-        save(matFileName,'RF','mlParamsStruct','controlParamsStruct');
+        outputmatFileName = ['RF_Y' num2str(cvToGenerate) '_SimResults_2906.mat' ];
+        save(outputmatFileName,'RF','mlParamsStruct','controlParamsStruct');
     end
 else
     ML_Results = struct;
@@ -165,6 +165,7 @@ else
 end
 
 %% Save
+outputmatFileName = ['ResultsRF' '_' typeOfData ioDTStr dateTest '.mat' ];
 if (saveToMatFile)
-    save(matFileName,'ML_Results','controlParamsStruct','mlParamsStruct','trainingTimes');
+    save(outputmatFileName,'ML_Results','controlParamsStruct','mlParamsStruct','trainingTimes');
 end
