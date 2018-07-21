@@ -3,8 +3,8 @@ clear all;
 close all;
 clc;
 %%
-load('ResultsRF_0506.mat');
-ml_Type = 'RF';
+load('ResultsARMAX_Real_2906.mat');
+ml_Type = 'ARMAX';
 %%
 
 ResultsStupidFix = fix_stupid_me(ML_Results,ml_Type,...
@@ -190,7 +190,7 @@ function [ResultsFixedStruct] = fix_stupid_me(ML_Results,typeML,nameOutputs)
                         ResultsFixedStruct.Output(y).MSE(e,du,dy) = ...
                                 ML_Results.Output(y).Performance(e,du,dy).MSE(1);
                         ResultsFixedStruct.Output(y).Correlation(e,du,dy) =...
-                                ML_Results.Output(y).Performance(e,du,dy).Correlation(1);
+                                ML_Results.Output(y).Performance(e,du,dy).NMSE(1); % Correlation(1)
                         ResultsFixedStruct.Output(y).OOBError(e,du,dy) = ...
                                 ML_Results.Output(y).Performance(e,du,dy).OOBError(1);
                         ResultsFixedStruct.Output(y).NMSE(e,du,dy) = ...

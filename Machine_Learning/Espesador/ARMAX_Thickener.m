@@ -18,7 +18,7 @@ optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
-useDelayMV_CV = false;
+useDelayMV_CV = true;
 noiseyData = true;
 generateOne = false;
 %% Bool Handling
@@ -139,8 +139,8 @@ if generateOne
     save(matFileModel,'armaxModel','mOrder','controlParamsStruct','mlParamsStruct');
 else
     ML_Results = struct;
-    for offsetChoice = 1:2
-            for focusChoice = 1:2
+    for offsetChoice = 1:1%2
+            for focusChoice = 1:1%2
                 for na = 1:length(mlParamsStruct.NA)
                     for nb = 1:length(mlParamsStruct.NB)
                         for nc = 1:length(mlParamsStruct.NC)
