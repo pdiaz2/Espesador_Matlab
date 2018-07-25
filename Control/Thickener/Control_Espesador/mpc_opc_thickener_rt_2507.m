@@ -55,22 +55,24 @@ rCostValuesIterations = repmat([0.001 0.01],simControlTo,1);
 %                         0.001 0.01];
 betaCostValuesIterations = repmat([1 1 1 1],simControlTo,1);
 lambdaCostValuesIterations = repmat([1 1 1 1],simControlTo,1);
-%% PI Tuning
-KpArray = repmat([90 3],simControlTo,1);
-%             [
-%             90 3;
-%             90 3
-%             ];
-KiArray = repmat([3.6 1e-4],simControlTo,1);
-%             [
-%             3.6 1e-4;
-%             3.6 1e-4
-%             ];
-KdArray = repmat([0 0],simControlTo,1);
-%             [
-%             0 0;
-%             0 0;
-%             ];
+%{
+% %% PI Tuning
+% KpArray = repmat([90 3],simControlTo,1);
+% %             [
+% %             90 3;
+% %             90 3
+% %             ];
+% KiArray = repmat([3.6 1e-4],simControlTo,1);
+% %             [
+% %             3.6 1e-4;
+% %             3.6 1e-4
+% %             ];
+% KdArray = repmat([0 0],simControlTo,1);
+% %             [
+% %             0 0;
+% %             0 0;
+% %             ];
+%}
 %% Reference Values Struct
 wValuesStruct.delta = [
                         0 0 0 0;
@@ -188,7 +190,7 @@ for simIter = simControlFrom:simControlTo
     rng(120938103);
     load('Agosto_SimResults_1304_State.mat');
     tic;
-    sim('mpc_rf_thickener.slx');
+    sim('mpc_rf_thickener_opc_rt.slx');
     toc;
     % Store Results
     % For the time being, multiply Cp_u by 100
@@ -198,23 +200,25 @@ for simIter = simControlFrom:simControlTo
     uMPC_RF(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
     dMPC_RF(:,:,simIter) = inputs.signals.values(:,1:numDV);
     optMPC_RF(:,:,simIter) = gaResults.signals.values(:,:);
-    %% PI Control
-    Kp = KpArray(simIter,:);
-    Ki = KiArray(simIter,:);
-    Kd = KdArray(simIter,:);
-    run parametrosEmpty.m
-    rng(120938103);
-    load('Agosto_SimResults_1304_State.mat');
-    tic;
-    sim('pid_thickener.slx');
-    toc;
-     % Store Results
-    % For the time being, multiply Cp_u by 100
-    y.signals.values(:,2) = y.signals.values(:,2)*100;
-    
-    yPID(:,:,simIter) = y.signals.values(:,:);
-    uPID(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
-    dPID(:,:,simIter) = inputs.signals.values(:,1:numDV);
+    %{
+%     %% PI Control
+%     Kp = KpArray(simIter,:);
+%     Ki = KiArray(simIter,:);
+%     Kd = KdArray(simIter,:);
+%     run parametrosEmpty.m
+%     rng(120938103);
+%     load('Agosto_SimResults_1304_State.mat');
+%     tic;
+%     sim('pid_thickener.slx');
+%     toc;
+%      % Store Results
+%     % For the time being, multiply Cp_u by 100
+%     y.signals.values(:,2) = y.signals.values(:,2)*100;
+%     
+%     yPID(:,:,simIter) = y.signals.values(:,:);
+%     uPID(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
+%     dPID(:,:,simIter) = inputs.signals.values(:,1:numDV);
+    %}
     %% MPC - ARMAX
     
     % Store references
@@ -267,10 +271,10 @@ for simIter = simControlFrom:simControlTo
                'Color',controlColors{1},...
                'LineStyle',controlLineStyle{1})
         hold on
-        plot(t(startPlotTime:end),yPID(startPlotTime:end,cv,simIter),...
-               'LineWidth',1,...
-               'Color',controlColors{2},...
-               'LineStyle',controlLineStyle{2})
+%         plot(t(startPlotTime:end),yPID(startPlotTime:end,cv,simIter),...
+%                'LineWidth',1,...
+%                'Color',controlColors{2},...
+%                'LineStyle',controlLineStyle{2})
         title(titlesCV{cv})
         plot(t(startPlotTime:end),wRefSimulink(startPlotTime:end,cv,simIter),...
                 'g--','LineWidth',1);
@@ -280,7 +284,7 @@ for simIter = simControlFrom:simControlTo
     %     ylim(CVLims(cv,:));
         ylim auto
         yLegend_1 = ['$y_' num2str(cv) '$ MPC-RF'];
-        yLegend_2 = ['$y_' num2str(cv) '$ PI'];
+%         yLegend_2 = ['$y_' num2str(cv) '$ PI'];
         wLegend = ['$w_' num2str(cv) '$'];
     %     yFiltLegend = ['$\tilde{y}_' num2str(cv) '$'];
 %         legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex');
@@ -303,10 +307,10 @@ for simIter = simControlFrom:simControlTo
                'Color',controlColors{1},...
                'LineStyle',controlLineStyle{1})
         hold on
-        plot(t(startPlotTime:end),dPID(startPlotTime:end,dv,simIter),...
-               'LineWidth',1,...
-               'Color',controlColors{1},...
-               'LineStyle',controlLineStyle{2})
+%         plot(t(startPlotTime:end),dPID(startPlotTime:end,dv,simIter),...
+%                'LineWidth',1,...
+%                'Color',controlColors{1},...
+%                'LineStyle',controlLineStyle{2})
         title(titlesDV{dv})
         ylabel(DVUnits{dv})
         xlabel('Time (hr)')
@@ -330,17 +334,17 @@ for simIter = simControlFrom:simControlTo
                'Color',controlColors{1},...
                'LineStyle',controlLineStyle{1})
         hold on
-        plot(t(startPlotTime:end),uPID(startPlotTime:end,mv,simIter),...
-               'LineWidth',1,...
-               'Color',controlColors{2},...
-               'LineStyle',controlLineStyle{2})
+%         plot(t(startPlotTime:end),uPID(startPlotTime:end,mv,simIter),...
+%                'LineWidth',1,...
+%                'Color',controlColors{2},...
+%                'LineStyle',controlLineStyle{2})
         title(titlesMV{mv})
         ylabel(MVUnits{mv})
         xlabel('Time (hr)')
         ylim(MVLims(mv,:));
         ylim auto
         mLegend_1 = ['$u_' num2str(mv) '$ MPC'];
-        mLegend_2 = ['$u_' num2str(mv) '$ PI'];
+%         mLegend_2 = ['$u_' num2str(mv) '$ PI'];
 %         legend({mLegend_1,mLegend_2},'Interpreter','latex');
         grid on
         if imprint

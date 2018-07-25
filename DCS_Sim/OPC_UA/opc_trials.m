@@ -5,6 +5,7 @@
 % connect(uaClient)
 clear;
 clc;
+% global ua_client
 % ua_client = opcua('opc.tcp://146.155.14.192:4840/freeopcua/server/');
 % ua_client = opcua('opc.tcp://localhost:16664/OpenOpcUaServer/');
 ua_client = opcua('opc.tcp://localhost:4840/freeopcua/server/');

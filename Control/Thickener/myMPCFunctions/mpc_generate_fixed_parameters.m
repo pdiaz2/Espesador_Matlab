@@ -61,6 +61,13 @@ function mpc_generate_fixed_parameters(dateMatFileStr);
     lambdaNormMatrix = qNormMatrix;
     %% Numeric Solution Stability Factor
     stabilityFactor = 1;
+    %% OPC Parameters
+    opcParameters(1) = 4; % Thickener Index in OPC Server
+    opcParameters(2) = 100; % Seconds before disconnecting client
+    opcParameters(3) = 1;
+    opcParameters(4) = 4;
+    opcParameters(5) = 6;
+    opcParameters(6) = 8;
     %% Save
     save(matFileName);
 end
