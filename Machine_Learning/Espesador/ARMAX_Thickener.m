@@ -11,7 +11,9 @@ saveToMatFile = false;
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 seed = rng(1231231); % For reproducibility (should look into this after)
+% Crucial parameters for system identification
 N_y = 20;
+tau_R = 5;
 useDelayMV_CV = true;
 noiseyData = true;
 generateOne = true;
@@ -55,7 +57,7 @@ Dt = 1;
 % Plant and control params definition
 controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.Dt = Dt;
-controlParamsStruct.tau_R = 5;%5; % 10
+controlParamsStruct.tau_R = tau_R;%5; % 10
 controlParamsStruct.N_y = N_y;
 if useDelayMV_CV
     switch typeOfData
