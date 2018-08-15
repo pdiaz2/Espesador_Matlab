@@ -3,7 +3,7 @@ clear all;
 close all;
 clc;
 %%
-load('ResultsARMAX_Real_2906.mat');
+load('ResultsARMAX_Real_AR_3107.mat');
 ml_Type = 'ARMAX';
 %%
 

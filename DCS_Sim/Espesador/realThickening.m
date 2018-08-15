@@ -4,19 +4,29 @@ clear;
 
 run parametrosEmpty.m
 
-month = 'Agosto';
-% outputMatFileName = [month '_SimResults_1304_rawData'];
-outputMatFileName = ['Agosto_SimResults_1304_Noise_rawData'];
-matFileName = ['ThickenerOperation_' month '_rawData.mat'];
+month = 'Septiembre';
+nameDataset = month;
+typeOfData = 'Sim';
+dateTest = '1408';
+outputMatFileName = [nameDataset '_' typeOfData '_' dateTest '_Noise'];%_BF.mat'];
+figurePath = ['figures\' typeOfData '\'];
 saveToMatFile = true;
+imprint = true;
+plotFigures = true;
+%%
+granularity = 'g';
+viewFreq = 100;
+compensatePhase = 3;
+startThickener = 0;
+%% Load Mat File with data
+matFileName = ['ThickenerOperation_' month '_BF.mat'];
 typeOfTest = 'realThickening';
 makePRBS = eye(5);
 prbsStrArray = {'Qu','gpt','Qf','Cf','p1f'};
 prbsAmplitude = [15,4,40/3600,0.1,0.1];
 %% Noise for CV
 cvSNR = [20 20 20 20]; % DB
-cvVariance = [10 0.1 3 0.000001];
-% noisePower = [0.05 0.001 0.03 0.00001];
+cvVariance = [5 0.05 3 0.000001];
 cvNoisePower = cvVariance./10.^(cvSNR/10);
 cvNoiseSeeds = [11051993 5031995 8061958 1111960];
 %%
@@ -150,8 +160,13 @@ for input = 1:1
             Cp_f.signals.values = Cp_f.signals.values+prbsSignal*(input == 4);
             p1_f.signals.values = p1_f.signals.values+prbsSignal*(input == 5);
     end
-    run parametrosEmpty.m
-
+    switch month
+        case 'Agosto'
+            run parametrosEmpty.m
+        case 'Septiembre'
+            load(['Agosto_' typeOfData '_' dateTest '_Noise_State.mat']);
+    end
+    
 %     load('Agosto_SimResults_1304_State.mat');
 %     load('Permanent_1606_State.mat');
     tic;
@@ -202,8 +217,11 @@ end
 %% Save
 matFile = [options.stepTestType '.mat'];
 matFileState = [options.stepTestType '_State.mat'];
-run prepDataML.m
 if saveToMatFile
-    save(matFile,'SimResults','options','startYield');
     save(matFileState,'phi0','w0','u10','u20','u30');
 end
+run prepDataML.m
+% if saveToMatFile
+%     save(matFile,'SimResults','options','startYield');
+%     save(matFileState,'phi0','w0','u10','u20','u30');
+% end

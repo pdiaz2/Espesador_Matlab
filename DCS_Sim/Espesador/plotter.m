@@ -163,3 +163,25 @@ if imprint
     % Latex
     print(printName,'-depsc');
 end
+%% Autocorrelation
+startAutocorr = 200*60;
+maxLag = 24*60;
+autocorrWindowSize = 100*60;
+for cv = 1:3
+    figure
+    DC = mean(SimResults.CV(cv).GroupedTimeSeries(startAutocorr:...
+                              startAutocorr+autocorrWindowSize));
+    Var = var(SimResults.CV(cv).GroupedTimeSeries(startAutocorr:...
+                              startAutocorr+autocorrWindowSize));
+    [r,lags] = xcorr(SimResults.CV(cv).GroupedTimeSeries(startAutocorr:...
+                              startAutocorr+autocorrWindowSize)-DC,maxLag);
+    subplot(2,1,1)
+    plot((0:autocorrWindowSize)/60,SimResults.CV(cv).GroupedTimeSeries(startAutocorr:...
+                              startAutocorr+autocorrWindowSize))
+    xlabel('Hours [hr]')
+    grid on
+    subplot(2,1,2)
+    plot(r(floor(length(r)/2)+1:end)/(autocorrWindowSize*Var))
+    xlabel('Lags (min)')
+    grid on
+end

@@ -216,7 +216,27 @@ for simIter = simControlFrom:simControlTo
     uPID(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
     dPID(:,:,simIter) = inputs.signals.values(:,1:numDV);
     %% MPC - ARMAX
+    mpc_design_armax_object(dateMatFileStr,N_y,N_u,kappaControl,...
+                            qCostValuesIterations(simIter,:),...
+                            rCostValuesIterations(simIter,:),...
+                            betaCostValuesIterations(simIter,:),...
+                            lambdaCostValuesIterations(simIter,:));
+    load(['mpc_armax_object' dateMatFileStr '.mat']);
+    run parametrosEmpty.m
+    rng(120938103);
+    load('Agosto_SimResults_1304_State.mat');
+    tic;
+    sim('mpc_armax_thickener.slx');
+    toc;
     
+    % Store Results
+    % For the time being, multiply Cp_u by 100
+    y.signals.values(:,2) = y.signals.values(:,2)*100;
+    
+    yARMAX(:,:,simIter) = y.signals.values(:,:);
+    uARMAX(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
+    dARMAX(:,:,simIter) = inputs.signals.values(:,1:numDV);
+    optMPC_ARMAX(:,:,simIter) = gaResults.signals.values(:,:);
     % Store references
     wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
     wRefSimulink(:,:,simIter) = wRef.signals.values(:,:);

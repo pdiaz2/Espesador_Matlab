@@ -89,7 +89,7 @@ function [ Output ] = ml_learn_model(numOutputs,trainingSubset,bestHyp,mlParamsS
         NA = diag(bestHyp(1)*ones(1,numOutputs));
         NB = repmat(bestHyp(2),numOutputs,numInputs);
         NC = repmat(bestHyp(3),numOutputs,1);
-        NK = repmat(bestHyp(4),numOutputs,numInputs)+delayMV_CV;
+        NK = repmat(bestHyp(4),numOutputs,numInputs)+delayMV_CV(:,1:end);
         intNoiseArray = repmat(mlParamsArray{7},numOutputs,1);
         Output.Model = armax(trainingSubset,[NA NB NC NK],'IntegrateNoise',intNoiseArray,opt);
     end

@@ -1,4 +1,4 @@
-function mpc_generate_fixed_parameters(dateMatFileStr);
+function mpc_generate_fixed_parameters(dateMatFileStr)
     %% Mat File Handling
     matFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
     delayParametersFile = ['delayParameters_' dateMatFileStr '.mat'];
@@ -64,10 +64,11 @@ function mpc_generate_fixed_parameters(dateMatFileStr);
     %% OPC Parameters
     opcParameters(1) = 4; % Thickener Index in OPC Server
     opcParameters(2) = 100; % Seconds before disconnecting client
-    opcParameters(3) = 1;
-    opcParameters(4) = 4;
-    opcParameters(5) = 6;
-    opcParameters(6) = 8;
+    opcParameters(3) = 5; % tau_s of system
+    opcParameters(4) = 1;
+    opcParameters(5) = 4;
+    opcParameters(6) = 6;
+    opcParameters(7) = 8;
     %% Save
     save(matFileName);
 end

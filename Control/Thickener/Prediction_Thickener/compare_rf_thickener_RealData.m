@@ -9,10 +9,10 @@ typeOfData = 'Real_';
 dateTest = '2906';
 figurePath = ['figures\' typeOfData '\'];
 K_ahead = 1;
-
+K_forecast = 100;
 %%
 saveToMatFile = false;
-imprint = true;
+imprint = false;
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
 seed = rng(1231231); % For reproducibility (should look into this after)
@@ -117,7 +117,7 @@ testBatch = 8; %Backward Compatibility
                                                                 
 % %% RF Models
 for cv = 1:n
-    rfFileName = ['RF_Y' num2str(cv) '_' typeOfData ioDTStr dateTest '.mat'];
+    rfFileName = ['RF_Y' num2str(cv) '_' typeOfData ioDTStr 'X_' dateTest '.mat'];
     load(rfFileName);
     mlParamsStruct.cvToGenerate = cv;
     %% Predict with RF
@@ -135,14 +135,21 @@ for cv = 1:n
                                 controlParamsStruct.tau_R,...
                                 mOrder.na,...
                                 mlParamsStruct);
+    [~,~,yHatForecast] = ml_predict_N_ahead(ML_Model.Model,testSubsetRF(cv).InputData(1:K_forecast+20,:),...
+                                            testSubsetRF(cv).OutputData(1:K_forecast+20,:),K_forecast,...
+                                            controlParamsStruct.tau_R,mOrder.na(cv),...
+                                            mlParamsStruct,-1);
+                                        
     RFPredictionStruct(cv).yHat = results.yHat;
+    RFPredictionStruct(cv).yHatForecast = yHatForecast;
     RFPredictionStruct(cv).MSE = results.MSE;
     RFPredictionStruct(cv).Correlation = results.Correlation;
     RFPredictionStruct(cv).OOBError = results.OOBError;
 end
 delayMaxInTime = max(max(max(mlParamsStruct.DelayMatrix.U),max(mlParamsStruct.DelayMatrix.Y)));
 %% ARMAX Models
-armaxFileName = ['ARMAX_MDL_' typeOfData ioDTStr dateTest '.mat'];
+dateTest = '3107';
+armaxFileName = ['ARMAX_MDL_' typeOfData ioDTStr 'X_' dateTest '.mat'];
 load(armaxFileName);
 modelOrder = order(armaxModel);
 mlMethod = 'ARMAX';
@@ -174,34 +181,51 @@ predictInputData = iddata(validationOutputs,inputTimeSeries,controlParamsStruct.
 [armaxPredict,x0,sys_pred] = predict(armaxModel,predictInputData,K_ahead,pOptions);
 icForecast = idpar(x0);
 armaxPredict = armaxPredict.OutputData;
-%{
-%% Forecast & Predict Compare
-% % % fOptions = forecastOptions('InitialCondition','e');
-% % % pastDataSamples = 1000;
-% % % K_forecast = 100;
-% % % forecastInputData = iddata(validationOutputs(1:pastDataSamples,:),...
-% % %                             inputTimeSeries(1:pastDataSamples,:),controlParamsStruct.tau_R);
-% % % armaxForecast = forecast(armaxModel,forecastInputData,K_forecast,...
-% % %                         inputTimeSeries(pastDataSamples+1:pastDataSamples+K_forecast,:),fOptions);
-% % % armaxForecast = armaxForecast.OutputData;
-% % % figure
-% % % plot(validationOutputs(pastDataSamples+1:pastDataSamples+K_forecast,1))
-% % % hold on
-% % % plot(armaxPredict(pastDataSamples+1:pastDataSamples+K_forecast,1))
-% % % plot(armaxForecast(:,1))
-% % % legend('V','P','F');
-% % % hold off
-%}
-%%
+
 deadTimeMax = max(max(mlParamsStruct.delayMV_CV));
 armaxToRFWindowLB = deadTimeMax+(K_ahead-1)+delayMaxInTime;
 armaxToRFWindowUB = controlParamsStruct.N_y-1-(K_ahead-1);
+%% Forecast & Predict Compare
+%{}
+
+fOptions = forecastOptions('InitialCondition','e');
+pastDataSamples = 1000;
+
+forecastInputData = iddata(validationOutputs(1:pastDataSamples+armaxToRFWindowLB,:),...
+                            inputTimeSeries(1:pastDataSamples+armaxToRFWindowLB,:),controlParamsStruct.tau_R);
+armaxForecast = forecast(armaxModel,forecastInputData,K_forecast,...
+                        inputTimeSeries(pastDataSamples+1+armaxToRFWindowLB...
+                        :pastDataSamples+armaxToRFWindowLB+K_forecast,:),fOptions);
+armaxForecast = armaxForecast.OutputData;
+
+%}
+%% Plot prediction comparisons
+
 CVNames = {'Torque','Underflow Concentration','Interface Level','Overflow Concentration','Residence Time',...
             'Solid Throughput','Underflow Particle Diameter','Overflow'};
 CVUnits = {'%','%','m','%','hr','ton/hr','N/A','m3/hr'};
 CVSaveName = {'torque_','Cp_u_','intLevel_','Cp_e_','tauRd_','SFlx_','P1_U_','Q_e_'};
 kAheadStr = [num2str(K_ahead) showGoodStr '_'];
 time = linspace(0,size(RFPredictionStruct(1).yHat,1)*5/60,size(RFPredictionStruct(1).yHat,1)+1);
+
+for cv = 1:n
+    figure
+    plot(validationOutputs(pastDataSamples+1:pastDataSamples+K_forecast,cv))
+    hold on
+    plot(armaxPredict(pastDataSamples+1:pastDataSamples+K_forecast,cv))
+    plot(armaxForecast(:,cv))
+    plot(RFPredictionStruct(cv).yHatForecast(1,:));
+    legend('Validation','ARMAX Predict','ARMAX Forecast','RF Forecast');
+    xlabel(['Samples [' num2str(controlParamsStruct.tau_R) ' min/sample]'])
+    hold off
+    grid on
+    printName = [figurePath 'forecast_' CVSaveName{cv} typeOfData ioDTStr noiseStr kAheadStr dateTest];
+    if imprint
+        % Latex
+        print(printName,'-depsc');
+    end
+end
+
 for cv = 1:n
     figure
     title(CVNames{cv})

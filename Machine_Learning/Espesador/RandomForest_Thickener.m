@@ -3,30 +3,27 @@ clear all;
 close all;
 clc;
 %% Boolean control
-% load('Agosto_Real_2206_BF.mat');
-% load('ThreeMonths_Real_2706_BF.mat');
-% load('PRBS_1606_NoNoise_rawData.mat');
-nameDataset = 'Agosto_';
-typeOfData = 'Sim_';
+nameDataset = 'ThreeMonths_';
+typeOfData = 'Real_';
 dateTest = '2906';
 
 
-saveToMatFile = true;
+saveToMatFile = false;
 % matFileName = 'blah';
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
 seed = rng(1231231); % For reproducibility (should look into this after)
 N_y = 20;
-generateOne = false;
+generateOne = true;
 useDelayMV_CV = false;
-noiseyData = true;
+noiseyData = false;
 %% Bool Handling
 if generateOne
     % Input wave
-    cvToGenerate = 2;
+    cvToGenerate = 1;
     experiment = 1;
     delayUCases = 1;
-    delayYCases = 2;
+    delayYCases = 1;
 else
    waveVector = 1:4;
    cvToGenerate = -1; %Not used in this case
@@ -47,6 +44,7 @@ load(matFileName);
 %% Plant specifics
 m = length(SimResults.MV);
 d = length(SimResults.DV);
+d = 2;
 % d = 3;
 numInputs = d+m;
 % n = length(SimResults.CV);
@@ -61,10 +59,19 @@ controlParamsStruct.Dt = Dt;
 controlParamsStruct.tau_R = 5; % 10
 controlParamsStruct.N_y = N_y;
 if useDelayMV_CV
-    controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
+    switch typeOfData
+        case 'Sim_'
+            % Values obtained by inspection of open loop tests on simulator
+            controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
+                                                    6.5*60 6.5/60 0 6.5*60;
+                                                    3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
+        case 'Real_'
+            controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
+    end
+    
     ioDTStr = 'ioDT_';
 else
-    controlParamsStruct.delayMV_CV = zeros(3,5);
+    controlParamsStruct.delayMV_CV = zeros(3,numInputs);
     ioDTStr = '';
 end
 %% DownSamplig for tau_R
@@ -80,11 +87,15 @@ mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         'Type','integer');
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
 
-mlParamsStruct.DelayMatrix.U = repmat([0:1]',1,numInputs);
+mlParamsStruct.DelayMatrix.U = repmat([5,10,20,60]',1,numInputs);
+% mlParamsStruct.DelayMatrix.U = repmat([5]',1,numInputs);
+% mlParamsStruct.DelayMatrix.U = repmat([0]',1,numInputs);
 [mlParamsStruct.sizeUMatrix garbage] = size(mlParamsStruct.DelayMatrix.U);
 mlParamsStruct.delayMV_CV = controlParamsStruct.delayMV_CV;
 
-mlParamsStruct.DelayMatrix.Y = repmat([5,15,25,35,45,60]',1,numOutputs);
+% mlParamsStruct.DelayMatrix.Y = repmat([5,15,25,35,45,60]',1,numOutputs);
+mlParamsStruct.DelayMatrix.Y = repmat([6,12,36,60]',1,numOutputs);
+% mlParamsStruct.DelayMatrix.Y = repmat([0]',1,numOutputs);
 [mlParamsStruct.sizeYMatrix garbage] = size(mlParamsStruct.DelayMatrix.Y);
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
@@ -128,10 +139,31 @@ if generateOne
     RF = ML_Model(1).Model;
     
     RF.PredictorNames
+    
     if strcmp(mlParamsStruct.trainingParamsArray{7},'TBagger')
         RF.OOBPermutedPredictorDeltaError
-        outputmatFileName = ['RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr dateTest '.mat' ];
-%         save(outputmatFileName,'ML_Model','mOrder','mlParamsStruct','controlParamsStruct');
+        
+        % RF Structure statistics
+        limitTo = floor(RF.Trees{1}.NumNodes*0.8);
+        for t = 1:mlParamsStruct.trainingParamsArray{1}
+           Tree = RF.Trees{t};
+           treeStats.numNodes(t) = Tree.NumNodes;
+           treeStats.branches(t) = sum(Tree.IsBranchNode);
+           treeStats.sizes(:,t) = Tree.NodeSize(1:limitTo);
+           treeStats.cutPredictors(:,t) = Tree.CutPredictor(1:30);
+           treeStats.nodeProbability = Tree.NodeProbability(1:limitTo);
+        end
+        treeStats.Means.numNodes = mean(treeStats.numNodes);
+        treeStats.Means.branches = mean(treeStats.branches);
+        treeStats.Means.sizes = mean(treeStats.sizes,2);
+        treeStats.Means.nodeProbability = mean(treeStats.nodeProbability,2);
+
+        treeStats.Std.numNodes = std(treeStats.numNodes);
+        treeStats.Std.branches = std(treeStats.branches);
+        treeStats.Std.sizes = std(treeStats.sizes,0,2);
+        treeStats.Std.nodeProbability = std(treeStats.nodeProbability,0,2);
+        outputmatFileName = ['RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr 'AR_' dateTest '.mat' ];
+%         save(outputmatFileName,'ML_Model','mOrder','mlParamsStruct','controlParamsStruct','treeStats');
     else
         outputmatFileName = ['RF_Y' num2str(cvToGenerate) '_SimResults_2906.mat' ];
         save(outputmatFileName,'RF','mlParamsStruct','controlParamsStruct');
@@ -165,7 +197,7 @@ else
 end
 
 %% Save
-outputmatFileName = ['ResultsRF' '_' typeOfData ioDTStr dateTest '.mat' ];
+outputmatFileName = ['ResultsRF' '_' typeOfData ioDTStr 'X_' dateTest '.mat' ];
 if (saveToMatFile)
     save(outputmatFileName,'ML_Results','controlParamsStruct','mlParamsStruct','trainingTimes');
 end

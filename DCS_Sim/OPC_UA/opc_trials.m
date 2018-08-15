@@ -12,7 +12,7 @@ ua_client = opcua('opc.tcp://localhost:4840/freeopcua/server/');
 connect(ua_client)
 %%
 nodes = getNamespace(ua_client);
-sstat = getServerStatus(ua_client);
+% sstat = getServerStatus(ua_client);
 % NodeList = browseNamespace(ua_client);
 %%
 server = nodes(1);

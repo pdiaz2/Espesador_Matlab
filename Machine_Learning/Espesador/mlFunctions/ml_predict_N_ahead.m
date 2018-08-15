@@ -46,6 +46,7 @@ function [ MSE_Ny,yHat,auxYHat ] = ml_predict_N_ahead( ML_Model, inputTimeSeries
             auxInputTimeSeries(:,1) = auxYHat(:,j-1);
 
             % Rearrange X part of predictor inputs
+            % If na = 0, the lines below override the "mistake" above
             auxInputTimeSeries(:,(1+na_y):end) = inputTimeSeries(1+(j-1):...
                                                 predictionWindow+(j-1),...
                                                 (1+na_y):end);

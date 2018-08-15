@@ -14,7 +14,7 @@ for q = 1:length(Qu_0Vector)
 %     Qu_0 = Qu_0Vector(q); % m3/s.
 %     gpt_0 = 25;
     stepsMVToGenerate = [1 0];
-    stepSizes = [-40:5:40];
+    stepSizes = [-30:10:30];
     run testOpenLoop_0901.m;
     clearvars -except q Qu_0Vector gpt_0Vector;
     disp('Se terminaron los escalones UF de la iteración')

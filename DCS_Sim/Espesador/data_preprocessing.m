@@ -28,6 +28,8 @@ SimResultsPPStruct = dp_group_time_series(SimResultsPPStruct);
 %% Delay Estimation
 estDelayWindowMV = 262*3600/60:264*3600/60;
 estDelayWindowCV = 262*3600/60:274*3600/60;
+% estDelayWindowMV = 613*3600/60:615*3600/60;
+% estDelayWindowCV = 613*3600/60:626*3600/60;
 SimResultsPPStruct.delayMV_CV = -1*ones(3,5);
 % Fliped because im stupid
 for cv = 1:3

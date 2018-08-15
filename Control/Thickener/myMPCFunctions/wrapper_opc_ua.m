@@ -44,17 +44,17 @@ else
     %% Read/Write Operations
     if writeBool
         % Write CV
-        cvOPCIndex = [opcParameters(3):opcParameters(4)-1];
+        cvOPCIndex = [opcParameters(4):opcParameters(5)-1];
         writeValue(ua_client,processVar(cvOPCIndex),...
                    messageCell(1:length(cvOPCIndex)));
         % Write DV
-        dvOPCIndex = [opcParameters(5):opcParameters(6)];
+        dvOPCIndex = [opcParameters(6):opcParameters(7)];
         writeValue(ua_client,processVar(dvOPCIndex),...
                    messageCell(length(cvOPCIndex)+1:length(cvOPCIndex)+length(dvOPCIndex)));
 
     else
         % Read MV values, specified in positions opcParameters(3
-        mvOPCIndex = [opcParameters(4):opcParameters(5)-1];
+        mvOPCIndex = [opcParameters(5):opcParameters(6)-1];
         MV = readValue(ua_client,processVar(mvOPCIndex));
     end
     %% Output Results
