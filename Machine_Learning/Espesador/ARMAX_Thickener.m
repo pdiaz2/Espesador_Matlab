@@ -143,7 +143,7 @@ if generateOne
     matFileModel = ['ARMAX_MDL_' typeOfData ioDTStr dateTest ...
                     '_k' num2str(controlParamsStruct.tau_R)...
                     '.mat'];
-%     save(matFileModel,'armaxModel','mOrder','controlParamsStruct','mlParamsStruct');
+    save(matFileModel,'armaxModel','mOrder','controlParamsStruct','mlParamsStruct');
 else
     ML_Results = struct;
     for offsetChoice = 1:1%2

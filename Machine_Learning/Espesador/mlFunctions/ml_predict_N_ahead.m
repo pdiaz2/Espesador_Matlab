@@ -55,7 +55,7 @@ function [ MSE_Ny,yHat,auxYHat ] = ml_predict_N_ahead( ML_Model, inputTimeSeries
                                                     predictionWindow+(j-1)));
         end
     elseif strcmp(mlMethod,'SS')
-        data = iddata(validationOutputs,inputTimeSeries,tau_R);
+        data = iddata(validationOutputs,inputTimeSeries,tau_R,'TimeUnit','minutes');
         for j = 1:N_y
             % Approximate forecasting with prediction function in Matlab
             yP = predict(ML_Model,data,j,pOptions);
@@ -68,7 +68,7 @@ function [ MSE_Ny,yHat,auxYHat ] = ml_predict_N_ahead( ML_Model, inputTimeSeries
     elseif strcmp(mlMethod,'ARMAX')
 %         MSE_Ny = -1*ones(N_y,1);
 %         yHat = sim(ML_Model,
-        data = iddata(validationOutputs,inputTimeSeries,tau_R);
+        data = iddata(validationOutputs,inputTimeSeries,tau_R,'TimeUnit','minutes');
         for j = 1:N_y
             % Predict j-step ahead
             yP = predict(ML_Model,data,j,pOptions);
