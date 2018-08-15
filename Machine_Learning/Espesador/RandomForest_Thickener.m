@@ -3,8 +3,8 @@ clear all;
 close all;
 clc;
 %% Boolean control
-nameDataset = 'ThreeMonths_';
-typeOfData = 'Real_';
+nameDataset = 'Agosto_';
+typeOfData = 'Sim_';
 dateTest = '1408';
 
 
@@ -16,16 +16,18 @@ seed = rng(1231231); % For reproducibility (should look into this after)
 % Crucial parameters for system identification
 N_y = 20;
 tau_R = 5;
+% Data validation and machine learning parameters
+trainVSVal = 0.85;
 generateOne = true;
-useDelayMV_CV = false;
-noiseyData = false;
+useDelayMV_CV = true;
+noiseyData = true;
 %% Bool Handling
 if generateOne
     % Input wave
-    cvToGenerate = 1;
+    cvToGenerate = 3;
     experiment = 1;
     delayUCases = 1;
-    delayYCases = 1;
+    delayYCases = 4;
 else
    waveVector = 1:4;
    cvToGenerate = -1; %Not used in this case
@@ -102,7 +104,7 @@ mlParamsStruct.DelayMatrix.Y = repmat([6,12,36,60]',1,numOutputs);
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
 mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;
-mlParamsStruct.trainingSamples = floor(0.85*nSamples);
+mlParamsStruct.trainingSamples = floor(trainVSVal*nSamples);
 if strcmp(typeOfData,'Real_')
     mlParamsStruct.limitTestDataIndex = 24177;
 else
@@ -167,7 +169,7 @@ if generateOne
         outputmatFileName = ['TBag_RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr 'AR_' dateTest...
                             '_k' num2str(controlParamsStruct.tau_R)...
                             '.mat'];
-%         save(outputmatFileName,'ML_Model','mOrder','mlParamsStruct','controlParamsStruct','treeStats');
+        save(outputmatFileName,'ML_Model','mOrder','mlParamsStruct','controlParamsStruct','treeStats');
     else
         outputmatFileName = ['RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr dateTest...
                             '_k' num2str(controlParamsStruct.tau_R)...
