@@ -50,7 +50,8 @@ function [ predictorMLStruct,delayMaxInTime] = ml_prepare_IO_data( IOBigSet,...
         Y = IOBigSet(OLExperiment).Outputs.TimeSeries(:,:);
 %         [] = ml_arrange_dead_time(timeSeries,deadTimeMV_CV)
         Ts = tau_R;
-        predictorMLStruct = iddata(Y,U,Ts,'InputName',nameInputs','OutputName',nameOutputs');
+        predictorMLStruct = iddata(Y,U,Ts,'InputName',nameInputs','OutputName',nameOutputs',...
+                                   'TimeUnit','minutes');
         delayMaxInTime = -1; %bogey value
     end                                       
 

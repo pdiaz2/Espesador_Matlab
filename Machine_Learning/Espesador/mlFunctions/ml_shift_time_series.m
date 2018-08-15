@@ -2,11 +2,11 @@ function [predictorData, predictorNames] = ml_shift_time_series(expData, NameVar
                                                 predictorData, predictorNames,...
                                                 numSamplesPerExp,...
                                                 delayMaxInTime, delayCoeffs,...
-                                                deadTimeVar,deadTimeMax)
+                                                deadTimeVars,deadTimeMax)
 % ML_SHIFT_TIME_SERIES
     for v = 1:nVars
         d = delayCoeffs(v);
-        deadTime = deadTimeVar(v);
+        deadTime = deadTimeVars(v);
         deadTimeDiff = deadTimeMax-deadTime;
         for shifts = 1:d
             % Selects shifted versions of tData time series for the predictor.
