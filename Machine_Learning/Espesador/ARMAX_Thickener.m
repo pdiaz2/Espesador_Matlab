@@ -21,7 +21,7 @@ generateOne = true;
 if generateOne
     % Input wave
     cvToGenerate = 2;
-    na = 1;%3
+    na = 4;%3
     nb = 1;
     nc = 1;
     nk = 1;
