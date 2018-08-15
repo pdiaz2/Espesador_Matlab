@@ -1,4 +1,4 @@
-SimResults.groupBy = 60;
+
 %% FFT of Signals
 fftWindow = 15*3600:60*3600;
 
