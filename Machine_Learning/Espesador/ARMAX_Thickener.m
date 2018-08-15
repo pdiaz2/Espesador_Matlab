@@ -5,7 +5,7 @@ clc;
 
 nameDataset = 'Agosto_';
 typeOfData = 'Sim_';
-dateTest = '2906';
+dateTest = '1408';
 saveToMatFile = false;
 % matFileName = 'ResultsARMAX_NoNoise_2206';
 optimizeMLHyperparameters = false;
@@ -55,7 +55,7 @@ Dt = 1;
 % Plant and control params definition
 controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.Dt = Dt;
-controlParamsStruct.tau_R = 10;%5; % 10
+controlParamsStruct.tau_R = 5;%5; % 10
 controlParamsStruct.N_y = N_y;
 if useDelayMV_CV
     switch typeOfData
@@ -138,8 +138,9 @@ if generateOne
                                                         mlParamsStruct,...
                                                         mOrder);
     armaxModel = ML_Model.Model;
-    dateTest = '1008';
-    matFileModel = ['ARMAX_MDL_' typeOfData ioDTStr dateTest '.mat'];
+    matFileModel = ['ARMAX_MDL_' typeOfData ioDTStr dateTest ...
+                    '_k' num2str(controlParamsStruct.tau_R)...
+                    '.mat'];
 %     save(matFileModel,'armaxModel','mOrder','controlParamsStruct','mlParamsStruct');
 else
     ML_Results = struct;
@@ -185,8 +186,9 @@ else
     
 end
 %% Save
-dateTest = '3107';
-outputmatFileName = ['ResultsARMAX_' typeOfData ioDTStr 'X_' dateTest '.mat'];
+outputmatFileName = ['ResultsARMAX_' typeOfData ioDTStr dateTest...
+                    '_k' num2str(controlParamsStruct.tau_R)...
+                    '.mat'];
 if (saveToMatFile)
     save(outputmatFileName,'ML_Results','controlParamsStruct','mlParamsStruct','trainingTime');
 end

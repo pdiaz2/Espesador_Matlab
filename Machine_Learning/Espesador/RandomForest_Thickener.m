@@ -5,7 +5,7 @@ clc;
 %% Boolean control
 nameDataset = 'ThreeMonths_';
 typeOfData = 'Real_';
-dateTest = '2906';
+dateTest = '1408';
 
 
 saveToMatFile = false;
@@ -162,10 +162,14 @@ if generateOne
         treeStats.Std.branches = std(treeStats.branches);
         treeStats.Std.sizes = std(treeStats.sizes,0,2);
         treeStats.Std.nodeProbability = std(treeStats.nodeProbability,0,2);
-        outputmatFileName = ['RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr 'AR_' dateTest '.mat' ];
+        outputmatFileName = ['TBag_RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr 'AR_' dateTest...
+                            '_k' num2str(controlParamsStruct.tau_R)...
+                            '.mat'];
 %         save(outputmatFileName,'ML_Model','mOrder','mlParamsStruct','controlParamsStruct','treeStats');
     else
-        outputmatFileName = ['RF_Y' num2str(cvToGenerate) '_SimResults_2906.mat' ];
+        outputmatFileName = ['RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr dateTest...
+                            '_k' num2str(controlParamsStruct.tau_R)...
+                            '.mat'];
         save(outputmatFileName,'RF','mlParamsStruct','controlParamsStruct');
     end
 else
@@ -197,7 +201,9 @@ else
 end
 
 %% Save
-outputmatFileName = ['ResultsRF' '_' typeOfData ioDTStr 'X_' dateTest '.mat' ];
+outputmatFileName = ['ResultsRF' '_' typeOfData ioDTStr dateTest...
+                    '_k' num2str(controlParamsStruct.tau_R)...
+                    '.mat'];
 if (saveToMatFile)
     save(outputmatFileName,'ML_Results','controlParamsStruct','mlParamsStruct','trainingTimes');
 end
