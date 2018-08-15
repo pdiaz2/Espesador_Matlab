@@ -15,7 +15,7 @@ mlMethod = 'RF';
 seed = rng(1231231); % For reproducibility (should look into this after)
 % Crucial parameters for system identification
 N_y = 20;
-tau_R = 5;
+tau_R = 10;
 % Data validation and machine learning parameters
 trainVSVal = 0.85;
 generateOne = true;
@@ -27,7 +27,7 @@ if generateOne
     cvToGenerate = 3;
     experiment = 1;
     delayUCases = 1;
-    delayYCases = 4;
+    delayYCases = 3;
 else
    waveVector = 1:4;
    cvToGenerate = -1; %Not used in this case
@@ -91,7 +91,7 @@ mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         'Type','integer');
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
 
-mlParamsStruct.DelayMatrix.U = repmat([5,10,20,60]',1,numInputs);
+mlParamsStruct.DelayMatrix.U = repmat([5,15,30,60]',1,numInputs);
 % mlParamsStruct.DelayMatrix.U = repmat([5]',1,numInputs);
 % mlParamsStruct.DelayMatrix.U = repmat([0]',1,numInputs);
 [mlParamsStruct.sizeUMatrix garbage] = size(mlParamsStruct.DelayMatrix.U);
