@@ -4,10 +4,12 @@ close all;
 %%
 % load('Agosto_Real_2206_rawData.mat');
 % load('ThreeMonths_Real_2706_BF.mat');
-nameDataset = 'ThreeMonths_';
-typeOfData = 'Real_';
-dateTest = '2906';
+nameDataset = 'Agosto_';
+typeOfData = 'Sim_';
+dateTest = '1408';
 figurePath = ['figures\' typeOfData '\'];
+tau_R = 5;
+N_y = 20;
 K_ahead = 1;
 K_forecast = 100;
 %%
@@ -16,11 +18,12 @@ imprint = false;
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
 seed = rng(1231231); % For reproducibility (should look into this after)
-N_y = 20;
-useDelayMV_CV = false;
-noiseyData = false;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+useDelayMV_CV = true;
+noiseyData = true;
 generateOne = true;
 showGood = true;
+%%%%%%%%%%%%%%%%%%%%
 if generateOne
     % Input wave
     cvToGenerate = 2;
@@ -44,6 +47,7 @@ load(matFileName);
 %% Plant specifics
 m = length(SimResults.MV);
 d = length(SimResults.DV);
+d = 2;
 % d = 3;
 numInputs = d+m;
 % n = length(SimResults.CV);
@@ -55,7 +59,7 @@ Dt = 1;
 % Plant and control params definition
 controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.Dt = Dt;
-controlParamsStruct.tau_R = 5; % 10
+controlParamsStruct.tau_R = tau_R; % 10
 controlParamsStruct.N_y = N_y;
 if useDelayMV_CV
     controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
@@ -117,7 +121,8 @@ testBatch = 8; %Backward Compatibility
                                                                 
 % %% RF Models
 for cv = 1:n
-    rfFileName = ['RF_Y' num2str(cv) '_' typeOfData ioDTStr 'X_' dateTest '.mat'];
+    rfFileName = ['TBag_RF_Y' num2str(cv) '_' typeOfData ioDTStr...
+                    dateTest '_k' num2str(tau_R) '.mat'];
     load(rfFileName);
     mlParamsStruct.cvToGenerate = cv;
     %% Predict with RF
@@ -148,8 +153,8 @@ for cv = 1:n
 end
 delayMaxInTime = max(max(max(mlParamsStruct.DelayMatrix.U),max(mlParamsStruct.DelayMatrix.Y)));
 %% ARMAX Models
-dateTest = '3107';
-armaxFileName = ['ARMAX_MDL_' typeOfData ioDTStr 'X_' dateTest '.mat'];
+armaxFileName = ['ARMAX_MDL_' typeOfData ioDTStr...
+                    dateTest '_k' num2str(tau_R) '.mat'];
 load(armaxFileName);
 modelOrder = order(armaxModel);
 mlMethod = 'ARMAX';

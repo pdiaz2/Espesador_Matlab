@@ -15,7 +15,7 @@ mlMethod = 'RF';
 seed = rng(1231231); % For reproducibility (should look into this after)
 % Crucial parameters for system identification
 N_y = 20;
-tau_R = 10;
+tau_R = 5;
 % Data validation and machine learning parameters
 trainVSVal = 0.85;
 generateOne = true;
@@ -24,10 +24,10 @@ noiseyData = true;
 %% Bool Handling
 if generateOne
     % Input wave
-    cvToGenerate = 3;
+    cvToGenerate = 2; 
     experiment = 1;
     delayUCases = 1;
-    delayYCases = 3;
+    delayYCases = 1; % 3
 else
    waveVector = 1:4;
    cvToGenerate = -1; %Not used in this case
@@ -39,8 +39,8 @@ else
     noiseStr = '';
 end
 matFileName = [nameDataset typeOfData noiseStr dateTest '_BF.mat'];
-load(matFileName);
-
+% load(matFileName);
+load('testScriptML.mat');
 
 
 
@@ -66,9 +66,12 @@ if useDelayMV_CV
     switch typeOfData
         case 'Sim_'
             % Values obtained by inspection of open loop tests on simulator
-            controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
-                                                    6.5*60 6.5/60 0 6.5*60;
-                                                    3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
+%             controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
+%                                                     6.5*60 6.5/60 0 6.5*60;
+%                                                     3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
+            controlParamsStruct.delayMV_CV = floor([10 10 0 10;
+                                                    10 10 0 10;
+                                                    10 10 0 10]/controlParamsStruct.tau_R);                                    
         case 'Real_'
             controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
     end
@@ -148,13 +151,13 @@ if generateOne
         RF.OOBPermutedPredictorDeltaError
         
         % RF Structure statistics
-        limitTo = floor(RF.Trees{1}.NumNodes*0.8);
+        limitTo = floor(RF.Trees{1}.NumNodes*0.2); % 0.8
         for t = 1:mlParamsStruct.trainingParamsArray{1}
            Tree = RF.Trees{t};
            treeStats.numNodes(t) = Tree.NumNodes;
            treeStats.branches(t) = sum(Tree.IsBranchNode);
            treeStats.sizes(:,t) = Tree.NodeSize(1:limitTo);
-           treeStats.cutPredictors(:,t) = Tree.CutPredictor(1:30);
+           treeStats.cutPredictors(:,t) = Tree.CutPredictor(1:limitTo); %30
            treeStats.nodeProbability = Tree.NodeProbability(1:limitTo);
         end
         treeStats.Means.numNodes = mean(treeStats.numNodes);
@@ -166,7 +169,7 @@ if generateOne
         treeStats.Std.branches = std(treeStats.branches);
         treeStats.Std.sizes = std(treeStats.sizes,0,2);
         treeStats.Std.nodeProbability = std(treeStats.nodeProbability,0,2);
-        outputmatFileName = ['TBag_RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr 'AR_' dateTest...
+        outputmatFileName = ['testBench' num2str(cvToGenerate) '_' typeOfData ioDTStr dateTest...
                             '_k' num2str(controlParamsStruct.tau_R)...
                             '.mat'];
         save(outputmatFileName,'ML_Model','mOrder','mlParamsStruct','controlParamsStruct','treeStats');
@@ -174,7 +177,7 @@ if generateOne
         outputmatFileName = ['RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr dateTest...
                             '_k' num2str(controlParamsStruct.tau_R)...
                             '.mat'];
-        save(outputmatFileName,'RF','mlParamsStruct','controlParamsStruct');
+%         save(outputmatFileName,'RF','mlParamsStruct','controlParamsStruct');
     end
 else
     ML_Results = struct;

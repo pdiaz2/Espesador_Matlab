@@ -63,9 +63,12 @@ if useDelayMV_CV
     switch typeOfData
         case 'Sim_'
             % Values obtained by inspection of open loop tests on simulator
-            controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
-                                                    6.5*60 6.5/60 0 6.5*60;
-                                                    3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
+%             controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
+%                                                     6.5*60 6.5/60 0 6.5*60;
+%                                                     3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
+            controlParamsStruct.delayMV_CV = floor([10 10 0 10;
+                                                    10 10 0 10;
+                                                    10 10 0 10]/controlParamsStruct.tau_R);  
         case 'Real_'
             controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
     end
