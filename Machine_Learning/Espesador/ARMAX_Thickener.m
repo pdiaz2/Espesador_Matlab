@@ -21,7 +21,7 @@ generateOne = true;
 if generateOne
     % Input wave
     cvToGenerate = 2;
-    na = 4;%3
+    na = 1;%4%3
     nb = 1;
     nc = 1;
     nk = 1;
@@ -38,8 +38,8 @@ else
     noiseStr = '';
 end
 matFileName = [nameDataset typeOfData noiseStr dateTest '_BF.mat'];
-load(matFileName);
-
+% load(matFileName);
+load('testScriptML.mat');
 
 
 %% Plant specifics
@@ -116,7 +116,7 @@ mlParamsStruct.cvToGenerate = cvToGenerate;
 %% Training & Testing Set
 testBigSet = struct;
 trainingBigSet = struct;
-SimResults.CV(7).GroupedTimeSeries = fillmissing(SimResults.CV(7).GroupedTimeSeries,'nearest');
+% SimResults.CV(7).GroupedTimeSeries = fillmissing(SimResults.CV(7).GroupedTimeSeries,'nearest');
 [trainingBigSet,testBigSet,controlParamsStruct] = ml_generate_tT_sets(trainingBigSet,...
                                                                     testBigSet,...
                                                                     SimResults,...
@@ -143,7 +143,7 @@ if generateOne
                                                         mlParamsStruct,...
                                                         mOrder);
     armaxModel = ML_Model.Model;
-    matFileModel = ['ARMAX_MDL_' typeOfData ioDTStr dateTest ...
+    matFileModel = ['testBenchARMAX_MDL_' typeOfData ioDTStr dateTest ...
                     '_k' num2str(controlParamsStruct.tau_R)...
                     '.mat'];
     save(matFileModel,'armaxModel','mOrder','controlParamsStruct','mlParamsStruct');

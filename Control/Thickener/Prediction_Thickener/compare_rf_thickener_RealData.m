@@ -11,7 +11,7 @@ figurePath = ['figures\' typeOfData '\'];
 tau_R = 5;
 N_y = 20;
 K_ahead = 1;
-K_forecast = 100;
+K_forecast = 5;
 %%
 saveToMatFile = false;
 imprint = false;
@@ -42,8 +42,8 @@ else
 end
 %%
 matFileName = [nameDataset typeOfData noiseStr dateTest '_BF.mat'];
-load(matFileName);
-
+% load(matFileName);
+load('testScriptML.mat');
 %% Plant specifics
 m = length(SimResults.MV);
 d = length(SimResults.DV);
@@ -62,7 +62,10 @@ controlParamsStruct.Dt = Dt;
 controlParamsStruct.tau_R = tau_R; % 10
 controlParamsStruct.N_y = N_y;
 if useDelayMV_CV
-    controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
+%     controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
+    controlParamsStruct.delayMV_CV = floor([10 10 0 10;
+                                            10 10 0 10;
+                                            10 10 0 10]/controlParamsStruct.tau_R);
     ioDTStr = 'ioDT_';
 else
     controlParamsStruct.delayMV_CV = zeros(3,5);
@@ -121,7 +124,7 @@ testBatch = 8; %Backward Compatibility
                                                                 
 % %% RF Models
 for cv = 1:n
-    rfFileName = ['TBag_RF_Y' num2str(cv) '_' typeOfData ioDTStr...
+    rfFileName = ['testBench' num2str(cv) '_' typeOfData ioDTStr...
                     dateTest '_k' num2str(tau_R) '.mat'];
     load(rfFileName);
     mlParamsStruct.cvToGenerate = cv;
@@ -140,20 +143,23 @@ for cv = 1:n
                                 controlParamsStruct.tau_R,...
                                 mOrder.na,...
                                 mlParamsStruct);
-    [~,~,yHatForecast] = ml_predict_N_ahead(ML_Model.Model,testSubsetRF(cv).InputData(1:K_forecast+20,:),...
-                                            testSubsetRF(cv).OutputData(1:K_forecast+20,:),K_forecast,...
+    
+    [~,~,yHatForecast] = ml_predict_N_ahead(ML_Model.Model,testSubsetRF(cv).InputData(1:K_forecast+N_y,:),...
+                                            testSubsetRF(cv).OutputData(1:K_forecast+N_y,:),K_forecast,...
                                             controlParamsStruct.tau_R,mOrder.na(cv),...
                                             mlParamsStruct,-1);
-                                        
+    yForecast = ml_forecast(ML_Model.Model,testSubsetRF(cv).InputData,...
+                            K_forecast,mOrder.na(cv));
     RFPredictionStruct(cv).yHat = results.yHat;
     RFPredictionStruct(cv).yHatForecast = yHatForecast;
+    RFPredictionStruct(cv).yForecast = yForecast;
     RFPredictionStruct(cv).MSE = results.MSE;
     RFPredictionStruct(cv).Correlation = results.Correlation;
     RFPredictionStruct(cv).OOBError = results.OOBError;
 end
-delayMaxInTime = max(max(max(mlParamsStruct.DelayMatrix.U),max(mlParamsStruct.DelayMatrix.Y)));
+delayMaxInTime = max(max(max(mlParamsStruct.DelayMatrix.U)),max(max(mlParamsStruct.DelayMatrix.Y)));
 %% ARMAX Models
-armaxFileName = ['ARMAX_MDL_' typeOfData ioDTStr...
+armaxFileName = ['testBenchARMAX_MDL_' typeOfData ioDTStr...
                     dateTest '_k' num2str(tau_R) '.mat'];
 load(armaxFileName);
 modelOrder = order(armaxModel);
@@ -178,9 +184,7 @@ ic.Output = trainingData.OutputData(end-(modelOrder+500):end,:);
 pOptions = predictOptions('InitialCondition',ic);
 
 validationOutputs = testData.OutputData;
-% validationOutputs = downsample(validationOutputs,controlParamsStruct.tau_R);
 inputTimeSeries = testData.InputData;
-% inputTimeSeries = downsample(inputTimeSeries,controlParamsStruct.tau_R);
 predictInputData = iddata(validationOutputs,inputTimeSeries,controlParamsStruct.tau_R);
 
 [armaxPredict,x0,sys_pred] = predict(armaxModel,predictInputData,K_ahead,pOptions);
@@ -211,7 +215,7 @@ CVNames = {'Torque','Underflow Concentration','Interface Level','Overflow Concen
 CVUnits = {'%','%','m','%','hr','ton/hr','N/A','m3/hr'};
 CVSaveName = {'torque_','Cp_u_','intLevel_','Cp_e_','tauRd_','SFlx_','P1_U_','Q_e_'};
 kAheadStr = [num2str(K_ahead) showGoodStr '_'];
-time = linspace(0,size(RFPredictionStruct(1).yHat,1)*5/60,size(RFPredictionStruct(1).yHat,1)+1);
+time = linspace(0,size(RFPredictionStruct(1).yHat,1)*tau_R/60,size(RFPredictionStruct(1).yHat,1)+1);
 
 for cv = 1:n
     figure
