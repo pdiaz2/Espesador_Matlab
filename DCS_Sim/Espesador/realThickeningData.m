@@ -5,12 +5,13 @@ close all;
 load('Septiembre_Sim_1304_BF')
 
 %%
-nameDataset = 'ThreeMonths';
+nameDataset = 'ThreeMonthsSaul';
 typeOfData = 'Real';
-dateTest = '2706';
+dateTest = '1508';
 outputMatFileName = [nameDataset '_' typeOfData '_' dateTest '_BF.mat'];
 figurePath = ['figures\' typeOfData '\'];
 saveToMatFile = false;
+csvWrite = true;
 imprint = false;
 plotFigures = true;
 %%
@@ -25,11 +26,14 @@ SimResults.CV(2).TimeSeries = [];
 SimResults.CV(3).TimeSeries = [];
 SimResults.MV(1).TimeSeries = [];
 SimResults.MV(2).TimeSeries = [];
+% Added for real real data
+SimResults.MV(3).TimeSeries = [];
+SimResults.MV(4).TimeSeries = [];
 SimResults.DV(1).TimeSeries = [];
 SimResults.DV(2).TimeSeries = [];
 for monthIndex = 1:length(months)
     month = months{monthIndex};
-    matFileName = ['ThickenerOperation_' month '_BF.mat'];
+    matFileName = ['ThickenerOperationSaul_' month '_BF.mat'];
     load(matFileName);
 
     numVars = length(BigData.varsIndex);
@@ -45,6 +49,8 @@ for monthIndex = 1:length(months)
 
     SimResults.MV(1).TimeSeries = [SimResults.MV(1).TimeSeries; BigData.PreProcessed(4,1:simTime)'];
     SimResults.MV(2).TimeSeries = [SimResults.MV(2).TimeSeries; FlocculantNew(1,1:simTime)'];
+    SimResults.MV(3).TimeSeries = [SimResults.MV(3).TimeSeries; BigData.PreProcessed(5,1:simTime)'];
+    SimResults.MV(4).TimeSeries = [SimResults.MV(4).TimeSeries; BigData.PreProcessed(6,1:simTime)'];
 
     % DV
 
@@ -81,7 +87,7 @@ for dv = 1:3
     SimResults.DV(dv).FFT = fft(SimResults.DV(dv).TimeSeries(fftWindow))*1/length(fftWindow);
 end
 
-for mv = 1:2
+for mv = 1:4
     SimResults.MV(mv).FFT = fft(SimResults.MV(mv).TimeSeries(fftWindow));
 end
 for dv = 1:3
@@ -116,9 +122,9 @@ CVNames = {'Torque','Underflow Concentration','Interface Level','Overflow Concen
 CVUnits = {'%','%','m','%','hr','ton/hr','N/A','m3/hr'};
 CVSaveName = {'torque','Cp_u','intLevel','Cp_e','tauRd','SFlx','P1_U','Q_e'};
 % MV
-MVNames = {'Discharge Flow','Flocculant Dose'};
-MVUnits = {'m3/hr','gpt'};
-MVSaveName = {'Q_u','gpt'};
+MVNames = {'Discharge Flow','Flocculant Dose','Flocculant Feedrate','Dilution Feedrate'};
+MVUnits = {'m3/hr','gpt','m3/hr','m3/hr'};
+MVSaveName = {'Q_u','gpt','FFeed','DilFeed'};
 % DV
 DVNames = {'Feed rate','Feed Concentration','Feed Particle Diameter'};
 DVUnits = {'m3/s','%','N/A'};
@@ -304,4 +310,17 @@ end
 if saveToMatFile
     save(outputMatFileName,'SimResults','options','startYield');
 end
-
+%% CSV Write
+if csvWrite
+    M = [];
+    for cv = 1:3
+        M = [M SimResults.CV(cv).GroupedTimeSeries'];
+    end
+    for mv = 1:4
+        M = [M SimResults.MV(mv).GroupedTimeSeries'];
+    end
+    for dv = 1:2
+        M = [M SimResults.DV(dv).GroupedTimeSeries'];
+    end
+    dlmwrite('tresMesesSaul.csv',M,'delimiter',';','precision',5,'newline','unix');
+end

@@ -77,8 +77,9 @@ for var = 1:numVars
     % Smooth Data
     BigData.PreProcessed(var,:) = smoothdata(BigData.PreProcessed(var,:),'gaussian',60);
 end
-        % Fill Outliers
-
+% adjust a specific variable by gand
+wrongValue = find(BigData.PreProcessed(6,:) < 0);        
+BigData.PreProcessed(6,wrongValue) = 0;
 %     BigData.fillOutliers(var,:) = fillOutliers(BigData.RawData(var,:),'linear','movmean',60);
 %% Final Filtering
 numVars = length(BigData.varsIndex);
@@ -114,5 +115,5 @@ for i = 1:numVars
         [BigData.varsNames{i} ' Matlab']})
     hold off
 end
-matfileName = ['BigData_' month '.mat'];
+matfileName = ['BigDataSaul_' month '_BF.mat'];
 save(matfileName,'BigData');

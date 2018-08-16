@@ -2,14 +2,15 @@ clear;
 clc;
 close all;
 %% CSV Reading
-month = 'Noviembre';
-csvname = ['Todos_' month '.csv'];
+month = 'Octubre';
+csvname = ['Todos_' month '_BF.csv'];
 lengthFile = [2674800 2592000 2678400 2505600];
 rowAdjustment = 7*24*60*60+1; % Numbering starts from 0 in dlmread
 endOfFile = 2505600;
 M = dlmread(csvname,';',[1 3 endOfFile 15]);
 % MV1: Underflow Rate --> 7110_FT_1030 (m3/hr) --> 6
 % MV2: GPT --> No_Tag --> Excel (interpolate every hour, add noise every k*Dt ?)
+% "MV"3: AguaDosificacion --> 7120_FT_1001 --> 12 equiv floccFlow
 % CV1: Torque --> 7110_OT_1003 --> 15
 % CV2: Underflow Concentration --> 7110_DT_1030_SOLIDO -> 4
 % CV3: Cama --> 7110_LT_1009_S4 --> 10
@@ -42,6 +43,6 @@ for i = 1:numVars
     legend(BigData.varsNames{i})
 end
 BigData.RawData = M(:,BigData.varsIndex-2)';
-BigData.RawData(3,:) = 12*ones(1,numSamples)-BigData.RawData(3,:);
+% BigData.RawData(3,:) = 12*ones(1,numSamples)-BigData.RawData(3,:);
 
 run filterData.m

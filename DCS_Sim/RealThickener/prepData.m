@@ -4,15 +4,19 @@ clc;
 %% Load Data
 imprint = false;
 figureOption = 'ViewPreProcessed'; % ViewPreProcessed or CompareMethods
-saveToMatFile = false;
-month = 'Noviembre'; % October: eliminated due to System Error in Underflow Rate.
+saveToMatFile = true;
+cama = true;
+month = 'Octubre'; % October: eliminated due to System Error in Underflow Rate.
 % Some portions could be hand picked for test set (first validation).
 
-matfileName = ['BigData_' month '.mat'];
-DVFileName = ['DV_' month '.mat'];
+matfileName = ['BigDataSaul_' month '_BF.mat'];
+DVFileName = ['DV_' month '_BF.mat'];
 load(DVFileName);
 load(matfileName);
 BigData.months = {'Agosto','Septiembre','Octubre','Noviembre'};
+% if cama
+%     BigData.PreProcessed(3,:) = 12-BigData.PreProcessed(3,:);
+% end
 %% Densimeter Preprocessing
 rho_s = 2.75; % g/l
 rho_f = 1.0; % g/l
@@ -132,7 +136,7 @@ else
     end 
 end
 %% Manual Inspection of Graphs
-matFile = ['ThickenerOperation_' month '.mat'];
+matFile = ['ThickenerOperationSaul_' month '_BF.mat'];
 BigData.manual.timeLimit = length(DVResized); % In FeedRate we can see that the plant was practically put out of service ata around 1.3e6
 if saveToMatFile
     save(matFile,'FlocculantNew','BigData','rhoFeed','wt_f','month');
