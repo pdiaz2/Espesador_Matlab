@@ -39,8 +39,8 @@ else
     noiseStr = '';
 end
 matFileName = [nameDataset typeOfData noiseStr dateTest '_BF.mat'];
-% load(matFileName);
-load('testScriptML.mat');
+load(matFileName);
+% load('testScriptML.mat');
 
 
 
@@ -66,12 +66,12 @@ if useDelayMV_CV
     switch typeOfData
         case 'Sim_'
             % Values obtained by inspection of open loop tests on simulator
-%             controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
-%                                                     6.5*60 6.5/60 0 6.5*60;
-%                                                     3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
-            controlParamsStruct.delayMV_CV = floor([10 10 0 10;
-                                                    10 10 0 10;
-                                                    10 10 0 10]/controlParamsStruct.tau_R);                                    
+            controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
+                                                    6.5*60 6.5/60 0 6.5*60;
+                                                    3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
+%             controlParamsStruct.delayMV_CV = floor([10 10 0 10;
+%                                                     10 10 0 10;
+%                                                     10 10 0 10]/controlParamsStruct.tau_R);                                    
         case 'Real_'
             controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
     end
@@ -151,13 +151,13 @@ if generateOne
         RF.OOBPermutedPredictorDeltaError
         
         % RF Structure statistics
-        limitTo = floor(RF.Trees{1}.NumNodes*0.2); % 0.8
+        limitTo = floor(RF.Trees{1}.NumNodes*0.8); 
         for t = 1:mlParamsStruct.trainingParamsArray{1}
            Tree = RF.Trees{t};
            treeStats.numNodes(t) = Tree.NumNodes;
            treeStats.branches(t) = sum(Tree.IsBranchNode);
            treeStats.sizes(:,t) = Tree.NodeSize(1:limitTo);
-           treeStats.cutPredictors(:,t) = Tree.CutPredictor(1:limitTo); %30
+           treeStats.cutPredictors(:,t) = Tree.CutPredictor(1:30); 
            treeStats.nodeProbability = Tree.NodeProbability(1:limitTo);
         end
         treeStats.Means.numNodes = mean(treeStats.numNodes);

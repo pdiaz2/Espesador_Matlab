@@ -14,17 +14,18 @@ seed = rng(1231231); % For reproducibility (should look into this after)
 % Crucial parameters for system identification
 N_y = 20;
 tau_R = 5;
-useDelayMV_CV = true;
+trainVSVal = 0.85;
+useDelayMV_CV = false;
 noiseyData = true;
 generateOne = true;
 %% Bool Handling
 if generateOne
     % Input wave
     cvToGenerate = 2;
-    na = 1;%4%3
-    nb = 1;
+    na = 2;%4%3
+    nb = 2;
     nc = 1;
-    nk = 1;
+    nk = 2;
     offsetChoice = 1;
     focusChoice = 1;
 else
@@ -38,8 +39,8 @@ else
     noiseStr = '';
 end
 matFileName = [nameDataset typeOfData noiseStr dateTest '_BF.mat'];
-% load(matFileName);
-load('testScriptML.mat');
+load(matFileName);
+% load('testScriptML.mat');
 
 
 %% Plant specifics
@@ -63,12 +64,12 @@ if useDelayMV_CV
     switch typeOfData
         case 'Sim_'
             % Values obtained by inspection of open loop tests on simulator
-%             controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
-%                                                     6.5*60 6.5/60 0 6.5*60;
-%                                                     3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
-            controlParamsStruct.delayMV_CV = floor([10 10 0 10;
-                                                    10 10 0 10;
-                                                    10 10 0 10]/controlParamsStruct.tau_R);  
+            controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
+                                                    6.5*60 6.5/60 0 6.5*60;
+                                                    3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
+%             controlParamsStruct.delayMV_CV = floor([10 10 0 10;
+%                                                     10 10 0 10;
+%                                                     10 10 0 10]/controlParamsStruct.tau_R);  
         case 'Real_'
             controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
     end
@@ -143,7 +144,7 @@ if generateOne
                                                         mlParamsStruct,...
                                                         mOrder);
     armaxModel = ML_Model.Model;
-    matFileModel = ['testBenchARMAX_MDL_' typeOfData ioDTStr dateTest ...
+    matFileModel = ['ARMAX_MDL_' typeOfData ioDTStr dateTest ...
                     '_k' num2str(controlParamsStruct.tau_R)...
                     '.mat'];
     save(matFileModel,'armaxModel','mOrder','controlParamsStruct','mlParamsStruct');
