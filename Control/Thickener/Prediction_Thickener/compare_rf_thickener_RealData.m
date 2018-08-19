@@ -1,26 +1,54 @@
 clear all;
 clc;
-close all;
+% close all;
 %%
 % load('Agosto_Real_2206_rawData.mat');
 % load('ThreeMonths_Real_2706_BF.mat');
-nameDataset = 'Agosto_';
-typeOfData = 'Sim_';
-dateTest = '1408';
+nameDataset = 'Abril_a_Julio_';
+typeOfData = 'Real18_';
+dateTest = '1708';
 figurePath = ['figures\' typeOfData '\'];
-tau_R = 5;
-N_y = 20;
-K_ahead = 20;
-K_forecast = 100;
-%%
-saveToMatFile = false;
+
+% Save and print bools
 imprint = false;
+useTimePlot = false;
+saveResultsToMatFile = false;
+saveModelToMatFile = false;
+%%%%%%
+% RF Specifics
+numTreesInput = 100;
+tau_RInput = 1;
+naInput = 6;
+nbInput = 6;
+cvToGenerate = 2;
+
+% ARMAX Specifics
+NAInput = 3;
+NBInput = 3;
+NCInput = 3;
+selectedCV = [1 2 3];
+selectedMV = [2 3];
+selectedDV = [1 2];
+%%%%%%%%%%%%%%%%
+trainVSValInput = 0.95;
+tau_R = tau_RInput;
+N_y = 20;
+pastDataSamples = 990;
+K_ahead = 50;
+K_forecast = 50;
+varStringRF = ['B' num2str(numTreesInput) ...
+              '_k' num2str(tau_RInput) '_'...
+              'na' num2str(naInput) '_nb' num2str(nbInput)];
+varStringARMAX = ['k' num2str(tau_RInput) '_'...
+                'na' num2str(NAInput) '_nb' num2str(NBInput)...
+                '_nc' num2str(NCInput)];
+%%
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
-seed = rng(1231231); % For reproducibility (should look into this after)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-useDelayMV_CV = true;
-noiseyData = true;
+useDelayMV_CV = false;
+noiseyData = false;
 generateOne = true;
 showGood = true;
 %%%%%%%%%%%%%%%%%%%%
@@ -40,19 +68,17 @@ if noiseyData
 else
     noiseStr = '';
 end
+seed = rng(1231231); % For reproducibility (should look into this after)
 %%
 matFileName = [nameDataset typeOfData noiseStr dateTest '_BF.mat'];
 load(matFileName);
 % load('testScriptML.mat');
 %% Plant specifics
-m = length(SimResults.MV);
-d = length(SimResults.DV);
-d = 2;
-% d = 3;
+MachineLearningData = ml_pick_variables(selectedCV,selectedMV,selectedDV,SimResults);
+n = length(MachineLearningData.CV);
+m = length(MachineLearningData.MV);
+d = length(MachineLearningData.DV);
 numInputs = d+m;
-% n = length(SimResults.CV);
-% n = length(SimResults.CV)-1;
-n = 3;
 numOutputs = n;
 Dt = 1;
 %% Structure definitions
@@ -63,9 +89,9 @@ controlParamsStruct.tau_R = tau_R; % 10
 controlParamsStruct.N_y = N_y;
 if useDelayMV_CV
 %     controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
-    controlParamsStruct.delayMV_CV = floor([10 10 0 10;
-                                            10 10 0 10;
-                                            10 10 0 10]/controlParamsStruct.tau_R);
+%     controlParamsStruct.delayMV_CV = floor([10 10 0 10;
+%                                             10 10 0 10;
+%                                             10 10 0 10]/controlParamsStruct.tau_R);
     ioDTStr = 'ioDT_';
 else
     controlParamsStruct.delayMV_CV = zeros(3,5);
@@ -73,8 +99,8 @@ else
 end
 
 %% DownSamplig for tau_R
-SimResults = ml_downsampling(SimResults,controlParamsStruct,'d');
-controlParamsStruct.nSamples = length(SimResults.CV(1).GroupedTimeSeries);
+MachineLearningData = ml_downsampling(MachineLearningData,controlParamsStruct,'d');
+controlParamsStruct.nSamples = length(MachineLearningData.CV(1).GroupedTimeSeries);
 nSamples = controlParamsStruct.nSamples;
 %% Machine Learning - Structural Parameters
 % Delete plzzz
@@ -94,7 +120,7 @@ mlParamsStruct.DelayMatrix.Y = repmat([4:5]',1,numOutputs);
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
 mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;
-mlParamsStruct.trainingSamples = floor(0.85*nSamples);
+mlParamsStruct.trainingSamples = floor(trainVSValInput*nSamples);
 if strcmp(typeOfData,'Real_') && showGood
     mlParamsStruct.limitTestDataIndex = 24177;
     showGoodStr = 'G';    
@@ -116,17 +142,18 @@ testBigSet = struct;
 trainingBigSet = struct;
 [trainingBigSet,testBigSet,controlParamsStruct] = ml_generate_tT_sets(trainingBigSet,...
                                                                     testBigSet,...
-                                                                    SimResults,...
+                                                                    MachineLearningData,...
                                                                     controlParamsStruct,...
                                                                     mlParamsStruct);
 testBatch = 8; %Backward Compatibility
 
 delayMaxInTime = -1;
-pastDataSamples = 300;
+
 % %% RF Models
 for cv = 1:n
-    rfFileName = ['TBag_RF_Y' num2str(cv) '_' typeOfData ioDTStr...
-                    dateTest '_k' num2str(tau_R) '.mat'];
+    rfFileName = ['TBag_RF_Y' num2str(cv) '_' typeOfData...
+                    ioDTStr noiseStr...
+                    varStringRF '_' dateTest '.mat'];
     load(rfFileName);
     mlParamsStruct.cvToGenerate = cv;
     %% Predict with RF
@@ -140,21 +167,21 @@ for cv = 1:n
     
     results = ml_validate_model(testSubsetRF,ML_Model,...
                                 controlParamsStruct.dimsSystem(1),...
-                                controlParamsStruct.N_y,...
+                                K_ahead,...
                                 controlParamsStruct.tau_R,...
                                 mOrder.na,...
                                 mlParamsStruct);
     
-    [~,~,yHatForecast] = ml_predict_N_ahead(ML_Model.Model,testSubsetRF(cv).InputData(1:K_forecast+N_y,:),...
-                                            testSubsetRF(cv).OutputData(1:K_forecast+N_y,:),K_forecast,...
-                                            controlParamsStruct.tau_R,mOrder.na(cv),...
-                                            mlParamsStruct,-1);
+%     [~,~,yHatForecast] = ml_predict_N_ahead(ML_Model.Model,testSubsetRF(cv).InputData(1+pastDataSamples:end,:),...
+%                                             testSubsetRF(cv).OutputData(1+pastDataSamples:end,:),K_forecast,...
+%                                             controlParamsStruct.tau_R,mOrder.na(cv),...
+%                                             mlParamsStruct,-1);
     % For forecasting, I need to give pastDataSamples before forecasting,
     % so I need to adjust RF for that
     yForecast = ml_forecast(ML_Model.Model,testSubsetRF(cv).InputData(1+pastDataSamples:end,:),...
                             K_forecast,mOrder.na(cv));
     RFPredictionStruct(cv).yHat = results.yHat;
-    RFPredictionStruct(cv).yHatForecast = yHatForecast;
+%     RFPredictionStruct(cv).yHatForecast = yHatForecast;
     RFPredictionStruct(cv).yForecast = yForecast;
     RFPredictionStruct(cv).MSE = results.MSE;
     RFPredictionStruct(cv).Correlation = results.Correlation;
@@ -166,18 +193,16 @@ end
 % 1) My RF starts predicting from deadTimeMax+delayMaxinTime ahead 
 % 2) The way ml_validate_model works leaves out the first K_ahead-1 samples
 % I have to start comparing from deadTimeMax + delayMaxInTime+1;
-delayMaxInTime = max(max(max(mlParamsStruct.DelayMatrix.U)),max(max(mlParamsStruct.DelayMatrix.Y)));
+% delayMaxInTime = max(max(max(mlParamsStruct.DelayMatrix.U)),max(max(mlParamsStruct.DelayMatrix.Y)));
 deadTimeMax = max(max(mlParamsStruct.delayMV_CV));
 % RF is ahead of ARMAX by armaxToRFWindowLB
 %%%%%%%%%%%%%%%%%%%%%%%%%
-% Aqui estamos!
-% armaxToRFWindowLB = deadTimeMax +(K_ahead-1)+delayMaxInTime;
-% armaxToRFWindowUB = controlParamsStruct.N_y-1-(K_ahead-1);
 armaxToRFWindowLB = deadTimeMax + delayMaxInTime;
-armaxToRFWindowUB = controlParamsStruct.N_y-1;
+armaxToRFWindowUB = K_ahead-1;
 %% ARMAX Models
 armaxFileName = ['ARMAX_MDL_' typeOfData ioDTStr...
-                    dateTest '_k' num2str(tau_R) '.mat'];
+                ioDTStr noiseStr...
+                varStringARMAX '_' dateTest '.mat'];
 load(armaxFileName);
 modelOrder = order(armaxModel);
 mlMethod = 'ARMAX';
@@ -210,8 +235,13 @@ icForecast = idpar(x0);
 armaxPredict = armaxPredict.OutputData;
 
 
+if isequal(validationOutputs(1+pastDataSamples:pastDataSamples+K_forecast,1),...
+        testSubsetRF(1).OutputData(1+pastDataSamples:pastDataSamples+K_forecast))
+    fprintf('Comparing same portion of data =)\r\n')
+else
+    fprintf('Using different portions of data =(\r\n')
+end
 
-% if 
 %% Options for plotting
 
 CVNames = {'Torque','Underflow Concentration','Interface Level','Overflow Concentration','Residence Time',...
@@ -219,7 +249,13 @@ CVNames = {'Torque','Underflow Concentration','Interface Level','Overflow Concen
 CVUnits = {'%','%','m','%','hr','ton/hr','N/A','m3/hr'};
 CVSaveName = {'torque_','Cp_u_','intLevel_','Cp_e_','tauRd_','SFlx_','P1_U_','Q_e_'};
 kAheadStr = [num2str(K_ahead) showGoodStr '_'];
-time = linspace(0,size(RFPredictionStruct(1).yHat,1)*tau_R/60,size(RFPredictionStruct(1).yHat,1)+1);
+if useTimePlot
+    time = linspace(0,size(RFPredictionStruct(1).yHat,1)*tau_R/60,size(RFPredictionStruct(1).yHat,1)+1);
+    xLabelStr = 'Hours [hr]';
+else
+    time = linspace(0,size(RFPredictionStruct(1).yHat,1),size(RFPredictionStruct(1).yHat,1)+1);
+    xLabelStr = 'Samples [n]'
+end
 %% Forecast & Predict Compare
 %{}
 
@@ -238,40 +274,24 @@ armaxForecast = armaxForecast.OutputData;
 
 %% Plot prediction comparisons
 
-
-% for cv = 1:n
-%     figure
-%     plot(validationOutputs(pastDataSamples+1:pastDataSamples+K_forecast,cv))
-%     hold on
-%     plot(armaxPredict(pastDataSamples+1:pastDataSamples+K_forecast,cv))
-%     plot(armaxForecast(:,cv))
-%     plot(RFPredictionStruct(cv).yHatForecast(1,:));
-%     legend('Validation','ARMAX Predict','ARMAX Forecast','RF Forecast');
-%     xlabel(['Samples [' num2str(controlParamsStruct.tau_R) ' min/sample]'])
-%     hold off
-%     grid on
-%     printName = [figurePath 'forecast_' CVSaveName{cv} typeOfData ioDTStr noiseStr kAheadStr dateTest];
-%     if imprint
-%         % Latex
-%         print(printName,'-depsc');
-%     end
-% end
 for cv = 1:n
     figure
     plot(validationOutputs(1+pastDataSamples:pastDataSamples+K_forecast,cv))
     hold on
-    plot(armaxPredict(1+pastDataSamples:pastDataSamples+K_forecast,cv))
+%     plot(armaxPredict(1+pastDataSamples:pastDataSamples+K_forecast,cv))
     plot(armaxForecast(:,cv))
 %     plot(RFPredictionStruct(cv).yHatForecast(1,:));
     plot(RFPredictionStruct(cv).yForecast(:))
-    legend('Validation','ARMAX Predict','ARMAX Forecast','RF Forecast');
+    legend('Validation','ARMAX Forecast','RF Forecast');
     xlabel(['Samples [' num2str(controlParamsStruct.tau_R) ' min/sample]'])
     hold off
     grid on
-    printName = [figurePath 'forecast_' CVSaveName{cv} typeOfData ioDTStr noiseStr kAheadStr dateTest];
+    printName = [figurePath 'forecast_' CVSaveName{cv} typeOfData ioDTStr noiseStr...
+                kAheadStr varStringRF '_' dateTest];
     if imprint
         % Latex
         print(printName,'-depsc');
+        print(printName,'-djpeg');
     end
 end
 %}
@@ -284,13 +304,15 @@ for cv = 1:n
     plot(time(1:end-1),RFPredictionStruct(cv).yHat(:,K_ahead))
 %     plot(testSubsetRF(cv).OutputData(1:end-armaxToRFWindowUB));
     ylabel(CVUnits{cv})
-    xlabel('Hours [hr]')
+    xlabel(xLabelStr)
     legend({'Validation','ARIMAX','RF'});
     hold off
     grid on
-    printName = [figurePath CVSaveName{cv} typeOfData ioDTStr noiseStr kAheadStr dateTest];
+    printName = [figurePath CVSaveName{cv} typeOfData ioDTStr noiseStr...
+                kAheadStr varStringRF '_' dateTest];
     if imprint
         % Latex
         print(printName,'-depsc');
+        print(printName,'-djpeg');
     end
 end

@@ -5,9 +5,9 @@ close all;
 load('Septiembre_Sim_1304_BF')
 
 %%
-nameDataset = 'ThreeMonthsSaul';
+nameDataset = 'ThreeMonths';
 typeOfData = 'Real';
-dateTest = '1508';
+dateTest = '1408';
 outputMatFileName = [nameDataset '_' typeOfData '_' dateTest '_BF.mat'];
 figurePath = ['figures\' typeOfData '\'];
 saveToMatFile = false;
@@ -19,8 +19,9 @@ granularity = 'g';
 viewFreq = 100;
 compensatePhase = 4;
 startThickener = 0;
-%%
 months = {'Agosto','Septiembre','Octubre'};
+%%
+
 SimResults.CV(1).TimeSeries = [];
 SimResults.CV(2).TimeSeries = [];
 SimResults.CV(3).TimeSeries = [];
@@ -122,6 +123,7 @@ CVNames = {'Torque','Underflow Concentration','Interface Level','Overflow Concen
 CVUnits = {'%','%','m','%','hr','ton/hr','N/A','m3/hr'};
 CVSaveName = {'torque','Cp_u','intLevel','Cp_e','tauRd','SFlx','P1_U','Q_e'};
 % MV
+% MVNames = {'Discharge Flow','Flogcculant Dose','Flocculant Feedrate','Dilution Feedrate'};
 MVNames = {'Discharge Flow','Flocculant Dose','Flocculant Feedrate','Dilution Feedrate'};
 MVUnits = {'m3/hr','gpt','m3/hr','m3/hr'};
 MVSaveName = {'Q_u','gpt','FFeed','DilFeed'};
@@ -322,5 +324,5 @@ if csvWrite
     for dv = 1:2
         M = [M SimResults.DV(dv).GroupedTimeSeries'];
     end
-    dlmwrite('tresMesesSaul.csv',M,'delimiter',';','precision',5,'newline','unix');
+    dlmwrite('tresMesesSaul_BF.csv',M,'delimiter',';','precision',5,'newline','unix');
 end

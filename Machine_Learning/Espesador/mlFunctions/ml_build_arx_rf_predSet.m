@@ -25,9 +25,11 @@ function [ arxRFSet] = ml_build_arx_rf_predSet( UPastSequence, YPastSequence, Y,
         % delayed according to delayMV_CV(cv,mv))
         U_CV = UPastSequence(:,1+(cv-1)*m:cv*m);
         arxRFSet(cv).InputData = [YPastSequence(:,1+startIndexY:endIndexY) U_CV];
+        arxRFSet(cv).PredictorNames = predictorNames{cv};
+%         arxRFSet(cv).InputData = fliplr([YPastSequence(:,1+startIndexY:endIndexY) U_CV]);
+%         arxRFSet(cv).PredictorNames = fliplr(predictorNames{cv});
         % Select cv(t) for validation (tau_R ahead prediction)
         arxRFSet(cv).OutputData = OutputTimeSeries(:,cv);
-        arxRFSet(cv).PredictorNames = predictorNames{cv};
         arxRFSet(cv).startIndexY = startIndexY;
         arxRFSet(cv).endIndexY = endIndexY;
     end

@@ -2,11 +2,11 @@ clear;
 clc;
 close all;
 %% CSV Reading
-month = 'Octubre';
+month = 'Agosto';
 csvname = ['Todos_' month '_BF.csv'];
 lengthFile = [2674800 2592000 2678400 2505600];
 rowAdjustment = 7*24*60*60+1; % Numbering starts from 0 in dlmread
-endOfFile = 2505600;
+endOfFile = 2674800;
 M = dlmread(csvname,';',[1 3 endOfFile 15]);
 % MV1: Underflow Rate --> 7110_FT_1030 (m3/hr) --> 6
 % MV2: GPT --> No_Tag --> Excel (interpolate every hour, add noise every k*Dt ?)

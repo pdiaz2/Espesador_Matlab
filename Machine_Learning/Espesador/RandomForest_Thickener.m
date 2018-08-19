@@ -3,31 +3,41 @@ clear all;
 close all;
 clc;
 %% Boolean control
-nameDataset = 'Agosto_';
-typeOfData = 'Sim_';
-dateTest = '1408';
-
-
-saveToMatFile = false;
-% matFileName = 'blah';
-optimizeMLHyperparameters = false;
+nameDataset = 'Abril_a_Julio_';
+typeOfData = 'Real18_';
+dateTest = '1708';
+figurePath = ['figures\'];
+% Save and print bools
+imprint = true;
+saveResultsToMatFile = false;
+saveModelToMatFile = true;
+plotForestStats = true;
+%%%%%%
+cvToGenerate = 2;
+selectedCV = [1 2 3];
+selectedMV = [2 3];
+selectedDV = [1 2];
+%%%%%%%%%%%%%%%%
 mlMethod = 'RF';
-seed = rng(1231231); % For reproducibility (should look into this after)
+optimizeMLHyperparameters = false;
 % Crucial parameters for system identification
 N_y = 20;
-tau_R = 5;
+tau_R = 1;%5
 % Data validation and machine learning parameters
-trainVSVal = 0.85;
+trainVSVal = 0.95;
 generateOne = true;
-useDelayMV_CV = true;
-noiseyData = true;
+useDelayMV_CV = false;
+noiseyData = false;
+
+seed = rng(1231231); % For reproducibility (should look into this after)
 %% Bool Handling
 if generateOne
     % Input wave
-    cvToGenerate = 2; 
     experiment = 1;
-    delayUCases = 1;
-    delayYCases = 1; % 3
+    % 1 is 0 order
+    delayUCases = 6;
+    % 1 is 0 order
+    delayYCases = 6; 
 else
    waveVector = 1:4;
    cvToGenerate = -1; %Not used in this case
@@ -46,14 +56,11 @@ load(matFileName);
 
 
 %% Plant specifics
-m = length(SimResults.MV);
-d = length(SimResults.DV);
-d = 2;
-% d = 3;
+MachineLearningData = ml_pick_variables(selectedCV,selectedMV,selectedDV,SimResults);
+n = length(MachineLearningData.CV);
+m = length(MachineLearningData.MV);
+d = length(MachineLearningData.DV);
 numInputs = d+m;
-% n = length(SimResults.CV);
-% n = length(SimResults.CV)-1;
-n = 3;
 numOutputs = n;
 Dt = 1;
 %% Structure definitions
@@ -66,43 +73,44 @@ if useDelayMV_CV
     switch typeOfData
         case 'Sim_'
             % Values obtained by inspection of open loop tests on simulator
-            controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
-                                                    6.5*60 6.5/60 0 6.5*60;
-                                                    3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
+%             controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
+%                                                     6.5*60 6.5/60 0 6.5*60;
+%                                                     3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
 %             controlParamsStruct.delayMV_CV = floor([10 10 0 10;
 %                                                     10 10 0 10;
-%                                                     10 10 0 10]/controlParamsStruct.tau_R);                                    
+%                                                     10 10 0 10]/controlParamsStruct.tau_R);
+            controlParamsStruct.delayMV_CV = zeros(n,numInputs);
         case 'Real_'
-            controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
+            controlParamsStruct.delayMV_CV = floor(MachineLearningData.delayMV_CV/controlParamsStruct.tau_R);
     end
     
     ioDTStr = 'ioDT_';
 else
-    controlParamsStruct.delayMV_CV = zeros(3,numInputs);
+    controlParamsStruct.delayMV_CV = zeros(n,numInputs);
     ioDTStr = '';
 end
 %% DownSamplig for tau_R
-SimResults = ml_downsampling(SimResults,controlParamsStruct,'d');
-controlParamsStruct.nSamples = length(SimResults.CV(1).GroupedTimeSeries);
+
+MachineLearningData = ml_downsampling(MachineLearningData,controlParamsStruct,'d');
+controlParamsStruct.nSamples = length(MachineLearningData.CV(1).GroupedTimeSeries);
 nSamples = controlParamsStruct.nSamples;
 %% Machine Learning - Structural Parameters
+mlParamsStruct.selectedVars.CV = selectedCV;
+mlParamsStruct.selectedVars.MV = selectedMV;
+mlParamsStruct.selectedVars.DV = selectedDV;
 
-mlParamsStruct.trainingParamsArray = {100,1,'on',10,'on','curvature','TBagger'};
+mlParamsStruct.trainingParamsArray = {500,1,'on',10,'on','curvature','TBagger'};
 mlParamsStruct.optimizeParams.maxMinLS = 40;
 mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         [1,mlParamsStruct.optimizeParams.maxMinLS],...
                                         'Type','integer');
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
 
-mlParamsStruct.DelayMatrix.U = repmat([5,15,30,60]',1,numInputs);
-% mlParamsStruct.DelayMatrix.U = repmat([5]',1,numInputs);
-% mlParamsStruct.DelayMatrix.U = repmat([0]',1,numInputs);
+mlParamsStruct.DelayMatrix.U = repmat([0,5,15,30,60,72,90]',1,numInputs);
 [mlParamsStruct.sizeUMatrix garbage] = size(mlParamsStruct.DelayMatrix.U);
 mlParamsStruct.delayMV_CV = controlParamsStruct.delayMV_CV;
 
-% mlParamsStruct.DelayMatrix.Y = repmat([5,15,25,35,45,60]',1,numOutputs);
-mlParamsStruct.DelayMatrix.Y = repmat([6,12,36,60]',1,numOutputs);
-% mlParamsStruct.DelayMatrix.Y = repmat([0]',1,numOutputs);
+mlParamsStruct.DelayMatrix.Y = repmat([0,6,12,36,60,72,90]',1,numOutputs);
 [mlParamsStruct.sizeYMatrix garbage] = size(mlParamsStruct.DelayMatrix.Y);
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
@@ -123,7 +131,7 @@ testBigSet = struct;
 trainingBigSet = struct;
 [trainingBigSet,testBigSet,controlParamsStruct] = ml_generate_tT_sets(trainingBigSet,...
                                                                     testBigSet,...
-                                                                    SimResults,...
+                                                                    MachineLearningData,...
                                                                     controlParamsStruct,...
                                                                     mlParamsStruct);
 testBatch = 8; %Backward Compatibility
@@ -148,36 +156,138 @@ if generateOne
     RF.PredictorNames
     
     if strcmp(mlParamsStruct.trainingParamsArray{7},'TBagger')
-        RF.OOBPermutedPredictorDeltaError
         
         % RF Structure statistics
-        limitTo = floor(RF.Trees{1}.NumNodes*0.8); 
-        for t = 1:mlParamsStruct.trainingParamsArray{1}
+        limitTo = floor(RF.Trees{1}.NumNodes*0.8);
+        numTrees = mlParamsStruct.trainingParamsArray{1};
+        numPredictors = length(RF.OOBPermutedPredictorDeltaError);
+        for t = 1:numTrees
            Tree = RF.Trees{t};
-           treeStats.numNodes(t) = Tree.NumNodes;
-           treeStats.branches(t) = sum(Tree.IsBranchNode);
-           treeStats.sizes(:,t) = Tree.NodeSize(1:limitTo);
-           treeStats.cutPredictors(:,t) = Tree.CutPredictor(1:30); 
-           treeStats.nodeProbability = Tree.NodeProbability(1:limitTo);
+           forestStats.numNodes(t) = Tree.NumNodes;
+           forestStats.branches(t) = sum(Tree.IsBranchNode);
+           forestStats.sizes(:,t) = Tree.NodeSize(1:limitTo);
+           forestStats.cutPredictors(:,t) = Tree.CutPredictor(1:30); 
+           forestStats.nodeProbability = Tree.NodeProbability(1:limitTo);
         end
-        treeStats.Means.numNodes = mean(treeStats.numNodes);
-        treeStats.Means.branches = mean(treeStats.branches);
-        treeStats.Means.sizes = mean(treeStats.sizes,2);
-        treeStats.Means.nodeProbability = mean(treeStats.nodeProbability,2);
-
-        treeStats.Std.numNodes = std(treeStats.numNodes);
-        treeStats.Std.branches = std(treeStats.branches);
-        treeStats.Std.sizes = std(treeStats.sizes,0,2);
-        treeStats.Std.nodeProbability = std(treeStats.nodeProbability,0,2);
-        outputmatFileName = ['testBench' num2str(cvToGenerate) '_' typeOfData ioDTStr dateTest...
-                            '_k' num2str(controlParamsStruct.tau_R)...
-                            '.mat'];
-        save(outputmatFileName,'ML_Model','mOrder','mlParamsStruct','controlParamsStruct','treeStats');
+        forestStats.OOBError = oobError(RF,'Mode','cumulative');
+        forestStats.OOBPermutedDelta = RF.OOBPermutedPredictorDeltaError;
+        forestStats.OOBSamples = sum(RF.OOBIndices,1);
+        forestStats.PredictorSplit = RF.NumPredictorSplit;
+        % Mean values
+        forestStats.Means.numNodes = mean(forestStats.numNodes);
+        forestStats.Means.branches = mean(forestStats.branches);
+        forestStats.Means.sizes = mean(forestStats.sizes,2);
+        forestStats.Means.nodeProbability = mean(forestStats.nodeProbability,2);
+        forestStats.Means.OOBError = mean(forestStats.OOBError);
+        forestStats.Means.OOBPermutedDelta = mean(RF.OOBPermutedPredictorDeltaError);
+        forestStats.Means.OOBSamples = mean(forestStats.OOBSamples);
+        forestStats.Means.PredictorSplit = mean(forestStats.PredictorSplit);
+        % Var values
+        forestStats.Std.numNodes = std(forestStats.numNodes);
+        forestStats.Std.branches = std(forestStats.branches);
+        forestStats.Std.sizes = std(forestStats.sizes,0,2);
+        forestStats.Std.nodeProbability = std(forestStats.nodeProbability,0,2);
+        forestStats.Std.OOBError = std(forestStats.OOBError);
+        forestStats.Std.OOBPermutedDelta = std(RF.OOBPermutedPredictorDeltaError);
+        forestStats.Std.OOBSamples = std(forestStats.OOBSamples);
+        forestStats.Std.PredictorSplit = std(forestStats.PredictorSplit);
+        if plotForestStats
+            % Plot OOBError
+            figure
+            plot(10*log10(forestStats.OOBError),'b*')
+            hold on
+            plot(mean(10*log10(forestStats.OOBError))*ones(1,numTrees),'r')
+            plot(mean(10*log10(forestStats.OOBError))*ones(1,numTrees)+...
+                std(10*log10(forestStats.OOBError)),'g--')
+            plot(mean(10*log10(forestStats.OOBError))*ones(1,numTrees)-...
+                std(10*log10(forestStats.OOBError)),'g--')
+            legend('CumOOBError','Mean PDE', 'Std PDE');
+            grid on
+            hold off
+            printName = [figurePath 'OOBErr' num2str(cvToGenerate) '_' typeOfData ioDTStr noiseStr...
+                        'B' num2str(numTrees) ...
+                        '_k' num2str(controlParamsStruct.tau_R) '_'...
+                        'na' num2str(delayYCases) '_nb' num2str(delayUCases)...
+                        '_' dateTest];
+            if imprint
+                % Latex
+                print(printName,'-depsc');
+                print(printName,'-djpeg');
+            end
+            
+            % Plot PDE
+            positiveIndexes = forestStats.OOBPermutedDelta > 0;
+            permutedDeltaPos = forestStats.OOBPermutedDelta(positiveIndexes);
+            permutedDeltaNeg = forestStats.OOBPermutedDelta(~positiveIndexes);
+            figure
+            plot(10*log10(permutedDeltaPos),'b*')
+            hold on
+            plot(mean(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos)),'r')
+            plot(mean(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos))+...
+                std(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos)),'g--')
+            plot(mean(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos))-...
+                std(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos)),'g--')
+            legend('PDE','Mean PDE', 'Std PDE');
+            grid on
+            hold off
+            printName = [figurePath 'PDE_' num2str(cvToGenerate) '_' typeOfData ioDTStr noiseStr...
+                        'B' num2str(numTrees) ...
+                        '_k' num2str(controlParamsStruct.tau_R) '_'...
+                        'na' num2str(delayYCases) '_nb' num2str(delayUCases)...
+                        '_' dateTest];
+            if imprint
+                % Latex
+                print(printName,'-depsc');
+                print(printName,'-djpeg');
+            end
+            forestStats.positiveIndexPermutedDelta = positiveIndexes;
+            % Plot PS
+            positiveIndexes = forestStats.PredictorSplit > 0;
+            predictorSplitPos = forestStats.PredictorSplit(positiveIndexes);
+            predictorSplitNeg = forestStats.PredictorSplit(~positiveIndexes);
+            figure
+            plot(10*log10(predictorSplitPos),'b*')
+            hold on
+            plot(mean(10*log10(predictorSplitPos))*ones(1,length(predictorSplitPos)),'r')
+            plot(mean(10*log10(predictorSplitPos))*ones(1,length(predictorSplitPos))+...
+                std(10*log10(predictorSplitPos)),'g--')
+            plot(mean(10*log10(predictorSplitPos))*ones(1,length(predictorSplitPos))-...
+                std(10*log10(predictorSplitPos)),'g--')
+            legend('PS','Mean PS', 'Std PS');
+            grid on
+            hold off
+            printName = [figurePath 'PS' num2str(cvToGenerate) '_' typeOfData ioDTStr noiseStr...
+                        'B' num2str(numTrees) ...
+                        '_k' num2str(controlParamsStruct.tau_R) '_'...
+                        'na' num2str(delayYCases) '_nb' num2str(delayUCases)...
+                        '_' dateTest];
+            if imprint
+                % Latex
+                print(printName,'-depsc');
+                print(printName,'-djpeg');
+            end
+            
+            forestStats.positiveIndexPredSplit = positiveIndexes;
+        end
+        outputmatFileName = ['TBag_RF_Y' num2str(cvToGenerate) '_' typeOfData...
+                            ioDTStr noiseStr...
+                            'B' num2str(numTrees) ...
+                            '_k' num2str(controlParamsStruct.tau_R) '_'...
+                            'na' num2str(delayYCases) '_nb' num2str(delayUCases)...
+                            '_' dateTest];
+        if saveModelToMatFile
+            save(outputmatFileName,'ML_Model','resultsIter','mOrder','mlParamsStruct','controlParamsStruct','forestStats');
+        end
     else
-        outputmatFileName = ['RF_Y' num2str(cvToGenerate) '_' typeOfData ioDTStr dateTest...
-                            '_k' num2str(controlParamsStruct.tau_R)...
-                            '.mat'];
-%         save(outputmatFileName,'RF','mlParamsStruct','controlParamsStruct');
+        outputmatFileName = ['RF_Y' num2str(cvToGenerate) '_' typeOfData...
+                            ioDTStr noiseStr...
+                            'B' num2str(numTrees) ...
+                            '_k' num2str(controlParamsStruct.tau_R) '_'...
+                            'na' num2str(delayYCases) '_nb' num2str(delayUCases)...
+                            '_' dateTest];
+        if saveModelToMatFile
+            save(outputmatFileName,'RF','mlParamsStruct','mOrder','controlParamsStruct');
+        end
     end
 else
     ML_Results = struct;
@@ -208,9 +318,11 @@ else
 end
 
 %% Save
-outputmatFileName = ['ResultsRF' '_' typeOfData ioDTStr dateTest...
-                    '_k' num2str(controlParamsStruct.tau_R)...
-                    '.mat'];
-if (saveToMatFile)
+outputmatFileName = ['ResultsRF' '_' typeOfData ioDTStr noiseStr...
+                    'B' num2str(numTrees) ...
+                    '_k' num2str(controlParamsStruct.tau_R) '_'...
+                    'na' num2str(mOrder.na) '_nb' num2str(mOrder.nb)...
+                    '_' dateTest];
+if (saveResultsToMatFile)
     save(outputmatFileName,'ML_Results','controlParamsStruct','mlParamsStruct','trainingTimes');
 end

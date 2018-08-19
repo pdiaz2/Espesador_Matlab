@@ -6,25 +6,32 @@ clc;
 nameDataset = 'Agosto_';
 typeOfData = 'Sim_';
 dateTest = '1408';
+%%%%%%%%%%%%%
 saveToMatFile = false;
-% matFileName = 'ResultsARMAX_NoNoise_2206';
+saveModelToMatFile = true;
+%%%%%%%%%%%%%%%%
+cvToGenerate = 2;
+selectedCV = [1 2 3];
+selectedMV = [1 2];
+selectedDV = [1 2];
+%%%%%%%%%%%%%%%%%%%%%
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
-seed = rng(1231231); % For reproducibility (should look into this after)
+
 % Crucial parameters for system identification
 N_y = 20;
-tau_R = 5;
+tau_R = 5;%5
 trainVSVal = 0.85;
 useDelayMV_CV = false;
 noiseyData = true;
 generateOne = true;
+
+seed = rng(1231231); % For reproducibility (should look into this after)
 %% Bool Handling
 if generateOne
-    % Input wave
-    cvToGenerate = 2;
-    na = 2;%4%3
-    nb = 2;
-    nc = 1;
+    na = 4;
+    nb = 4;
+    nc = 3;
     nk = 2;
     offsetChoice = 1;
     focusChoice = 1;
@@ -44,44 +51,43 @@ load(matFileName);
 
 
 %% Plant specifics
-m = length(SimResults.MV);
-d = length(SimResults.DV);
-d = 2;
-% d = 3;
+MachineLearningData = ml_pick_variables(selectedCV,selectedMV,selectedDV,SimResults);
+n = length(MachineLearningData.CV);
+m = length(MachineLearningData.MV);
+d = length(MachineLearningData.DV);
 numInputs = d+m;
-% n = length(SimResults.CV);
-% n = length(SimResults.CV)-1;
-n = 3;
 numOutputs = n;
 Dt = 1;
+
 %% Structure definitions
 % Plant and control params definition
 controlParamsStruct.dimsSystem = [n m d];
 controlParamsStruct.Dt = Dt;
-controlParamsStruct.tau_R = tau_R;%5; % 10
+controlParamsStruct.tau_R = tau_R;
 controlParamsStruct.N_y = N_y;
 if useDelayMV_CV
     switch typeOfData
         case 'Sim_'
             % Values obtained by inspection of open loop tests on simulator
-            controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
-                                                    6.5*60 6.5/60 0 6.5*60;
-                                                    3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
+%             controlParamsStruct.delayMV_CV = floor([6.5*60 6.5*60 0 4.4*60;
+%                                                     6.5*60 6.5/60 0 6.5*60;
+%                                                     3*60 3*60 0 0.5*60]/controlParamsStruct.tau_R);
 %             controlParamsStruct.delayMV_CV = floor([10 10 0 10;
 %                                                     10 10 0 10;
-%                                                     10 10 0 10]/controlParamsStruct.tau_R);  
+%                                                     10 10 0 10]/controlParamsStruct.tau_R);
+            controlParamsStruct.delayMV_CV = zeros(n,numInputs);
         case 'Real_'
-            controlParamsStruct.delayMV_CV = floor(SimResults.delayMV_CV/controlParamsStruct.tau_R);
+            controlParamsStruct.delayMV_CV = floor(MachineLearningData.delayMV_CV/controlParamsStruct.tau_R);
     end
     
     ioDTStr = 'ioDT_';
 else
-    controlParamsStruct.delayMV_CV = zeros(3,numInputs);
+    controlParamsStruct.delayMV_CV = zeros(n,numInputs);
     ioDTStr = '';
 end
 %% DownSampling for tau_R
-SimResults = ml_downsampling(SimResults,controlParamsStruct,'d');
-controlParamsStruct.nSamples = length(SimResults.CV(1).GroupedTimeSeries);
+MachineLearningData = ml_downsampling(MachineLearningData,controlParamsStruct,'d');
+controlParamsStruct.nSamples = length(MachineLearningData.CV(1).GroupedTimeSeries);
 nSamples = controlParamsStruct.nSamples;
 
 %% Machine Learning - Structural Parameters
@@ -94,14 +100,14 @@ mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         'Type','integer');
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
 % Specific for ARMAX
-mlParamsStruct.NA = [6,12,36,60]%[4 6 10];
-mlParamsStruct.NB = [5,10,15,30,60]%[1:3];
-mlParamsStruct.NC = 2%[0 2 4];
-mlParamsStruct.NK = [0 1];%1%[1 2 4]; % [0 2 4];
+mlParamsStruct.NA = [6,12,36,60];
+mlParamsStruct.NB = [5,10,15,30,60];
+mlParamsStruct.NC = [0 2 5 8];
+mlParamsStruct.NK = [0 1];
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
 mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;
-mlParamsStruct.trainingSamples = floor(0.85*nSamples);
+mlParamsStruct.trainingSamples = floor(trainVSVal*nSamples);
 % Modification by force because of bad data in the end
 if strcmp(typeOfData,'Real_')
     mlParamsStruct.limitTestDataIndex = 24177;
@@ -120,7 +126,7 @@ trainingBigSet = struct;
 % SimResults.CV(7).GroupedTimeSeries = fillmissing(SimResults.CV(7).GroupedTimeSeries,'nearest');
 [trainingBigSet,testBigSet,controlParamsStruct] = ml_generate_tT_sets(trainingBigSet,...
                                                                     testBigSet,...
-                                                                    SimResults,...
+                                                                    MachineLearningData,...
                                                                     controlParamsStruct,...
                                                                     mlParamsStruct);
 testBatch = 8; %Backward Compatibility
@@ -144,10 +150,14 @@ if generateOne
                                                         mlParamsStruct,...
                                                         mOrder);
     armaxModel = ML_Model.Model;
-    matFileModel = ['ARMAX_MDL_' typeOfData ioDTStr dateTest ...
-                    '_k' num2str(controlParamsStruct.tau_R)...
-                    '.mat'];
-    save(matFileModel,'armaxModel','mOrder','controlParamsStruct','mlParamsStruct');
+    matFileModel = ['ARMAX_MDL_' typeOfData noiseStr ioDTStr...
+                    'k' num2str(controlParamsStruct.tau_R) '_'...
+                    'na' num2str(na) '_nb' num2str(nb)...
+                    '_nc' num2str(nc)...
+                    '_' dateTest];
+    if saveModelToMatFile
+        save(matFileModel,'armaxModel','mOrder','resultsIter','controlParamsStruct','mlParamsStruct');
+    end
 else
     ML_Results = struct;
     for offsetChoice = 1:1%2
@@ -192,9 +202,11 @@ else
     
 end
 %% Save
-outputmatFileName = ['ResultsARMAX_' typeOfData ioDTStr dateTest...
-                    '_k' num2str(controlParamsStruct.tau_R)...
-                    '.mat'];
+outputmatFileName = ['ResultsARMAX_' typeOfData noiseStr ioDTStr...
+                    'k' num2str(controlParamsStruct.tau_R) '_'...
+                    'na' num2str(na) '_nb' num2str(nb)...
+                    '_nc' num2str(nc)...
+                    '_' dateTest]
 if (saveToMatFile)
     save(outputmatFileName,'ML_Results','controlParamsStruct','mlParamsStruct','trainingTime');
 end

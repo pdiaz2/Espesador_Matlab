@@ -26,7 +26,7 @@ function [ MSE_Ny,yHat,auxYHat ] = ml_predict_N_ahead( ML_Model, inputTimeSeries
         yHat(:,1) = predict(ML_Model,inputTimeSeries);
 
         % We need to "leave room" to predict the next N_y-1 steps; this means that
-        % we have to cut the predictor/validation time series in (N_y-1)*tau_R from
+        % we have to cut the predictor/validation time series in (N_y-1) from
         % the end and backwards.
 
         auxYHat = yHat(1:end-(N_y-1));
