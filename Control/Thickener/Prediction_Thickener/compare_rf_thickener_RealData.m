@@ -1,6 +1,6 @@
 clear all;
 clc;
-% close all;
+close all;
 %%
 % load('Agosto_Real_2206_rawData.mat');
 % load('ThreeMonths_Real_2706_BF.mat');
@@ -10,13 +10,13 @@ dateTest = '1708';
 figurePath = ['figures\' typeOfData '\'];
 
 % Save and print bools
-imprint = false;
+imprint = true;
 useTimePlot = false;
 saveResultsToMatFile = false;
 saveModelToMatFile = false;
 %%%%%%
 % RF Specifics
-numTreesInput = 100;
+numTreesInput = 30;
 tau_RInput = 1;
 naInput = 6;
 nbInput = 6;

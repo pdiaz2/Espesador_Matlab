@@ -3,9 +3,9 @@ clear all;
 close all;
 clc;
 %% Boolean control
-nameDataset = 'Abril_a_Julio_';
-typeOfData = 'Real18_';
-dateTest = '1708';
+nameDataset = 'Agosto_';
+typeOfData = 'Sim_';
+dateTest = '1408';
 predictiveModelsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\PredictiveModels\';
 resultsMLPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsML\';
 figurePath = ['figures\'];
@@ -15,9 +15,9 @@ saveResultsToMatFile = false;
 saveModelToMatFile = true;
 plotForestStats = true;
 %%%%%%
-cvToGenerate = 2;
+cvToGenerate = 1;
 selectedCV = [1 2 3];
-selectedMV = [2 3];
+selectedMV = [1 2];
 selectedDV = [1 2];
 %%%%%%%%%%%%%%%%
 mlMethod = 'RF';
@@ -40,7 +40,7 @@ if generateOne
     delayUCases = 6;
     % 1 is 0 order
     delayYCases = 6;
-    nTrees = 500;
+    nTrees = 30;
 else
    waveVector = 1:4;
    cvToGenerate = -1; %Not used in this case
