@@ -15,7 +15,7 @@ saveResultsToMatFile = false;
 saveModelToMatFile = true;
 plotForestStats = true;
 %%%%%%
-cvToGenerate = 3;
+cvToGenerate = 1;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
 selectedDV = [1 2];
@@ -24,7 +24,7 @@ mlMethod = 'RF';
 optimizeMLHyperparameters = false;
 % Crucial parameters for system identification
 N_y = 20;
-tau_R = 10;%5
+tau_R = 5;
 % Data validation and machine learning parameters
 trainVSVal = 0.85;
 generateOne = true;
@@ -37,10 +37,10 @@ if generateOne
     % Input wave
     experiment = 1;
     % 1 is 0 order
-    delayUCases = 6;
+    delayUCases = 2;
     % 1 is 0 order
-    delayYCases = 6;
-    nTrees = 300;
+    delayYCases = 3;
+    nTrees = 100;
 else
    waveVector = 1:4;
    cvToGenerate = -1; %Not used in this case

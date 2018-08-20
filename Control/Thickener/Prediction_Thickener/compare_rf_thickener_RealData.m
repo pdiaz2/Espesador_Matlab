@@ -4,20 +4,20 @@ close all;
 %%
 % load('Agosto_Real_2206_rawData.mat');
 % load('ThreeMonths_Real_2706_BF.mat');
-nameDataset = 'Abril_a_Julio_';
-typeOfData = 'Real18_';
-dateTest = '1708';
+nameDataset = 'Agosto_';
+typeOfData = 'Sim_';
+dateTest = '1408';
 figurePath = ['figures\' typeOfData '\'];
 
 % Save and print bools
 imprint = true;
-useTimePlot = false;
+useTimePlot = true;
 saveResultsToMatFile = false;
 saveModelToMatFile = false;
 %%%%%%
 % RF Specifics
-numTreesInput = 30;
-tau_RInput = 1;
+numTreesInput = 300;
+tau_RInput = 10;
 naInput = 6;
 nbInput = 6;
 cvToGenerate = 2;
@@ -27,14 +27,14 @@ NAInput = 3;
 NBInput = 3;
 NCInput = 3;
 selectedCV = [1 2 3];
-selectedMV = [2 3];
+selectedMV = [1 2];
 selectedDV = [1 2];
 %%%%%%%%%%%%%%%%
-trainVSValInput = 0.95;
+trainVSValInput = 0.85;
 tau_R = tau_RInput;
 N_y = 20;
-pastDataSamples = 990;
-K_ahead = 50;
+pastDataSamples = 100;
+K_ahead = 20;
 K_forecast = 50;
 varStringRF = ['B' num2str(numTreesInput) ...
               '_k' num2str(tau_RInput) '_'...
@@ -42,13 +42,15 @@ varStringRF = ['B' num2str(numTreesInput) ...
 varStringARMAX = ['k' num2str(tau_RInput) '_'...
                 'na' num2str(NAInput) '_nb' num2str(NBInput)...
                 '_nc' num2str(NCInput)];
+%% Plot Options
+LineWidth = 1;
 %%
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 useDelayMV_CV = false;
-noiseyData = false;
+noiseyData = true;
 generateOne = true;
 showGood = true;
 %%%%%%%%%%%%%%%%%%%%
@@ -276,12 +278,12 @@ armaxForecast = armaxForecast.OutputData;
 
 for cv = 1:n
     figure
-    plot(validationOutputs(1+pastDataSamples:pastDataSamples+K_forecast,cv))
+    plot(validationOutputs(1+pastDataSamples:pastDataSamples+K_forecast,cv),'LineWidth',LineWidth)
     hold on
 %     plot(armaxPredict(1+pastDataSamples:pastDataSamples+K_forecast,cv))
-    plot(armaxForecast(:,cv))
+    plot(armaxForecast(:,cv),'--','LineWidth',LineWidth)
 %     plot(RFPredictionStruct(cv).yHatForecast(1,:));
-    plot(RFPredictionStruct(cv).yForecast(:))
+    plot(RFPredictionStruct(cv).yForecast(:),'-.','LineWidth',LineWidth)
     legend('Validation','ARMAX Forecast','RF Forecast');
     xlabel(['Samples [' num2str(controlParamsStruct.tau_R) ' min/sample]'])
     hold off
@@ -299,9 +301,9 @@ for cv = 1:n
     figure
     title(CVNames{cv})
     hold on
-    plot(time(1:end-1),validationOutputs(1:end-armaxToRFWindowUB,cv))
-    plot(time(1:end-1),armaxPredict(1:end-armaxToRFWindowUB,cv));
-    plot(time(1:end-1),RFPredictionStruct(cv).yHat(:,K_ahead))
+    plot(time(1:end-1),validationOutputs(1:end-armaxToRFWindowUB,cv),'LineWidth',LineWidth)
+    plot(time(1:end-1),armaxPredict(1:end-armaxToRFWindowUB,cv),'--','LineWidth',LineWidth);
+    plot(time(1:end-1),RFPredictionStruct(cv).yHat(:,K_ahead),'-.','LineWidth',LineWidth)
 %     plot(testSubsetRF(cv).OutputData(1:end-armaxToRFWindowUB));
     ylabel(CVUnits{cv})
     xlabel(xLabelStr)
