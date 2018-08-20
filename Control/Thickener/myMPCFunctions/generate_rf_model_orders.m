@@ -11,9 +11,6 @@ for cv = 1:numCV
 end
 nb = delayUMatrix(:,(1+numDV):end);
 nc = delayUMatrix(:,1:numDV);
-% maxYDelay = max(na);
-% maxUDelay = max(max(nb));
-% maxDDelay = max(max(nc));
 maxDelay(1) = max(na);
 maxDelay(2) = max(max(nb));
 maxDelay(3) = max(max(nc));

@@ -1,24 +1,36 @@
 clear all;
 clc;
 close all;
-%% 
+%% Control Parameters
+useMPC_RF = false;
+usePID = false;
+useMPC_ARMAX = true;
+%%%%%%%%%%%%%%%%%
+dvRealData = false;
+imprint = false;
+% Code for names:
+    % - BS: BigSearch. Big pop (100+) and big gens (100+)
+    % - SS: SmallSearch. Small pop (100-) and small gens (50-)
+    % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
+dateMatFileStr = '2407';
+figurePath = 'figures\opcConnection\';
+%%%%%%%%%%%%%%%
 N_y = 15;
 N_u = 3;%4
 kappaControl = 5;
 optimizationMethod = 'PSO';
 Dt = 1;
 simTime = 20*3600; % 10*3600
-% simTime = 3600;
 simControlFrom = 1;
 simControlTo = 1;
 groupBy = 60; % This should be automatic
 tau_R = 10*groupBy;
 tau_C = kappaControl*tau_R;
 stepInDVArray = [false;
-            false;
-            false;
-            true;
-            true];
+                false;
+                false;
+                true;
+                true];
 dvStepSizeArray = [
                 0 0 0;
                 0 0 0;
@@ -26,16 +38,11 @@ dvStepSizeArray = [
                 0 -0.1 0;
                 30 0 0
                 ];
-dvRealData = false;
-imprint = false;
+
 controlClosedLoop = 1;
 startPlotTime = 1; %Wait for noise filter to stabilize
-dateMatFileStr = '2407';
-figurePath = 'figures\opcConnection\';
-% Code for names:
-    % - BS: BigSearch. Big pop (100+) and big gens (100+)
-    % - SS: SmallSearch. Small pop (100-) and small gens (50-)
-    % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
+
+
 %% MPC Cost Values
 
 qCostValuesIterations = repmat([1 1 100 1],simControlTo,1);
@@ -57,20 +64,11 @@ betaCostValuesIterations = repmat([1 1 1 1],simControlTo,1);
 lambdaCostValuesIterations = repmat([1 1 1 1],simControlTo,1);
 %% PI Tuning
 KpArray = repmat([90 3],simControlTo,1);
-%             [
-%             90 3;
-%             90 3
-%             ];
+
 KiArray = repmat([3.6 1e-4],simControlTo,1);
-%             [
-%             3.6 1e-4;
-%             3.6 1e-4
-%             ];
+
 KdArray = repmat([0 0],simControlTo,1);
-%             [
-%             0 0;
-%             0 0;
-%             ];
+
 %% Reference Values Struct
 wValuesStruct.delta = [
                         0 0 0 0;
@@ -175,68 +173,75 @@ for simIter = simControlFrom:simControlTo
     end
 
     %% MPC - Random Forest
+    if useMPC_RF
     % Design parameters
-    mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMethod,...
+        mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMethod,...
+                                    qCostValuesIterations(simIter,:),...
+                                    rCostValuesIterations(simIter,:),...
+                                    betaCostValuesIterations(simIter,:),...
+                                    lambdaCostValuesIterations(simIter,:));
+        %Load Parameters
+        load(parametersFileArray{3}); 
+
+        run parametrosEmpty.m
+        rng(120938103);
+        load('Agosto_SimResults_1304_State.mat');
+        tic;
+        sim('mpc_rf_thickener.slx');
+        toc;
+        % Store Results
+        % For the time being, multiply Cp_u by 100
+        y.signals.values(:,2) = y.signals.values(:,2)*100;
+
+        yMPC_RF(:,:,simIter) = y.signals.values(:,:);
+        uMPC_RF(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
+        dMPC_RF(:,:,simIter) = inputs.signals.values(:,1:numDV);
+        optMPC_RF(:,:,simIter) = gaResults.signals.values(:,:);
+    end
+    %% PI Control
+    if usePID
+        Kp = KpArray(simIter,:);
+        Ki = KiArray(simIter,:);
+        Kd = KdArray(simIter,:);
+        run parametrosEmpty.m
+        rng(120938103);
+        load('Agosto_SimResults_1304_State.mat');
+        tic;
+        sim('pid_thickener.slx');
+        toc;
+         % Store Results
+        % For the time being, multiply Cp_u by 100
+        y.signals.values(:,2) = y.signals.values(:,2)*100;
+
+        yPID(:,:,simIter) = y.signals.values(:,:);
+        uPID(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
+        dPID(:,:,simIter) = inputs.signals.values(:,1:numDV);
+    end
+    %% MPC - ARMAX
+    if useMPC_ARMAX
+        mpc_design_armax_object(dateMatFileStr,N_y,N_u,kappaControl,...
                                 qCostValuesIterations(simIter,:),...
                                 rCostValuesIterations(simIter,:),...
                                 betaCostValuesIterations(simIter,:),...
                                 lambdaCostValuesIterations(simIter,:));
-    %Load Parameters
-    load(parametersFileArray{3}); 
-    
-    run parametrosEmpty.m
-    rng(120938103);
-    load('Agosto_SimResults_1304_State.mat');
-    tic;
-    sim('mpc_rf_thickener.slx');
-    toc;
-    % Store Results
-    % For the time being, multiply Cp_u by 100
-    y.signals.values(:,2) = y.signals.values(:,2)*100;
-    
-    yMPC_RF(:,:,simIter) = y.signals.values(:,:);
-    uMPC_RF(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
-    dMPC_RF(:,:,simIter) = inputs.signals.values(:,1:numDV);
-    optMPC_RF(:,:,simIter) = gaResults.signals.values(:,:);
-    %% PI Control
-    Kp = KpArray(simIter,:);
-    Ki = KiArray(simIter,:);
-    Kd = KdArray(simIter,:);
-    run parametrosEmpty.m
-    rng(120938103);
-    load('Agosto_SimResults_1304_State.mat');
-    tic;
-    sim('pid_thickener.slx');
-    toc;
-     % Store Results
-    % For the time being, multiply Cp_u by 100
-    y.signals.values(:,2) = y.signals.values(:,2)*100;
-    
-    yPID(:,:,simIter) = y.signals.values(:,:);
-    uPID(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
-    dPID(:,:,simIter) = inputs.signals.values(:,1:numDV);
-    %% MPC - ARMAX
-    mpc_design_armax_object(dateMatFileStr,N_y,N_u,kappaControl,...
-                            qCostValuesIterations(simIter,:),...
-                            rCostValuesIterations(simIter,:),...
-                            betaCostValuesIterations(simIter,:),...
-                            lambdaCostValuesIterations(simIter,:));
-    load(['mpc_armax_object' dateMatFileStr '.mat']);
-    run parametrosEmpty.m
-    rng(120938103);
-    load('Agosto_SimResults_1304_State.mat');
-    tic;
-    sim('mpc_armax_thickener.slx');
-    toc;
-    
-    % Store Results
-    % For the time being, multiply Cp_u by 100
-    y.signals.values(:,2) = y.signals.values(:,2)*100;
-    
-    yARMAX(:,:,simIter) = y.signals.values(:,:);
-    uARMAX(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
-    dARMAX(:,:,simIter) = inputs.signals.values(:,1:numDV);
-    optMPC_ARMAX(:,:,simIter) = gaResults.signals.values(:,:);
+        load(['mpc_armax_object' dateMatFileStr '.mat']);
+        run parametrosEmpty.m
+        rng(120938103);
+        load('Agosto_SimResults_1304_State.mat');
+        tic;
+        sim('mpc_armax_thickener.slx');
+        toc;
+
+        % Store Results
+        % For the time being, multiply Cp_u by 100
+        y.signals.values(:,2) = y.signals.values(:,2)*100;
+
+        yARMAX(:,:,simIter) = y.signals.values(:,:);
+        uARMAX(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
+        dARMAX(:,:,simIter) = inputs.signals.values(:,1:numDV);
+        optMPC_ARMAX(:,:,simIter) = gaResults.signals.values(:,:);
+    end
+    %% References
     % Store references
     wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
     wRefSimulink(:,:,simIter) = wRef.signals.values(:,:);

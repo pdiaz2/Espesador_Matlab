@@ -26,7 +26,7 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
     nPredictors = [10 10 9 9]
     %% MPC Fixed Parameters
 
-    % Constraints (Fixed by CIC2017)
+    % Constraints 
     % On MV (1 pps => 5 pp5s)
     deltaULowLim(1) = -15;
     deltaULowLim(2) = -5;
