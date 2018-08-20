@@ -23,7 +23,7 @@ mlMethod = 'ARMAX';
 
 % Crucial parameters for system identification
 N_y = 20;
-tau_R = 5;%5
+tau_R = 10;%5
 trainVSVal = 0.85;
 useDelayMV_CV = false;
 noiseyData = true;

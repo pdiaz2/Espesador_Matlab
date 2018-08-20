@@ -15,7 +15,7 @@ saveResultsToMatFile = false;
 saveModelToMatFile = true;
 plotForestStats = true;
 %%%%%%
-cvToGenerate = 1;
+cvToGenerate = 3;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
 selectedDV = [1 2];
@@ -24,12 +24,12 @@ mlMethod = 'RF';
 optimizeMLHyperparameters = false;
 % Crucial parameters for system identification
 N_y = 20;
-tau_R = 1;%5
+tau_R = 10;%5
 % Data validation and machine learning parameters
-trainVSVal = 0.95;
+trainVSVal = 0.85;
 generateOne = true;
 useDelayMV_CV = false;
-noiseyData = false;
+noiseyData = true;
 
 seed = rng(1231231); % For reproducibility (should look into this after)
 %% Bool Handling
@@ -40,7 +40,7 @@ if generateOne
     delayUCases = 6;
     % 1 is 0 order
     delayYCases = 6;
-    nTrees = 30;
+    nTrees = 300;
 else
    waveVector = 1:4;
    cvToGenerate = -1; %Not used in this case
