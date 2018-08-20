@@ -1,11 +1,11 @@
 function mpc_generate_fixed_parameters(dateMatFileStr)
     %% Mat File Handling
     matFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
-    delayParametersFile = ['delayParameters_' dateMatFileStr '.mat'];
+    RFParametersFile = ['RFParameters_' dateMatFileStr '.mat'];
     %% Initial Conditions
-    D0 = [325.1 0.3143 0.356];
+    D0 = [325.1 0.3143];
     U0 = [111 26]; 
-    Y0 = [21.02  0.737   2.126 0];
+    Y0 = [21.02  73.71   2.126];
     numCV = length(Y0);
     numDV = length(D0);
     numMV = length(U0);
@@ -17,13 +17,13 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
 %     cvNoisePower = zeros(1,numCV);
     
     %% Random Forest MEX Parameters
-    [na,nb,nc,maxDelay] = generate_rf_model_orders(delayParametersFile,numCV);
+    [na,nb,nc,maxDelay] = generate_rf_model_orders(RFParametersFile,numCV);
     maxYDelay = maxDelay(1);
     maxUDelay = maxDelay(2);
     maxDDelay = maxDelay(3);
     % Always print to check; MEX functions throw error anyway
     nTrees = ones(1,numCV)*100
-    nPredictors = [10 10 9 9]
+    nPredictors = [360 360 360 360]
     %% MPC Fixed Parameters
 
     % Constraints 

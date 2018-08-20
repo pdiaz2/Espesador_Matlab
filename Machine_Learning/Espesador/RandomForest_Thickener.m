@@ -15,7 +15,7 @@ saveResultsToMatFile = false;
 saveModelToMatFile = true;
 plotForestStats = true;
 %%%%%%
-cvToGenerate = 1;
+cvToGenerate = 3;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
 selectedDV = [1 2];
@@ -37,9 +37,9 @@ if generateOne
     % Input wave
     experiment = 1;
     % 1 is 0 order
-    delayUCases = 2;
+    delayUCases = 6;
     % 1 is 0 order
-    delayYCases = 3;
+    delayYCases = 6;
     nTrees = 100;
 else
    waveVector = 1:4;
@@ -102,7 +102,7 @@ mlParamsStruct.selectedVars.CV = selectedCV;
 mlParamsStruct.selectedVars.MV = selectedMV;
 mlParamsStruct.selectedVars.DV = selectedDV;
 
-mlParamsStruct.trainingParamsArray = {nTrees,1,'on',10,'on','curvature','TBagger'};
+mlParamsStruct.trainingParamsArray = {nTrees,1,'on',10,'on','curvature','Ensemble'};
 mlParamsStruct.optimizeParams.maxMinLS = 40;
 mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         [1,mlParamsStruct.optimizeParams.maxMinLS],...
@@ -157,12 +157,12 @@ if generateOne
     RF = ML_Model(1).Model;
     
     RF.PredictorNames
-    
+    numTrees = mlParamsStruct.trainingParamsArray{1};
     if strcmp(mlParamsStruct.trainingParamsArray{7},'TBagger')
         
         % RF Structure statistics
         limitTo = floor(RF.Trees{1}.NumNodes*0.8);
-        numTrees = mlParamsStruct.trainingParamsArray{1};
+        
         numPredictors = length(RF.OOBPermutedPredictorDeltaError);
         for t = 1:numTrees
            Tree = RF.Trees{t};

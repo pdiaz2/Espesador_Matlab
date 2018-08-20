@@ -2,7 +2,7 @@ clear all;
 clc;
 close all;
 %% Control Parameters
-useMPC_RF = false;
+useMPC_RF = true;
 usePID = false;
 useMPC_ARMAX = true;
 %%%%%%%%%%%%%%%%%
@@ -12,8 +12,8 @@ imprint = false;
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
     % - SS: SmallSearch. Small pop (100-) and small gens (50-)
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
-dateMatFileStr = '2407';
-figurePath = 'figures\opcConnection\';
+dateMatFileStr = '1408';
+figurePath = 'figures\trials_rf_1408\';
 %%%%%%%%%%%%%%%
 N_y = 15;
 N_u = 3;%4
@@ -32,11 +32,11 @@ stepInDVArray = [false;
                 true;
                 true];
 dvStepSizeArray = [
-                0 0 0;
-                0 0 0;
-                0 0 0;
-                0 -0.1 0;
-                30 0 0
+                0 0 0 0;
+                0 0 0 0;
+                0 0 0 0;
+                0 -0.1 0 0;
+                30 0 0 0
                 ];
 
 controlClosedLoop = 1;
@@ -45,7 +45,7 @@ startPlotTime = 1; %Wait for noise filter to stabilize
 
 %% MPC Cost Values
 
-qCostValuesIterations = repmat([1 1 100 1],simControlTo,1);
+qCostValuesIterations = repmat([1 1 1],simControlTo,1);
 %                         [
 %                         1 1 100 1;
 %                         1 1 100 1;
@@ -60,8 +60,8 @@ rCostValuesIterations = repmat([0.001 0.01],simControlTo,1);
 %                         ];
 % rCostValuesIterations = [1e10 1e10;
 %                         0.001 0.01];
-betaCostValuesIterations = repmat([1 1 1 1],simControlTo,1);
-lambdaCostValuesIterations = repmat([1 1 1 1],simControlTo,1);
+betaCostValuesIterations = repmat([1 1 1],simControlTo,1);
+lambdaCostValuesIterations = repmat([1 1 1],simControlTo,1);
 %% PI Tuning
 KpArray = repmat([90 3],simControlTo,1);
 
@@ -71,32 +71,32 @@ KdArray = repmat([0 0],simControlTo,1);
 
 %% Reference Values Struct
 wValuesStruct.delta = [
-                        0 0 0 0;
-                        0 0 4 0;
-                        0 -0.004 0 0;
-                        0 0 0 0;
-                        0 0 0 0;
+                        0 0 0;
+                        0 0 4;
+                        0 -0.4 0;
+                        0 0 0;
+                        0 0 0;
                        ];
 wValuesStruct.changeBool = logical([
-                                    0 0 0 0;
-                                    0 0 1 0;
-                                    0 1 0 0;
-                                    0 0 0 0;
-                                    0 0 0 0
+                                    0 0 0;
+                                    0 0 1;
+                                    0 1 0;
+                                    0 0 0;
+                                    0 0 0
                                     ]);
 wValuesStruct.shape = {
-                        'step','step','step','step';
-                        'step','step','step','step';
-                        'step','step','step','step';
-                        'step','step','step','step';
-                        'step','step','step','step'
+                        'step','step','step';
+                        'step','step','step';
+                        'step','step','step';
+                        'step','step','step';
+                        'step','step','step'
                         };
 wValuesStruct.timeToChange = [
-                                -1 -1 -1 -1;
-                                -1 -1 floor(simTime/1e3) -1;
-                                -1 floor(simTime/1e2) -1 -1;
-                                -1 -1 -1 -1;
-                                -1 -1 -1 -1
+                                -1 -1 -1;
+                                -1 -1 floor(simTime/1e3);
+                                -1 floor(simTime/1e2) -1;
+                                -1 -1 -1;
+                                -1 -1 -1
                                 ];
 wValuesStruct.addNoiseBool = [
                                 false; %always false for w
@@ -106,16 +106,16 @@ wValuesStruct.addNoiseBool = [
                                 false;
                                 ];
 %% Sensor Values Struct
-yValuesStruct.delta = [0 0 0 0];
-yValuesStruct.changeBool = logical([0 0 0 0]);
-yValuesStruct.shape = {'step','step','step','step'};
-yValuesStruct.timeToChange = [-1 -1 floor(simTime/22) -1];
+yValuesStruct.delta = [0 0 0];
+yValuesStruct.changeBool = logical([0 0 0]);
+yValuesStruct.shape = {'step','step','step'};
+yValuesStruct.timeToChange = [-1 -1 floor(simTime/22)];
 yValuesStruct.addNoiseBool = false;
 %%
-delayParametersFile = ['delayParameters_' dateMatFileStr '.mat'];
+RFParamatersFile = ['RFParameters_' dateMatFileStr '.mat'];
 fixedParametersFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
 designParametersFileName = ['mpc_design_parameters_' dateMatFileStr '.mat'];
-parametersFileArray = {delayParametersFile,fixedParametersFileName,designParametersFileName};
+parametersFileArray = {RFParamatersFile,fixedParametersFileName,designParametersFileName};
 %% Generate Fixed parameters
 % Fixed parameters
 mpc_generate_fixed_parameters(dateMatFileStr);
@@ -191,7 +191,7 @@ for simIter = simControlFrom:simControlTo
         toc;
         % Store Results
         % For the time being, multiply Cp_u by 100
-        y.signals.values(:,2) = y.signals.values(:,2)*100;
+%         y.signals.values(:,2) = y.signals.values(:,2)*100;
 
         yMPC_RF(:,:,simIter) = y.signals.values(:,:);
         uMPC_RF(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
@@ -211,7 +211,7 @@ for simIter = simControlFrom:simControlTo
         toc;
          % Store Results
         % For the time being, multiply Cp_u by 100
-        y.signals.values(:,2) = y.signals.values(:,2)*100;
+%         y.signals.values(:,2) = y.signals.values(:,2)*100;
 
         yPID(:,:,simIter) = y.signals.values(:,:);
         uPID(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
@@ -234,7 +234,7 @@ for simIter = simControlFrom:simControlTo
 
         % Store Results
         % For the time being, multiply Cp_u by 100
-        y.signals.values(:,2) = y.signals.values(:,2)*100;
+%         y.signals.values(:,2) = y.signals.values(:,2)*100;
 
         yARMAX(:,:,simIter) = y.signals.values(:,:);
         uARMAX(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
@@ -243,7 +243,7 @@ for simIter = simControlFrom:simControlTo
     end
     %% References
     % Store references
-    wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
+%     wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
     wRefSimulink(:,:,simIter) = wRef.signals.values(:,:);
     
 end

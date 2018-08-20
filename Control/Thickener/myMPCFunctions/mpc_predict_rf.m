@@ -24,12 +24,13 @@ for cv = 1:n
     X = predictorArray(:,1:p,cv);
     switch cv
         case 1
-            yHat(:,cv) = predictRF_Y1_mex(X,nTrees(cv),p);
+            yHat(:,cv) = predictRF_Y1_B100_na6_nb6_1408_mex(X,nTrees(cv),p);
         case 2
-            yHat(:,cv) = predictRF_Y2_mex(X,nTrees(cv),p);
+            yHat(:,cv) = predictRF_Y2_B100_na6_nb6_1408_mex(X,nTrees(cv),p);
         case 3
-            yHat(:,cv) = predictRF_Y3_mex(X,nTrees(cv),p);
+            yHat(:,cv) = predictRF_Y3_B100_na6_nb6_1408_mex(X,nTrees(cv),p);
         case 4
+            % Deprecated
             yHat(:,cv) = predictRF_Y4_mex(X,nTrees(cv),p);
     end
 end

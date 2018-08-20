@@ -1,11 +1,11 @@
-mse = [
-        0.0138 0.0961 0.3256 1.1112;
-        0.2427 0.8800 1.0520 1.0694;
-        0.0050 0.0335 0.0494 0.0869
-        ];
-dyn = [20.9694   21.0869    24;
-        73.59    74.16    8;
-        2.1262    3.0929    3];
-rmse = sqrt(mse);
-nrmse = rmse./dyn(:,3);
+% Load file manually in Hard_Data\PredictiveModels\
+delayU = 6*ones(3,1);
+delayY = 6*ones(3,1);
+numDV = 2;
+numMV = 2;
+numOutputs = 3;
+numInputs = numDV+numMV;
+
+save('RFParameters_1408.mat','delayU','delayY','controlParamsStruct','numDV','numInputs',...
+     'numOutputs','numMV','mlParamsStruct');
 
