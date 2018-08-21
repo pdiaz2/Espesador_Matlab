@@ -41,9 +41,9 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
     yHighLims(2,:) = 1.03*Y0(2);
     yLowLims(3,:) = 1.5;
     yHighLims(3,:) = 8;
-    yLowLims(4,:) = 0;
-    yHighLims(4,:) = 0.1;
-    
+%     yLowLims(4,:) = 0;
+%     yHighLims(4,:) = 0.1;
+%     
     
     
     uLowLims(1,:) = 70;
@@ -55,7 +55,7 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
     % w.r.t the setpoints/dynamic range of each variable
     % Another idea is to normalize between 0 and 100% w.r.t each variable
     % high and low lims. That would mean to substract (y(k)-y_Low)/yHigh-yLow)
-    qNormMatrix = diag([1 100 1 1000]);
+    qNormMatrix = diag([1 1 1]);
     rNormMatrix = diag([1 1]);
     betaNormMatrix = qNormMatrix;
     lambdaNormMatrix = qNormMatrix;

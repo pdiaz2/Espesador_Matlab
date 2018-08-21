@@ -24,7 +24,7 @@ function [ yHat ] = mpc_horizon_predict(x, N_y, uLims,...
 %                                       nTrees, nPredictors, na, nb, nc)
 
 % There is a big mistake in all this functions: if maxDelay for CV,MV,DV is
-% 1, then the shifting aux(2:end) = aux(1:end) shouldn't work in another
+% 1, then the shifting aux(2:end) = aux(1:end-1) shouldn't work in another
 % language besides Matlab. Apparently, aux(2:end) = aux(2:1) = empty array,
 % which was lucky
 % coder.extrinsic(CALL_ALL_MEX_FILES) (MAYBE)

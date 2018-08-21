@@ -2,18 +2,21 @@ clear all;
 clc;
 close all;
 %% Control Parameters
-useMPC_RF = true;
+useMPC_RF = false;
 usePID = false;
 useMPC_ARMAX = true;
 %%%%%%%%%%%%%%%%%
 dvRealData = false;
 imprint = false;
+saveControlResults = false;
 % Code for names:
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
     % - SS: SmallSearch. Small pop (100-) and small gens (50-)
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
+dateOutputStr = '2108';
 dateMatFileStr = '1408';
 figurePath = 'figures\trials_rf_1408\';
+resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
 %%%%%%%%%%%%%%%
 N_y = 15;
 N_u = 3;%4
@@ -24,7 +27,7 @@ simTime = 20*3600; % 10*3600
 simControlFrom = 1;
 simControlTo = 1;
 groupBy = 60; % This should be automatic
-tau_R = 10*groupBy;
+tau_R = 5*groupBy;
 tau_C = kappaControl*tau_R;
 stepInDVArray = [false;
                 false;
@@ -32,11 +35,11 @@ stepInDVArray = [false;
                 true;
                 true];
 dvStepSizeArray = [
-                0 0 0 0;
-                0 0 0 0;
-                0 0 0 0;
-                0 -0.1 0 0;
-                30 0 0 0
+                0 0 0;
+                0 0 0;
+                0 0 0;
+                0 -0.1 0;
+                30 0 0
                 ];
 
 controlClosedLoop = 1;
@@ -45,7 +48,7 @@ startPlotTime = 1; %Wait for noise filter to stabilize
 
 %% MPC Cost Values
 
-qCostValuesIterations = repmat([1 1 1],simControlTo,1);
+qCostValuesIterations = repmat([1 1 100],simControlTo,1);
 %                         [
 %                         1 1 100 1;
 %                         1 1 100 1;
@@ -165,11 +168,11 @@ for simIter = simControlFrom:simControlTo
     if dvRealData
         Q_f.signals.values = BigData.PreProcessed(7,1:simTime)';
         Cp_f.signals.values = wt_f(1:simTime)'/100;
-        p1_f.signals.values = D0(3)*ones(1,simTime)';
+        p1_f.signals.values = 0.356*ones(1,simTime)';
     else
        Q_f.signals.values = D0(1)*ones(1,simTime)';
        Cp_f.signals.values = D0(2)*ones(1,simTime)';
-       p1_f.signals.values = D0(3)*ones(1,simTime)';
+       p1_f.signals.values = 0.356*ones(1,simTime)';
     end
 
     %% MPC - Random Forest
@@ -196,7 +199,9 @@ for simIter = simControlFrom:simControlTo
         yMPC_RF(:,:,simIter) = y.signals.values(:,:);
         uMPC_RF(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
         dMPC_RF(:,:,simIter) = inputs.signals.values(:,1:numDV);
-        optMPC_RF(:,:,simIter) = gaResults.signals.values(:,:);
+        optMPC_RF(:,:,simIter) = solverResults.signals.values(:,:);
+        yHatMPC_RF(:,:,:,simIter) = yHat.signals.values(:,:,:);
+        controlMovesMPC_RF(:,:,:,simIter) = controlMoves.signals.values(:,:,:);
     end
     %% PI Control
     if usePID
@@ -239,11 +244,13 @@ for simIter = simControlFrom:simControlTo
         yARMAX(:,:,simIter) = y.signals.values(:,:);
         uARMAX(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
         dARMAX(:,:,simIter) = inputs.signals.values(:,1:numDV);
-        optMPC_ARMAX(:,:,simIter) = gaResults.signals.values(:,:);
+        optMPC_ARMAX(:,:,simIter) = solverResults.signals.values(:,:);
+        yHatMPC_ARMAX(:,:,:,simIter) = xHat.signals.values(:,:,:);
+        controlMovesMPC_ARMAX(:,:,:,simIter) = controlMoves.signals.values(:,:,:);
     end
     %% References
     % Store references
-%     wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
+    wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
     wRefSimulink(:,:,simIter) = wRef.signals.values(:,:);
     
 end
@@ -271,9 +278,9 @@ CVUnits = {'%','%','m','%'};
 MVUnits = {'m3/hr','gpt'};
 DVUnits = {'m3/s','%','N/A'};
 % Colors
-controlColors = {'r','b'};
-controlLineStyle = {'-','-.'};
-controlMarker = {'none','*'};
+controlColors = {'r','b','y'};
+controlLineStyle = {'-','-.','--'};
+controlMarker = {'*','none','d'};
 % Y Axis Limits
 CVLims = [15 22;
          65 75;
@@ -284,8 +291,8 @@ for simIter = simControlFrom:simControlTo
     f1 = figure(1+(simIter-1)*4);
     fig = gcf;
     movegui(fig,'southwest')
-    for cv = 1:numCV-1
-        subplot(numCV-1,1,cv)
+    for cv = 1:numCV
+        subplot(numCV,1,cv)
 
         plot(t(startPlotTime:end),yMPC_RF(startPlotTime:end,cv,simIter),...
                'LineWidth',1,...
@@ -338,12 +345,16 @@ for simIter = simControlFrom:simControlTo
         dLegend = ['$d_' num2str(dv) '$'];
 %         legend({dLegend},'Interpreter','latex');
         grid on
-        if imprint
+        
+    end
+    
+    if imprint
             printName = [figurePath 'control_DV_IT_' num2str(simIter) '_nl_' dateMatFileStr];
             print(printName,'-depsc');
             print(printName,'-djpeg');
-        end
     end
+        
+    
     f3 = figure(3+(simIter-1)*4);
     fig = gcf;
     movegui(fig,'northeast')
@@ -368,36 +379,53 @@ for simIter = simControlFrom:simControlTo
         mLegend_2 = ['$u_' num2str(mv) '$ PI'];
 %         legend({mLegend_1,mLegend_2},'Interpreter','latex');
         grid on
-        if imprint
+        
+    end
+    
+    if imprint
             printName = [figurePath 'control_MV_IT_' num2str(simIter) '_nl_' dateMatFileStr];
             print(printName,'-depsc');
             print(printName,'-djpeg');
-        end
     end
     f4 = figure(4+(simIter-1)*4);
     fig = gcf;
     movegui(fig,'southeast')
-    [~,hyperResults] = size(gaResults.signals.values);
+    [~,hyperResults] = size(solverResults.signals.values);
     for hyp = 1:hyperResults
         subplot(hyperResults,1,hyp)
-        plot(t,optMPC_RF(:,hyp,simIter),'*',...
+        plot(t,optMPC_RF(:,hyp,simIter),...
+            'Marker',controlMarker{1},...
             'Color',controlColors{1},...
             'LineWidth',1)
         title(titlesHyp{hyp})
         xlabel('Time (hr)')
         grid on
-        if imprint
+        
+    end
+    if imprint
             printName = [figurePath 'control_OP_IT_' num2str(simIter) '_nl_' dateMatFileStr];
             print(printName,'-depsc');
             print(printName,'-djpeg');
-        end
-    end
+    end  
+    
 end
+
 %% Save Specific Parameters
-saveTuningName = [figurePath 'mpc_rf_' dateMatFileStr '.mat'];
+saveTuningName = [figurePath 'mpcTuning_rf_' dateOutputStr '.mat'];
 if imprint
     save(saveTuningName,'qCostValues','rCostValues','betaCostValues',...
                         'lambdaCostValues','N_y','N_u','OptimSolverStruct',...
                         'bFilter','tau_C','kappaControl','KpArray','KiArray',...
                         'KdArray');
+end
+
+if saveControlResults
+   save([resultsPath 'ControlResults_' dateOutputStr '.mat'],...
+         'yMPC_RF','uMPC_RF','yHatMPC_RF','optMPC_RF','controlMovesMPC_RF',...
+         'yPID','uPID',...
+         'yMPC_ARMAX','uMPC_ARMAX','yHatMPC_ARMAX','optMPC_ARMAX','controlMovesMPC_ARMAX',...
+         'dMPC_RF','wRefSimulink','t',...
+         'numCV','numMV','numDV',...
+         'simControlFrom','simControlTo','startPlotTime',...
+         'figurePath');
 end
