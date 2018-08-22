@@ -23,7 +23,7 @@ mlMethod = 'ARMAX';
 
 % Crucial parameters for system identification
 N_y = 20;
-tau_R = 10;%5
+tau_R = 5;%5
 trainVSVal = 0.85;
 useDelayMV_CV = false;
 noiseyData = true;
@@ -32,8 +32,8 @@ generateOne = true;
 seed = rng(1231231); % For reproducibility (should look into this after)
 %% Bool Handling
 if generateOne
-    na = 3;
-    nb = 3;
+    na = 1;
+    nb = 1;
     nc = 3;
     nk = 2;
     offsetChoice = 1;

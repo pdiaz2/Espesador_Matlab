@@ -1,8 +1,8 @@
 % load('')
 %%
-simIter = 1;
-sampleTimes = [1:2];
-plotTrajectory = true;
+simIter = 3;
+sampleTimes = [1 10 20 30];
+plotTrajectory = false;
 plotMVSequence = true;
 %%
 titlesCV = {'Torque Trajectory','Underflow Concentration Trajectory','Interface Level Trajectory','Overflow Concentration','Residence Time',...
@@ -37,8 +37,10 @@ MVLims = [80 120;
 if plotTrajectory
     for f = 1:length(sampleTimes)
         sampleTime = sampleTimes(f);
-        optimalTrajectory_RF = yHatMPC_RF(:,:,sampleTime,simIter);
-        optimalTrajectory_ARMAX = yHatMPC_ARMAX(:,:,simTime,simIter);
+        optimalTrajectory_RF = yHatMPC_RF(sampleTime,:,:,simIter);
+        if useMPC_ARMAX
+            optimalTrajectory_ARMAX = yHatMPC_ARMAX(sampleTime,:,:,simIter);
+        end
         f1 = figure;
         fig = gcf;
         movegui(fig,'northeast')
@@ -50,10 +52,12 @@ if plotTrajectory
                    'Color',controlColors{1},...
                    'LineStyle',controlLineStyle{1})
             hold on
-            plot(0:(N_y-1),optimalTrajectory_ARMAX(cv,:),...
-                   'LineWidth',1,...
-                   'Color',controlColors{3},...
-                   'LineStyle',controlLineStyle{3})
+            if useMPC_ARMAX
+                plot(0:(N_y-1),optimalTrajectory_ARMAX(cv,:),...
+                       'LineWidth',1,...
+                       'Color',controlColors{3},...
+                       'LineStyle',controlLineStyle{3})
+            end
             title(titlesCV{cv})
             ylabel(CVUnits{cv})
             xlabel(['Samples [' num2str(tau_R/60)  'min/sample]']);
@@ -76,8 +80,10 @@ end
 if plotMVSequence
     for f = 1:length(sampleTimes)
         sampleTime = sampleTimes(f);
-        localControlMove_RF = controlMovesMPC_RF(:,:,sampleTime,simIter);
-        localControlMove_ARMAX = controlMovesMPC_ARMAX(:,:,simTime,simIter);
+        localControlMove_RF = controlMovesMPC_RF(sampleTime,:,:,simIter);
+        if useMPC_ARMAX
+            localControlMove_ARMAX = controlMovesMPC_ARMAX(sampleTime,:,:,simIter);
+        end
         f1 = figure;
         fig = gcf;
         movegui(fig,'southwest')
@@ -89,10 +95,12 @@ if plotMVSequence
                    'Color',controlColors{1},...
                    'LineStyle',controlLineStyle{1})
             hold on
-            plot(0:(N_y-1),localControlMove_RF(mv,:),...
-                   'LineWidth',1,...
-                   'Color',controlColors{3},...
-                   'LineStyle',controlLineStyle{3})
+            if useMPC_ARMAX
+                plot(0:(N_y-1),localControlMove_RF(mv,:),...
+                       'LineWidth',1,...
+                       'Color',controlColors{3},...
+                       'LineStyle',controlLineStyle{3})
+            end
             title(titlesMV{mv})
             ylabel(MVUnits{mv})
             xlabel(['Samples [' num2str(tau_R/60)  'min/sample]']);
