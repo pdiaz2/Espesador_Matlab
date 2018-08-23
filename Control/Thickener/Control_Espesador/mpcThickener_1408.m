@@ -74,28 +74,29 @@ startPlotTime = 1; %Wait for noise filter to stabilize
 qCostValuesIterations_RF = ...%repmat([1 1 100],simControlTo,1);
                         [
                         1 10 100; % OL
+                        10 10 100; % Bueno, el floculante oscila mucho y no le pega a la cama.
                         10 10 100;
-                        10 10 100;
-                        10 10 100;
+                        6 6 100;
+                        5 10 100; % Bueno, mucho overshoot en la cama y al final en Cp. Floculante oscila demasiado
                         5 10 100;
-                        5 10 100;
-                        5 10 100;
+                        5 7 120;
+                        20 100 20; % Bueno
                         20 100 20;
-                        20 100 20;
-                        20 100 20];
+                        20 100 40
+                        ];
 
 rCostValuesIterations_RF = ...%repmat([0.001 0.01],simControlTo,1);
                         [
                         1e14 1e14; % OL
-                        0.005 0.05;
+                        0.001 0.01; % Bueno
+                        0.001 0.03;
                         0.001 0.01;
-                        0.001 0.05;
-                        0.0005 0.005;
+                        0.001 0.01; % Bueno, mucho movimiento en el floculante
+                        0.001 0.04;
                         0.001 0.01;
-                        0.005 0.01;
-                        0.001 0.01;
-                        0.01 0.1;
-                        0.005 0.05;
+                        0.005 0.05; % Bien bueno, reaccionan lento las variables manipuladas. Hay que aumentar el esfuerzo sobre la cama (si se quiere)
+                       	0.005 0.01;
+                       	0.005 0.05
                         ];
 % rCostValuesIterations = [1e10 1e10;
 %                         0.001 0.01];
