@@ -338,31 +338,43 @@ for simIter = simControlFrom:simControlTo
                                 betaCostValuesIterations_ARMAX(simIter,:),...
                                 tuningStruct);
         load(['mpc_armax_object' dateMatFileStr '.mat']);
-        run parametrosEmpty.m
-        rng(120938103);
-        load('Agosto_SimResults_1304_State.mat');
-        tic;
-        sim('mpc_armax_thickener.slx');
-        toc;
+%         run parametrosEmpty.m
+%         rng(120938103);
+%         load('Agosto_SimResults_1304_State.mat');
+%         tic;
+%         sim('mpc_armax_thickener.slx');
+%         toc;
 
         % Store Results
         % For the time being, multiply Cp_u by 100
 %         y.signals.values(:,2) = y.signals.values(:,2)*100;
 
-        yARMAX(:,:,simIter) = y.signals.values(:,:);
-        uARMAX(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
-        dARMAX(:,:,simIter) = inputs.signals.values(:,1:numDV);
-        optMPC_ARMAX(:,:,simIter) = downsample(solverResults.signals.values(:,:),kappaControl_ARMAX);
-        yHatMPC_ARMAX(:,:,simIter) = downsample(xHat.signals.values(:,:),kappaControl_ARMAX);
-        auxControlMoves = permute(controlMoves.signals.values(:,:,:),[3 2 1]);
-        for mv = 1:numMV
-            controlMovesMPC_ARMAX(:,:,mv,simIter) = downsample(auxControlMoves(:,:,mv),kappaControl_ARMAX);
-        end
+%         yARMAX(:,:,simIter) = y.signals.values(:,:);
+%         uARMAX(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
+%         dARMAX(:,:,simIter) = inputs.signals.values(:,1:numDV);
+%         optMPC_ARMAX(:,:,simIter) = downsample(solverResults.signals.values(:,:),kappaControl_ARMAX);
+%         yHatMPC_ARMAX(:,:,simIter) = downsample(xHat.signals.values(:,:),kappaControl_ARMAX);
+%         auxControlMoves = permute(controlMoves.signals.values(:,:,:),[3 2 1]);
+%         for mv = 1:numMV
+%             controlMovesMPC_ARMAX(:,:,mv,simIter) = downsample(auxControlMoves(:,:,mv),kappaControl_ARMAX);
+%         end
        
     end
     %% References
     % Store references
 %     wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
-    wRefSimulink(:,:,simIter) = wRef.signals.values(:,:);
+%     wRefSimulink(:,:,simIter) = wRef.signals.values(:,:);
     
 end
+%%
+A_MPC = mpcObj.Model.Plant.A;
+B_MPC = mpcObj.Model.Plant.B;
+Bu_MPC = B_MPC(:,[3 4]);
+Bv_MPC = B_MPC(:,[1 2]);
+C_MPC = mpcObj.Model.Plant.C;
+[L,M,A,Cm,Bu,Bv,Dvm] = getEstimator(mpcObj);
+% ssMPC = ss(A,[Bu Bv],Cm,0,300);
+% [kest,L,P,M,Z] = kalman(ssMPC,[Bu Bv]'*[Bu Bv],eye(3,3),0);
+Poles = eig(A - L*Cm);
+[L,M,model,index] = getEstimator(mpcObj,'sys');
+max(abs(Poles)) % Just barely stable
