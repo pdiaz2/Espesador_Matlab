@@ -15,7 +15,7 @@ saveControlResults = false;
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
 dateOutputStr = '2108';
 dateMatFileStr = '1408';
-figurePath = 'figures\trials_rf_1408\';
+figurePath = 'figures\piow\';
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
 %%%%%%%%%%%%%%%
 N_y = 18;
@@ -25,8 +25,8 @@ kappaControl_ARMAX = 5;
 optimizationMethod = 'PSO';
 Dt = 1;
 simTime = 100*3600; % 10*3600
-simControlFrom = 1;
-simControlTo = 10;
+simControlFrom = 2;
+simControlTo = 5;
 groupBy = 60; % This should be automatic
 tau_R = 5*groupBy;
 tau_C_RF = kappaControl_RF*tau_R;
@@ -73,12 +73,12 @@ startPlotTime = 1; %Wait for noise filter to stabilize
 
 qCostValuesIterations_RF = ...%repmat([1 1 100],simControlTo,1);
                         [
-                        1 10 100; % OL
-                        10 10 100; % Bueno, el floculante oscila mucho y no le pega a la cama.
-                        10 10 100;
-                        6 6 100;
-                        5 10 100; % Bueno, mucho overshoot en la cama y al final en Cp. Floculante oscila demasiado
-                        5 10 100;
+						1 10 100; % OL
+						10 10 150; % Bueno, el floculante oscila mucho y no le pega a la cama.
+						5 10 150; % Bueno, mucho overshoot en la cama y al final en Cp. Floculante oscila demasiado
+						5 200 200; % Bueno pero tiene harto erro en regimen permanente. Podría subirse el costo del Cp_u y de la cama
+						1 1e-4 100; % Buenisimo, se parece a lo antiguo. Hay que hacer más chico el costo de Cp_u
+						20 100 20; % Bueno
                         5 7 120;
                         20 100 20; % Bueno
                         20 100 20;
@@ -89,10 +89,10 @@ rCostValuesIterations_RF = ...%repmat([0.001 0.01],simControlTo,1);
                         [
                         1e14 1e14; % OL
                         0.001 0.01; % Bueno
-                        0.001 0.03;
+                        0.004 0.04; % Quizás soltando un poco más el Q_u, porque el error en regimen es clarísimo. Las MV bajan y se quedan quietas después de un tiempo. El valor de la función objetivse queda pegado en 30 y tiene la forma de la cama.
                         0.001 0.01;
-                        0.001 0.01; % Bueno, mucho movimiento en el floculante
-                        0.001 0.04;
+                        0.001 0.01;
+                        0.005 0.05; % Bien bueno, reaccionan lento las variables manipuladas. Hay que aumentar el esfuerzo sobre la cama (si se quiere)
                         0.001 0.01;
                         0.005 0.05; % Bien bueno, reaccionan lento las variables manipuladas. Hay que aumentar el esfuerzo sobre la cama (si se quiere)
                        	0.005 0.01;
