@@ -10,21 +10,21 @@ dateTest = '1408';
 figurePath = ['figures\' typeOfData '\'];
 
 % Save and print bools
-imprint = true;
+imprint = false;
 useTimePlot = true;
 saveResultsToMatFile = false;
 saveModelToMatFile = false;
 %%%%%%
 % RF Specifics
-numTreesInput = 300;
-tau_RInput = 10;
+numTreesInput = 100;
+tau_RInput = 5;
 naInput = 6;
 nbInput = 6;
 cvToGenerate = 2;
 
 % ARMAX Specifics
-NAInput = 3;
-NBInput = 3;
+NAInput = 1;
+NBInput = 2;
 NCInput = 3;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
@@ -33,9 +33,9 @@ selectedDV = [1 2];
 trainVSValInput = 0.85;
 tau_R = tau_RInput;
 N_y = 20;
-pastDataSamples = 100;
+pastDataSamples = 1200; % 100 for storedd pictures which exhibit good things
 K_ahead = 20;
-K_forecast = 50;
+K_forecast = 1;
 varStringRF = ['B' num2str(numTreesInput) ...
               '_k' num2str(tau_RInput) '_'...
               'na' num2str(naInput) '_nb' num2str(nbInput)];
@@ -268,9 +268,9 @@ forecastInputData = iddata(validationOutputs(1:pastDataSamples,:),...
                             inputTimeSeries(1:pastDataSamples,:),...
                             controlParamsStruct.tau_R,'TimeUnit','minutes');
 % Forecast start from 
-armaxForecast = forecast(armaxModel,forecastInputData,K_forecast,...
-                        inputTimeSeries(1+pastDataSamples...
-                        :pastDataSamples+K_forecast,:),fOptions);
+[armaxForecast,x0,sysf,yf_sd,x,x_sd] = forecast(armaxModel,forecastInputData,K_forecast,...
+                                            inputTimeSeries(1+pastDataSamples...
+                                            :pastDataSamples+K_forecast,:),fOptions);
 armaxForecast = armaxForecast.OutputData;
 
 

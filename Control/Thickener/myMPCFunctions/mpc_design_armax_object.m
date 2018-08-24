@@ -4,11 +4,11 @@ function mpc_design_armax_object( dateMatFileStr,N_y,N_u,kappaControl_ARMAX,...
 %   Detailed explanation goes here
 %% Mat File Handling
 fixedParametersFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
-armaxModelFile = ['ARMAX_MDL_Sim_Noise_k5_na1_nb1_nc3_1408.mat']; % change to be function of datMatFileStr
+armaxModelFile = ['ARMAX_MDL_Sim_Noise_k5_na1_nb2_nc3_1408.mat']; % change to be function of datMatFileStr
 mpcObjectFileName = ['mpc_armax_object' dateMatFileStr '.mat'];
 load(fixedParametersFileName);
 load(armaxModelFile);
-
+load('initial.mat');
 %% MPC Object creation
 armaxModelForMPC = setmpcsignals(armaxModel,'MV',[3 4],'MD',[1 2]);
 mpcObj = mpc(armaxModelForMPC);
@@ -72,6 +72,7 @@ end
 % Input disturbance is zero by construction and identification
 % setoutdist(mpcObj,'model',tf)zeros(
 % setoutdist(mpcObj,'model',tf(zeros(numCV,1)))
+% mpcObj.Model.Nominal.X = x0;
 %% Save
 save(mpcObjectFileName,'mpcObj');
 end
