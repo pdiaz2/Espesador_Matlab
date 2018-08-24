@@ -33,7 +33,7 @@ seed = rng(1231231); % For reproducibility (should look into this after)
 %% Bool Handling
 if generateOne
     na = 1;
-    nb = 1;
+    nb = 2;
     nc = 3;
     nk = 2;
     offsetChoice = 1;
@@ -103,7 +103,7 @@ mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         'Type','integer');
 mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.minLS;
 % Specific for ARMAX
-mlParamsStruct.NA = [6,12,36,60];
+mlParamsStruct.NA = [0,6,12,36,60];
 mlParamsStruct.NB = [5,10,15,30,60];
 mlParamsStruct.NC = [0 2 5 8];
 mlParamsStruct.NK = [0 1];
