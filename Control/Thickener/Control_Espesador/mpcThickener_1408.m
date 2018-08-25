@@ -2,13 +2,14 @@ clear all;
 clc;
 close all;
 %% Control Parameters
-useMPC_RF = true;
+useMPC_RF = false;
 usePID = false;
 useMPC_ARMAX = false;
 %%%%%%%%%%%%%%%%%
 dvRealData = false;
 imprint = false;
 saveControlResults = false;
+
 % Code for names:
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
     % - SS: SmallSearch. Small pop (100-) and small gens (50-)
@@ -17,32 +18,24 @@ dateOutputStr = '2108';
 dateMatFileStr = '1408';
 figurePath = 'figures\piow\';
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
+%%%%%%%%%%
+simTime = 100*3600; % 10*3600
+simControlFrom = 2;
+simControlTo = 10;
 %%%%%%%%%%%%%%%
+% Time sampling specifications
+Dt = 1;
+groupBy = 60; 
+tau_R = 5*groupBy;
 N_y = 18;
 N_u = 3;%4
 kappaControl_RF = 5;
 kappaControl_ARMAX = 5;
 optimizationMethod = 'PSO';
-Dt = 1;
-simTime = 100*3600; % 10*3600
-simControlFrom = 6;
-simControlTo = 8;
-groupBy = 60; % This should be automatic
-tau_R = 5*groupBy;
 tau_C_RF = kappaControl_RF*tau_R;
 tau_C_ARMAX = kappaControl_ARMAX*tau_R;
-% stepInDVArray = [false;
-%                 false;
-%                 false;
-%                 true;
-%                 true];
-% dvStepSizeArray = [
-%                 0 0 0;
-%                 0 0 0;
-%                 0 0 0;
-%                 0 -0.1 0;
-%                 30 0 0
-%                 ];
+%%%%%%%%%%%%%%%%%%%%%
+% DV interaction specifics
 stepInDVArray = [false;
                 false;
                 false;
@@ -52,7 +45,7 @@ stepInDVArray = [false;
                 false;
                 false;
                 false;
-                false];
+                true];
 dvStepSizeArray = [
                 0 0 0;
                 0 0 0;
@@ -63,7 +56,7 @@ dvStepSizeArray = [
                 0 0 0;
                 0 0 0;
                 0 0 0;
-                0 0 0
+                0 -0.1 0
                 ];
 controlClosedLoop = 1;
 startPlotTime = 1; %Wait for noise filter to stabilize
@@ -73,35 +66,63 @@ startPlotTime = 1; %Wait for noise filter to stabilize
 
 qCostValuesIterations_RF = ...%repmat([1 1 100],simControlTo,1);
                         [
-						1 10 100; % OL
-						10 10 150; % Bueno, el floculante oscila mucho y no le pega a la cama.
-						5 10 150; % Bueno, mucho overshoot en la cama y al final en Cp. Floculante oscila demasiado
-						5 240 200; % Bueno pero tiene harto erro en regimen permanente. Podría subirse el costo del Cp_u y de la cama
-						1 0.5e-4 100; % Buenisimo, se parece a lo antiguo. Hay que hacer más chico el costo de Cp_u
-						1 150e-4 250; % Bueno
-                        50 100e-4 50;
-                        50 100e-4 500; % Bueno
-                        20 100 20;
-                        20 100 40
+						1 10 100; % 1 OL
+						1 1e2 1e2; % 2
+                        1 1e2 1e3; % 3 Bastante bueno pero la cama sigue siendo un poco muy alta. Oscilan muchísimos los gpt y en verdad casi todo.
+						1 1e2 1e4; % 4 Baja más la cama (queda en 3m). No controla muy bien la cama. Quizás hay que ponerle aún más peso.
+						1 1e2 1e2; % 5 Bueno! No oscila tanto el flujo (aguanta un costo tan bajo).
+						1 1e2 1e2; % 6 Más o menos malo respecto al resto. Pareciera que el costo del gpt no afecta tanto
+						1 1e2 1e2; % 7 Bueno pero no es mejor que el caso 2.
+                        1 1e2 1e2; % 8 Mejor que la 7, pero es igual que el caso 2
+                        1 1e2 1e2; % 9 Bueno
+                        1 1e2 1e2; % 10
+                        1 1e2 1e2  % 11
                         ];
 
 rCostValuesIterations_RF = ...%repmat([0.001 0.01],simControlTo,1);
                         [
-                        1e14 1e14; % OL
-                        0.001 0.01; % Bueno
-                        0.004 0.04; % Quizás soltando un poco más el Q_u, porque el error en regimen es clarísimo. Las MV bajan y se quedan quietas después de un tiempo. El valor de la función objetivse queda pegado en 30 y tiene la forma de la cama.
-                        0.001 0.01;
-                        0.001 0.01;
-                        0.001 0.01; % Bien bueno, reaccionan lento las variables manipuladas. Hay que aumentar el esfuerzo sobre la cama (si se quiere)
-                        0.001 0.01;
-                        0.001 0.01; % Bien bueno, reaccionan lento las variables manipuladas. Hay que aumentar el esfuerzo sobre la cama (si se quiere)
-                       	0.005 0.01;
-                       	0.005 0.05
+                        1e14 1e14; % 1 OL
+                        1e-3 1e-2; % 2 
+                        1e-3 1e-2; % 3 
+                        1e-3 1e-2; % 4 
+                        5e-4 1e-2; % 5
+                        1e-3 1e-3; % 6 
+                        1e-3 1e-2; % 7 
+                        1e-3 1e-2; % 8 
+                        1e-3 1e-2; % 9 
+                       	1e-3 1e-2; % 10
+                       	1e-3 1e-2 % 11
                         ];
 % rCostValuesIterations = [1e10 1e10;
 %                         0.001 0.01];
-betaCostValuesIterations_RF = repmat([1 1 1],simControlTo,1);
-lambdaCostValuesIterations_RF = repmat([1 1 1],simControlTo,1);
+betaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
+                        [
+						1 10 100; % 1 OL
+						1 1 1; % 2
+                        1 1e2 1e2; % 3
+						1 1e2 1e2; % 4 
+						1 1e2 1e2; % 5
+						1 1e2 1e3; % 6 
+						1 1e3 1e2; % 7 
+                        1 1e2 1e2; % 8 
+                        1 1e2 1e2; % 9 
+                        1 1e2 1e2; % 10
+                        1 1e2 1e2 % 11
+                        ];
+lambdaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
+                        [
+						1 10 100; % 1 OL
+						1 1 1; % 2
+                        1e4 1e4 1e4; % 3
+						1e4 1e4 1e4; % 4 
+						1e4 1e4 1e4; % 5 
+						1e4 1e4 1e4; % 6 
+						1e4 1e4 1e4; % 7 
+                        1e4 1e4 1e4; % 8 
+                        1e4 1e4 1e4; % 9 
+                        1e4 1e4 1e4; % 10
+                        1e4 1e4 1e4 % 11
+                        ];
 
 numCV = size(qCostValuesIterations_RF,2);
 numMV = size(rCostValuesIterations_RF,2);
@@ -148,7 +169,7 @@ wValuesStruct.delta = [
                         0 0 0;
                         0 0 0;
                         0 0 0;
-                        0 0 0;
+                        0 -0.4 0;
                        ];
 % wValuesStruct.changeBool = logical([
 %                                     0 0 0;
@@ -167,7 +188,7 @@ wValuesStruct.changeBool = logical([
                                     0 0 0;
                                     0 0 0;
                                     0 0 0;
-                                    0 0 0
+                                    0 1 0
                                     ]);
 wValuesStruct.shape = {
                         'step','step','step';
@@ -192,7 +213,7 @@ wValuesStruct.timeToChange = [
                                 -1 -1 -1;
                                 -1 -1 -1;
                                 -1 -1 -1;
-                                -1 -1 -1;
+                                -1 floor(simTime/1e3) -1;
                                 ];
 wValuesStruct.addNoiseBool = [
                                 false; %always false for w
@@ -350,9 +371,9 @@ for simIter = simControlFrom:simControlTo
         % For the time being, multiply Cp_u by 100
 %         y.signals.values(:,2) = y.signals.values(:,2)*100;
 
-        yARMAX(:,:,simIter) = y.signals.values(:,:);
-        uARMAX(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
-        dARMAX(:,:,simIter) = inputs.signals.values(:,1:numDV);
+        yMPC_ARMAX(:,:,simIter) = y.signals.values(:,:);
+        uMPC_ARMAX(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
+        dMPC_ARMAX(:,:,simIter) = inputs.signals.values(:,1:numDV);
         optMPC_ARMAX(:,:,simIter) = downsample(solverResults.signals.values(:,:),kappaControl_ARMAX);
         yHatMPC_ARMAX(:,:,simIter) = downsample(xHat.signals.values(:,:),kappaControl_ARMAX);
         auxControlMoves = permute(controlMoves.signals.values(:,:,:),[3 2 1]);
@@ -391,7 +412,7 @@ CVUnits = {'%','%','m','%'};
 MVUnits = {'m3/hr','gpt'};
 DVUnits = {'m3/s','%','N/A'};
 % Colors
-controlColors = {'r','b','y'};
+controlColors = {'r','b','k'};
 controlLineStyle = {'-','-.','--'};
 controlMarker = {'*','none','d'};
 % Y Axis Limits
@@ -401,9 +422,13 @@ CVLims = [15 22;
 MVLims = [80 120;
           20 30];
 for simIter = simControlFrom:simControlTo
+    iterInfo = '                    Iteration %d has figures %d,%d,%d,%d\r\n';
+    iterMatrix = [simIter,1+(simIter-1)*4,2+(simIter-1)*4,3+(simIter-1)*4,4+(simIter-1)*4];
+    fprintf(iterInfo,iterMatrix)
     f1 = figure(1+(simIter-1)*4);
     fig = gcf;
     movegui(fig,'southwest')
+    
     for cv = 1:numCV
         subplot(numCV,1,cv)
         if useMPC_RF
@@ -452,11 +477,18 @@ for simIter = simControlFrom:simControlTo
     movegui(fig,'northwest')
     for dv = 1:numDV
         subplot(numDV,1,dv)
-
-        plot(t(startPlotTime:end),dMPC_RF(startPlotTime:end,dv,simIter),...
-               'LineWidth',1,...
-               'Color',controlColors{1},...
-               'LineStyle',controlLineStyle{1})
+        if useMPC_RF
+            plot(t(startPlotTime:end),dMPC_RF(startPlotTime:end,dv,simIter),...
+                   'LineWidth',1,...
+                   'Color',controlColors{1},...
+                   'LineStyle',controlLineStyle{1})
+        end
+        if useMPC_ARMAX
+            plot(t(startPlotTime:end),dMPC_ARMAX(startPlotTime:end,dv,simIter),...
+                   'LineWidth',1,...
+                   'Color',controlColors{1},...
+                   'LineStyle',controlLineStyle{1})
+        end
         hold on
         ylabel(DVUnits{dv})
         xlabel('Time (hr)')
@@ -494,7 +526,7 @@ for simIter = simControlFrom:simControlTo
         end
         
         if useMPC_ARMAX
-            plot(t(startPlotTime:end),uMPC_RF(startPlotTime:end,mv,simIter),...
+            plot(t(startPlotTime:end),uMPC_ARMAX(startPlotTime:end,mv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{3},...
                    'LineStyle',controlLineStyle{3})
@@ -520,10 +552,11 @@ for simIter = simControlFrom:simControlTo
     fig = gcf;
     movegui(fig,'southeast')
     [~,hyperResults] = size(solverResults.signals.values);
-    [controllerHits,~,~] = size(optMPC_RF);
+    
     for hyp = 1:hyperResults
         subplot(hyperResults,1,hyp)
         if useMPC_RF
+            [controllerHits,~,~] = size(optMPC_RF);
             plot(1:controllerHits,optMPC_RF(:,hyp,simIter),...
                 'Marker',controlMarker{1},...
                 'Color',controlColors{1},...
@@ -532,6 +565,7 @@ for simIter = simControlFrom:simControlTo
         hold on
         
         if useMPC_ARMAX
+            [controllerHits,~,~] = size(optMPC_ARMAX);
             status = optMPC_ARMAX(:,1,simIter);
             successIndex = status >= 1;
             % Under development

@@ -5,11 +5,11 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMetho
     designParametersFileName = ['mpc_design_parameters_' dateMatFileStr '.mat'];
     load(fixedParametersFileName);
     %% MPC Design Parameters
-    % Weight Matrices (Design)
-    qMatrix = diag(qCostValues)*qNormMatrix*ones(numCV,N_y-1)*1/((N_y-1)*numCV); 
-    rMatrix = diag(rCostValues)*rNormMatrix*ones(numMV,N_u); 
-    betaCost = diag(betaCostValues)*betaNormMatrix*ones(numCV,1)*1/(numCV);
-    lambdaMatrix = diag(lambdaCostValues)*lambdaNormMatrix*ones(numCV,N_y)*1/((N_y)*numCV);
+    % Weight Matrices (Design) % 0:54 - Antes sin los .^2
+    qMatrix = diag(qCostValues)*qNormMatrix.^2*ones(numCV,N_y-1)*1/((N_y-1)*numCV); 
+    rMatrix = diag(rCostValues)*rNormMatrix.^2*ones(numMV,N_u); 
+    betaCost = diag(betaCostValues)*betaNormMatrix.^2*ones(numCV,1)*1/(numCV);
+    lambdaMatrix = diag(lambdaCostValues)*lambdaNormMatrix.^2*ones(numCV,N_y)*1/((N_y)*numCV);
 
     %% Stability for Numeric Method
     qMatrix = stabilityFactor*qMatrix;
@@ -59,6 +59,7 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMetho
                                     0.001*stabilityFactor; %ObjectiveLimit
                                     1e-3; % Champion distance tolerance
                                     ceil(championCounterFraction*gens); % Champion tolerance break counter
+                                    floor(50*60/25); % Plot from contol hit (end-4 always);
                                     0; %Plot Progress within Generations. 1 => plot; 2 => verbose (end-3) always
                                     1; % Use OutputFcn, (end-2 always);
                                     2; % 2 => PSO is being used (end-1 always)

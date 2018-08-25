@@ -2,6 +2,7 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
     %% Mat File Handling
     matFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
     RFParametersFile = ['RFParameters_' dateMatFileStr '.mat'];
+    x0FileName = ['x0Control_Sim_' dateMatFileStr '.mat'];
     %% Initial Conditions
     D0 = [325.1 0.3143];
     U0 = [111 26]; 
@@ -15,7 +16,11 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
     cvNoisePower = cvVariance./10.^(cvSNR/10);
     cvNoiseSeed = [11051993 5031995 8061958 1111960];
 %     cvNoisePower = zeros(1,numCV);
-    
+    %% Predictor initial state
+    load(x0FileName);
+    y0Memory = x0_RF.y0Memory;
+    u0Memory = x0_RF.u0Memory;
+    d0Memory = x0_RF.d0Memory;
     %% Random Forest MEX Parameters
     [na,nb,nc,maxDelay] = generate_rf_model_orders(RFParametersFile,numCV);
     maxYDelay = maxDelay(1);
@@ -55,8 +60,8 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
     % w.r.t the setpoints/dynamic range of each variable
     % Another idea is to normalize between 0 and 100% w.r.t each variable
     % high and low lims. That would mean to substract (y(k)-y_Low)/yHigh-yLow)
-    qNormMatrix = diag([1 1 1]);
-    rNormMatrix = diag([1 1]);
+    qNormMatrix = diag([1/3 1/3 1/5]); % Could also be yLimMax-yLimMin (or something like that)% 0:54 1 1 1 
+    rNormMatrix = diag([1/deltaUHighLim(1) 1/deltaUHighLim(2)]); % 0:54 - 1 1
     betaNormMatrix = qNormMatrix;
     lambdaNormMatrix = qNormMatrix;
     %% Numeric Solution Stability Factor
