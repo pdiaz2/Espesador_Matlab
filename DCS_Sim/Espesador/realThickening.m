@@ -4,14 +4,14 @@ clear;
 
 run parametrosEmpty.m
 
-month = 'Septiembre';
+month = 'Agosto';
 nameDataset = month;
 typeOfData = 'Sim';
 dateTest = '1408';
-outputMatFileName = [nameDataset '_' typeOfData '_' dateTest '_Noise'];%_BF.mat'];
+outputMatFileName = [nameDataset '_' typeOfData '_' dateTest];%_BF.mat'];
 figurePath = ['figures\' typeOfData '\'];
 saveToMatFile = true;
-imprint = true;
+imprint = false;
 plotFigures = true;
 %%
 granularity = 'g';
@@ -25,7 +25,7 @@ makePRBS = eye(5);
 prbsStrArray = {'Qu','gpt','Qf','Cf','p1f'};
 prbsAmplitude = [15,4,40/3600,0.1,0.1];
 %% Noise for CV
-cvSNR = [20 20 20 20]; % DB
+cvSNR = [90 90 90 90]; % DB
 cvVariance = [5 0.05 3 0.000001];
 cvNoisePower = cvVariance./10.^(cvSNR/10);
 cvNoiseSeeds = [11051993 5031995 8061958 1111960];
