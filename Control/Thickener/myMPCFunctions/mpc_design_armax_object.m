@@ -4,14 +4,18 @@ function mpc_design_armax_object( dateMatFileStr,N_y,N_u,kappaControl_ARMAX,...
 %   Detailed explanation goes here
 %% Mat File Handling
 fixedParametersFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
-armaxModelFile = ['ARMAX_MDL_Sim_Noise_k5_na1_nb2_nc3_1408.mat']; % change to be function of datMatFileStr
+armaxModelFile = ['ARMAX_MDL_Sim_Noise_k5_na3_nb3_nc3_1408.mat']; % change to be function of datMatFileStr
 mpcObjectFileName = ['mpc_armax_object' dateMatFileStr '.mat'];
+% x0FileName = ['x0Control_Sim_' dateMatFileStr '.mat'];
+% load(x0FileName);
 load(fixedParametersFileName);
 load(armaxModelFile);
-load('initial.mat');
+
 %% MPC Object creation
-armaxModelForMPC = setmpcsignals(armaxModel,'MV',[3 4],'MD',[1 2]);
-mpcObj = mpc(armaxModelForMPC);
+augmentedSys = ss(armaxModel,'augmented');
+augmentedMPC = setmpcsignals(augmentedSys,'MV',[3 4],'MD',[1 2],'UD',[5 6 7]);
+% armaxModelForMPC = setmpcsignals(armaxModel,'MV',[3 4],'MD',[1 2]);
+mpcObj = mpc(augmentedMPC);
 %% MPC Object Specs
 % Controller Sample Time, which is the sample time for the CONTROLLER BLOCK
 % NOT THE MODEL. The model is constructed before and the solver is called
@@ -20,8 +24,10 @@ mpcObj = mpc(armaxModelForMPC);
 mpcObj.PredictionHorizon = N_y;
 % Block moves - Tells the controller to keep the MV constant during the
 % blocks
-mpcObj.ControlHorizon = kappaControl_ARMAX*ones(1,N_u);
-mpcObj.ControlHorizon(N_u) = mpcObj.ControlHorizon(N_u)+(N_y-kappaControl_ARMAX*N_u);
+mpcObj.ControlHorizon = kappaControl_ARMAX*N_u;
+controlHorizon = kappaControl_ARMAX*ones(1,N_u);
+controlHorizon(N_u) = controlHorizon(N_u)+(N_y-kappaControl_ARMAX*N_u);
+mpcObj.ControlHorizon = controlHorizon;
 % Weights for horizon
 mpcObj.Weights.OV = ones(N_y,numCV);
 mpcObj.Weights.MV = ones(N_y,numMV);
@@ -64,15 +70,22 @@ for mv = 1:numMV
        mpcObj.MV(mv).RateMax = deltaUHighLim(mv);
    end
    %% Cost Assignment
-   mpcObj.Weights.MV(:,mv) = rCostValues(mv);
+   mpcObj.Weights.ManipulatedVariablesRate(:,mv) = rCostValues(mv);
 end
+%% Load operating point (nominal) conditions
+% We have shown that sysForecast.A is equal to augmentedMPC.A. B and C are
+% differente, but the state vector is then THE SAME. Therefore, we can use
+% the last value of the state produced by sysForecast as the nominal state
+% value for the mpcObj.
+mpcObj.Model.Nominal.X = x0Forecast;
+mpcObj.Model.Nominal.Y = x0_RF.y0Memory(:,1);
+mpcObj.Model.Nominal.U = [x0_RF.d0Memory(:,1);x0_RF.u0Memory(:,1);zeros(numCV,1)];
 %% Penalization of limit breaking
 % mpcObj.Weights.ECR = lambdaCostValues(1);
 %% Output Disturbance elimination
 % Input disturbance is zero by construction and identification
-% setoutdist(mpcObj,'model',tf)zeros(
 % setoutdist(mpcObj,'model',tf(zeros(numCV,1)))
-% mpcObj.Model.Nominal.X = x0;
+
 %% Save
 save(mpcObjectFileName,'mpcObj');
 end

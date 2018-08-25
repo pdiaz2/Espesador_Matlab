@@ -23,8 +23,8 @@ nbInput = 6;
 cvToGenerate = 2;
 
 % ARMAX Specifics
-NAInput = 1;
-NBInput = 2;
+NAInput = 3;
+NBInput = 3;
 NCInput = 3;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
@@ -43,7 +43,7 @@ varStringARMAX = ['k' num2str(tau_RInput) '_'...
                 'na' num2str(NAInput) '_nb' num2str(NBInput)...
                 '_nc' num2str(NCInput)];
 %% Plot Options
-LineWidth = 1;
+LineWidth = 0.7;
 %%
 optimizeMLHyperparameters = false;
 mlMethod = 'RF';
@@ -188,6 +188,9 @@ for cv = 1:n
     RFPredictionStruct(cv).MSE = results.MSE;
     RFPredictionStruct(cv).Correlation = results.Correlation;
     RFPredictionStruct(cv).OOBError = results.OOBError;
+    
+    RFPredictionStruct(cv).na = mOrder.na;
+    RFPredictionStruct(cv).nb = mOrder.nb;
     delayMaxInTime = max(delayMaxInTime,max(max(mOrder.na),max(mOrder.nb(cv))));
 end
 %% Maximum Delay for Adjustment
@@ -232,8 +235,8 @@ inputTimeSeries = testData.InputData(1+armaxToRFWindowLB:end,:);
 predictInputData = iddata(validationOutputs,inputTimeSeries,controlParamsStruct.tau_R,...
                           'TimeUnit','minutes');
 
-[armaxPredict,x0,sys_pred] = predict(armaxModel,predictInputData,K_ahead,pOptions);
-icForecast = idpar(x0);
+[armaxPredict,x0Predicted,sys_pred] = predict(armaxModel,predictInputData,K_ahead,pOptions);
+icForecast = idpar(x0Predicted);
 armaxPredict = armaxPredict.OutputData;
 
 
@@ -243,20 +246,33 @@ if isequal(validationOutputs(1+pastDataSamples:pastDataSamples+K_forecast,1),...
 else
     fprintf('Using different portions of data =(\r\n')
 end
+%% IC for September Control RF
+for cv = 1:numOutputs
+   x0_RF.y0Memory(cv,:) = fliplr(validationOutputs(end-RFPredictionStruct(cv).na+1:end,cv)');
+end
 
+for mv = 1:2
+   x0_RF.u0Memory(mv,:) = fliplr(inputTimeSeries(end-RFPredictionStruct(cv).nb+1:end,mv+2)');
+end
+
+for dv = 1:2
+   x0_RF.d0Memory(dv,:) =  fliplr(inputTimeSeries(end-RFPredictionStruct(cv).nb+1:end,dv)');
+end
 %% Options for plotting
 
 CVNames = {'Torque','Underflow Concentration','Interface Level','Overflow Concentration','Residence Time',...
             'Solid Throughput','Underflow Particle Diameter','Overflow'};
 CVUnits = {'%','%','m','%','hr','ton/hr','N/A','m3/hr'};
 CVSaveName = {'torque_','Cp_u_','intLevel_','Cp_e_','tauRd_','SFlx_','P1_U_','Q_e_'};
-kAheadStr = [num2str(K_ahead) showGoodStr '_'];
+kAheadStr = [num2str(K_ahead)  showGoodStr '_'];
 if useTimePlot
-    time = linspace(0,size(RFPredictionStruct(1).yHat,1)*tau_R/60,size(RFPredictionStruct(1).yHat,1)+1);
+    timePrediction = linspace(0,size(RFPredictionStruct(1).yHat,1)*tau_R/60,size(RFPredictionStruct(1).yHat,1)+1);
+    timeForecast = linspace(1,K_forecast*tau_R/60,K_forecast);
     xLabelStr = 'Hours [hr]';
 else
-    time = linspace(0,size(RFPredictionStruct(1).yHat,1),size(RFPredictionStruct(1).yHat,1)+1);
-    xLabelStr = 'Samples [n]'
+    timePrediction = linspace(0,size(RFPredictionStruct(1).yHat,1),size(RFPredictionStruct(1).yHat,1)+1);
+    timeForecast = linspace(1,K_forecast,K_forecast);
+    xlabelStr = (['Samples [' num2str(controlParamsStruct.tau_R) ' min/sample]']);
 end
 %% Forecast & Predict Compare
 %{}
@@ -268,11 +284,34 @@ forecastInputData = iddata(validationOutputs(1:pastDataSamples,:),...
                             inputTimeSeries(1:pastDataSamples,:),...
                             controlParamsStruct.tau_R,'TimeUnit','minutes');
 % Forecast start from 
-[armaxForecast,x0,sysf,yf_sd,x,x_sd] = forecast(armaxModel,forecastInputData,K_forecast,...
+[armaxForecast,x0Forecast,sysForecast,yf_sd,xForecast,x_sd] = forecast(armaxModel,forecastInputData,K_forecast,...
                                             inputTimeSeries(1+pastDataSamples...
                                             :pastDataSamples+K_forecast,:),fOptions);
 armaxForecast = armaxForecast.OutputData;
-
+%% Use No Noise Data
+% For graphical reasons, it is best to remove noise of actual outputs so we
+% can see clearly
+% if strcmp(typeOfData,'Sim_')
+%     noiseStr = '';
+%     matFileName = [nameDataset typeOfData noiseStr dateTest '_BF.mat'];
+%     load(matFileName);
+%     MachineLearningData = ml_pick_variables(selectedCV,selectedMV,selectedDV,SimResults);
+%     garbageSet = struct;
+%     validationBigSet = struct;
+%     [garbageSet,validationBigSet,controlParamsStruct] = ml_generate_tT_sets(garbageSet,...
+%                                                                     validationBigSet,...
+%                                                                     MachineLearningData,...
+%                                                                     controlParamsStruct,...
+%                                                                     mlParamsStruct);
+%     [testValData,~] = ml_prepare_IO_data(validationBigSet,...
+%                     controlParamsStruct.nameInputs,...
+%                     controlParamsStruct.nameOutputs,...
+%                     1, controlParamsStruct.tau_R,...
+%                     mlParamsStruct.validationSamples,...
+%                     mOrder.na, mOrder.nb,....
+%                     mlParamsStruct);
+%     validationOutputs = testValData.OutputData(1+armaxToRFWindowLB:end,:); 
+% end
 
 %% Plot prediction comparisons
 
@@ -281,11 +320,11 @@ for cv = 1:n
     plot(validationOutputs(1+pastDataSamples:pastDataSamples+K_forecast,cv),'LineWidth',LineWidth)
     hold on
 %     plot(armaxPredict(1+pastDataSamples:pastDataSamples+K_forecast,cv))
-    plot(armaxForecast(:,cv),'--','LineWidth',LineWidth)
+    plot(timeForecast,armaxForecast(:,cv),'--k','LineWidth',LineWidth)
 %     plot(RFPredictionStruct(cv).yHatForecast(1,:));
-    plot(RFPredictionStruct(cv).yForecast(:),'-.','LineWidth',LineWidth)
+    plot(timeForecast,RFPredictionStruct(cv).yForecast(:),'-.r','LineWidth',LineWidth)
     legend('Validation','ARMAX Forecast','RF Forecast');
-    xlabel(['Samples [' num2str(controlParamsStruct.tau_R) ' min/sample]'])
+    xlabel(xLabelStr);
     hold off
     grid on
     printName = [figurePath 'forecast_' CVSaveName{cv} typeOfData ioDTStr noiseStr...
@@ -301,9 +340,9 @@ for cv = 1:n
     figure
     title(CVNames{cv})
     hold on
-    plot(time(1:end-1),validationOutputs(1:end-armaxToRFWindowUB,cv),'LineWidth',LineWidth)
-    plot(time(1:end-1),armaxPredict(1:end-armaxToRFWindowUB,cv),'--','LineWidth',LineWidth);
-    plot(time(1:end-1),RFPredictionStruct(cv).yHat(:,K_ahead),'-.','LineWidth',LineWidth)
+    plot(timePrediction(1:end-1),validationOutputs(1:end-armaxToRFWindowUB,cv),'LineWidth',LineWidth)
+    plot(timePrediction(1:end-1),armaxPredict(1:end-armaxToRFWindowUB,cv),'--k','LineWidth',LineWidth);
+    plot(timePrediction(1:end-1),RFPredictionStruct(cv).yHat(:,K_ahead),'-.r','LineWidth',LineWidth)
 %     plot(testSubsetRF(cv).OutputData(1:end-armaxToRFWindowUB));
     ylabel(CVUnits{cv})
     xlabel(xLabelStr)
@@ -318,3 +357,7 @@ for cv = 1:n
         print(printName,'-djpeg');
     end
 end
+
+%% IC for September control ARIMAX
+x0_ARMAX = x0Forecast;
+save(['x0Control_' typeOfData dateTest '.mat'],'x0_RF','x0Forecast');
