@@ -18,13 +18,13 @@ time = linspace(0,options.simTime,samples)/3600; % In hours
 timeToWatch = length(time);
 % Torque plots
 figure
-title('Torque de Rastrillo')
+title('Torque')
 hold on
 for i = 1:length(options.stepSizes)
     plot(time(1:timeToWatch),torqueSteps(i,1:timeToWatch));
 end
 ylabel('%');
-xlabel('Horas [hr]')
+xlabel('Hours [hr]')
 hold off
 legend(stepSizesStr);
 printName = [figurePath 'torque' options.stepTestType];
@@ -35,13 +35,13 @@ end
 
 % Yield Stress plots
 figure
-title('Yield Stress Descarga')
+title('Underflow Yield Stress')
 hold on
 for i = 1:length(options.stepSizes)
     plot(time(1:timeToWatch),yieldStressSteps(i,1:timeToWatch));
 end
 ylabel('[Pa]');
-xlabel('Horas [hr]')
+xlabel('Hours [hr]')
 hold off
 legend(stepSizesStr);
 printName = [figurePath 'yieldStress' options.stepTestType];
@@ -52,13 +52,13 @@ end
 
 % Concentracion Descarga plots
 figure
-title('Concentración de Sólidos Descarga')
+title('Underflow Concentration')
 hold on
 for i = 1:length(options.stepSizes)
     plot(time(1:timeToWatch),Cp_uSteps(i,1:timeToWatch)*100);
 end
 ylabel('%');
-xlabel('Horas [hr]')
+xlabel('Hours [hr]')
 hold off
 legend(stepSizesStr);
 printName = [figurePath 'Cp_u' options.stepTestType];
@@ -69,13 +69,13 @@ end
 
 % Concentracion Descarga plots
 figure
-title('Concentración de Sólidos Rebalse')
+title('Overflow Concentration')
 hold on
 for i = 1:length(options.stepSizes)
     plot(time(1:timeToWatch),Cp_eSteps(i,1:timeToWatch)*100);
 end
 ylabel('%');
-xlabel('Horas [hr]')
+xlabel('Hours [hr]')
 hold off
 legend(stepSizesStr);
 printName = [figurePath 'Cp_e' options.stepTestType];
@@ -86,13 +86,13 @@ end
 
 % Nivel de Sedimento
 figure
-title('Nivel de Interface')
+title('Interface Level')
 hold on
 for i = 1:length(options.stepSizes)
     plot(time(1:timeToWatch),bedLevelSteps(i,1:timeToWatch));
 end
 ylabel('m');
-xlabel('Horas [hr]')
+xlabel('Hours [hr]')
 hold off
 legend(stepSizesStr);
 printName = [figurePath 'bedLevel' options.stepTestType];
@@ -109,7 +109,7 @@ for i = 1:length(options.stepSizes)
     plot(time(1:timeToWatch),p1_uSteps(i,1:timeToWatch))
 end
 ylabel('[N/A]')
-xlabel('Horas [hr]')
+xlabel('Hours [hr]')
 hold off
 legend(stepSizesStr);
 printName = [figurePath 'p1_u' options.stepTestType];
@@ -120,7 +120,7 @@ end
 
 % Q_u
 figure
-title('Flujo de Descarga')
+title('Underflow Rate')
 hold on
 % for i = 1:length(options.stepSizes)
 for i = 1:length(options.stepSizes)
@@ -128,7 +128,7 @@ for i = 1:length(options.stepSizes)
     plot(time(1:timeToWatch-1),Q_uControl(i,1:timeToWatch-1))
 end
 ylabel('[m3/hr]')
-xlabel('Horas [hr]')
+xlabel('Hours [hr]')
 hold off
 h1 = legend(stepSizesStr,'Location','northwest');
 % h1 = legend(stepSizesStr{1:10:71});
@@ -143,7 +143,7 @@ end
 
 % GPT
 figure
-title('Dosis de Floculante')
+title('Flocculant Dosage')
 hold on
 % for i = 1:length(options.stepSizes)
 for i = 1:length(options.stepSizes)
@@ -151,7 +151,7 @@ for i = 1:length(options.stepSizes)
     plot(time(1:timeToWatch-1),gptControl(i,1:timeToWatch-1))
 end
 ylabel('gpt')
-xlabel('Horas [hr]')
+xlabel('Hours [hr]')
 hold off
 h1 = legend(stepSizesStr,'Location','northwest');
 % h1 = legend(stepSizesStr{1:10:71});
@@ -166,14 +166,14 @@ end
 
 % Q_f
 figure
-title('Flujo de alimentación')
+title('Feedflow Rate')
 hold on
 % for i = 1:length(options.stepSizes)
 for i = 1:length(options.stepSizes)
     plot(time(1:timeToWatch-1),Q_fControl(i,1:timeToWatch-1)*3600)
 end
 ylabel('[m3/hr]')
-xlabel('Horas [hr]')
+xlabel('Hours [hr]')
 hold off
 h1 = legend(stepSizesStr,'Location','northwest');
 % h1 = legend(stepSizesStr{1:10:71});
@@ -188,14 +188,14 @@ end
 
 % Cp_f
 figure
-title('Concentración de Alimentación')
+title('Feed Concentrarion')
 hold on
 % for i = 1:length(options.stepSizes)
 for i = 1:length(options.stepSizes)
     plot(time(1:timeToWatch-1),Cp_fControl(i,1:timeToWatch-1)*100)
 end
 ylabel('[%]')
-xlabel('Horas [hr]')
+xlabel('Hours [hr]')
 hold off
 h1 = legend(stepSizesStr,'Location','northwest');
 % h1 = legend(stepSizesStr{1:10:71});
@@ -217,7 +217,7 @@ for i = 1:length(options.stepSizes)
     plot(time(1:timeToWatch-1),p1_fControl(i,1:timeToWatch-1))
 end
 ylabel('#')
-xlabel('Horas [hr]')
+xlabel('Hours [hr]')
 hold off
 h1 = legend(stepSizesStr,'Location','northwest');
 % h1 = legend(stepSizesStr{1:10:71});
