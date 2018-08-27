@@ -5,9 +5,7 @@ function mpc_design_armax_object( dateMatFileStr,N_y,N_u,kappaControl_ARMAX,...
 %% Mat File Handling
 fixedParametersFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
 armaxModelFile = ['ARMAX_MDL_Sim_Noise_k5_na3_nb3_nc3_1408.mat']; % change to be function of datMatFileStr
-mpcObjectFileName = ['mpc_armax_object' dateMatFileStr '.mat'];
-% x0FileName = ['x0Control_Sim_' dateMatFileStr '.mat'];
-% load(x0FileName);
+mpcObjectFileName = ['mpc_armax_object_' dateMatFileStr '.mat'];
 load(fixedParametersFileName);
 load(armaxModelFile);
 
@@ -30,17 +28,15 @@ controlHorizon(N_u) = controlHorizon(N_u)+(N_y-kappaControl_ARMAX*N_u);
 mpcObj.ControlHorizon = controlHorizon;
 % Weights for horizon
 mpcObj.Weights.OV = ones(N_y,numCV);
-mpcObj.Weights.MV = ones(N_y,numMV);
+mpcObj.Weights.MV = zeros(N_y,numMV);
 
 for cv = 1:numCV % Not considering Cpef
-    %% Variable Scaling
-%     mpcObj.OV(cv).ScaleFactor = qNormMatrix(cv,cv)*(N_y*(numCV));
-    % We are taking advantage of the fact that NormMatrixes for
-    % q,beta,lambda are all the same.
-    
+    %% Cost Assignment
+    mpcObj.Weights.OV(1:N_y-1,cv) = qCostValues(cv)*ones(N_y-1,1);
+    mpcObj.Weights.OV(N_y,cv) = betaCostValues(cv);
+    mpcObj.OV(cv).ScaleFactor = 1./qNormMatrix(cv,cv)*(N_y*(numCV));
     %% Limits
     if tuningStruct.CV.BoolLims(cv)
-        mpcObj.OV(cv).ScaleFactor = qNormMatrix(cv,cv)*(N_y*(numCV));
         mpcObj.OV(cv).Min = yLowLims(cv);
         mpcObj.OV(cv).Max = yHighLims(cv);
         if tuningStruct.CV.BoolECR(cv)
@@ -48,20 +44,14 @@ for cv = 1:numCV % Not considering Cpef
             mpcObj.OV(cv).MaxECR = tuningStruct.CV.ECR(cv);
         end
     end
-    
-    %% Cost Assignment
-    mpcObj.Weights.OV(1:N_y-1,cv) = qCostValues(cv)*ones(N_y-1,1);
-    mpcObj.Weights.OV(N_y,cv) = betaCostValues(cv);
 end
-% mpcObj.OV(2).ScaleFactor = 1*1/(N_y*(numCV)); % Override before (RF used Cp_uf in [0,1], not[0, 100])
-% mpcObj.OV(2).Max = 100*mpcObj.OV(2).Max;
-% mpcObj.OV(2).Min = 100*mpcObj.OV(2).Min;
+
 for mv = 1:numMV
-   %% Variable Scaling
-%    mpcObj.MV(mv).ScaleFactor = rNormMatrix(mv,mv);
+   %% Cost Assignment
+   mpcObj.Weights.ManipulatedVariablesRate(:,mv) = rCostValues(mv);
+   mpcObj.MV(mv).ScaleFactor = 1./rNormMatrix(mv,mv);
    %% Limits
    if tuningStruct.MV.BoolLims(mv)
-       mpcObj.MV(mv).ScaleFactor = 1/rNormMatrix(mv,mv);
        mpcObj.MV(mv).Min = uLowLims(mv);
        mpcObj.MV(mv).Max = uHighLims(mv);
    end
@@ -69,8 +59,7 @@ for mv = 1:numMV
        mpcObj.MV(mv).RateMin = deltaULowLim(mv);
        mpcObj.MV(mv).RateMax = deltaUHighLim(mv);
    end
-   %% Cost Assignment
-   mpcObj.Weights.ManipulatedVariablesRate(:,mv) = rCostValues(mv);
+   
 end
 %% Load operating point (nominal) conditions
 % We have shown that sysForecast.A is equal to augmentedMPC.A. B and C are
@@ -83,8 +72,12 @@ mpcObj.Model.Nominal.U = [x0_RF.d0Memory(:,1);x0_RF.u0Memory(:,1);zeros(numCV,1)
 %% Penalization of limit breaking
 % mpcObj.Weights.ECR = lambdaCostValues(1);
 %% Output Disturbance elimination
-% Input disturbance is zero by construction and identification
-% setoutdist(mpcObj,'model',tf(zeros(numCV,1)))
+% Unmeasured input disturbance is zero (?)
+distMod = getindist(mpcObj);
+distMod.A = zeros(numCV,numCV);
+setindist(mpcObj,'model',distMod)
+% Output disturbance is zero by construction and identification
+setoutdist(mpcObj,'model',tf(zeros(numCV,1)))
 
 %% Save
 save(mpcObjectFileName,'mpcObj');

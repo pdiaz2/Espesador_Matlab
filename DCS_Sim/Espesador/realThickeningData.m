@@ -124,12 +124,12 @@ CVUnits = {'%','%','m','%','hr','ton/hr','N/A','m3/hr'};
 CVSaveName = {'torque','Cp_u','intLevel','Cp_e','tauRd','SFlx','P1_U','Q_e'};
 % MV
 % MVNames = {'Discharge Flow','Flogcculant Dose','Flocculant Feedrate','Dilution Feedrate'};
-MVNames = {'Discharge Flow','Flocculant Dose','Flocculant Feedrate','Dilution Feedrate'};
+MVNames = {'Underflow Rate','Flocculant Dosage','Flocculant Feedrate','Dilution Feedrate'};
 MVUnits = {'m3/hr','gpt','m3/hr','m3/hr'};
 MVSaveName = {'Q_u','gpt','FFeed','DilFeed'};
 % DV
-DVNames = {'Feed rate','Feed Concentration','Feed Particle Diameter'};
-DVUnits = {'m3/s','%','N/A'};
+DVNames = {'Feed Rate','Feed Concentration','Feed Particle Diameter'};
+DVUnits = {'m3/hr','%','N/A'};
 DVSaveName = {'Q_f','Cp_f','P1_f'};
 if strcmp('s',granularity)
     samples = length(SimResultsRaw.CV(1).TimeSeries);
@@ -158,12 +158,12 @@ if (plotFigures)
             plot(time(1:timeToWatch),SimResultsRaw.CV(cv).TimeSeries(1:timeToWatch))
             plot(time(1:timeToWatch),SimResults.CV(cv).TimeSeries(1:timeToWatch)) 
         else
-            plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.CV(cv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+%             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.CV(cv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
             plot(time(1:timeToWatch-compensatePhase),SimResults.CV(cv).GroupedTimeSeries(1:end))
         end
         ylabel(CVUnits{cv})
         xlabel('Hours [hr]')
-        legend('Semi-Raw','PreProcessed')
+%         legend('Semi-Raw','PreProcessed')
         grid on
         printName = [figurePath CVSaveName{cv} options.stepTestType figAppendName];
         if imprint
@@ -184,13 +184,13 @@ if (plotFigures)
             plot(time(1:timeToWatch),SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch))
             plot(time(1:timeToWatch),SimResults.MV(mv).TimeSeries(1:timeToWatch)) 
         else
-            plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.MV(mv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+%             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.MV(mv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
             plot(time(1:timeToWatch-compensatePhase),SimResults.MV(mv).GroupedTimeSeries(1:end))
         end
         grid on
         ylabel(MVUnits{mv})
         xlabel('Hours [hr]')
-        legend('Semi-Raw','PreProcessed')
+%         legend('Semi-Raw','PreProcessed')
         printName = [figurePath MVSaveName{mv} options.stepTestType figAppendName];
         if imprint
             % Latex
@@ -211,13 +211,13 @@ if (plotFigures)
             plot(time(1:timeToWatch),SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch))
             plot(time(1:timeToWatch),SimResults.DV(dv).TimeSeries(1:timeToWatch))
         else
-            plot(time(1:timeToWatch-compensatePhase),SimResults.DV(dv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+%             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.DV(dv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
             plot(time(1:timeToWatch-compensatePhase),SimResults.DV(dv).GroupedTimeSeries(1:end))
         end
         grid on
         ylabel(DVUnits{dv})
         xlabel('Hours [hr]')
-        legend('Semi-Raw','PreProcessed')
+%         legend('Semi-Raw','PreProcessed')
         printName = [figurePath DVSaveName{dv} options.stepTestType figAppendName];
         if imprint
             % Latex
