@@ -4,7 +4,7 @@ function mpc_design_armax_object( dateMatFileStr,N_y,N_u,kappaControl_ARMAX,...
 %   Detailed explanation goes here
 %% Mat File Handling
 fixedParametersFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
-armaxModelFile = ['ARMAX_MDL_Sim_Noise_k5_na3_nb3_nc3_1408.mat']; % change to be function of datMatFileStr
+armaxModelFile = ['ARMAX_MDL_Sim_Noise_k5_na4_nb4_nc3_1408.mat']; % change to be function of datMatFileStr
 mpcObjectFileName = ['mpc_armax_object_' dateMatFileStr '.mat'];
 load(fixedParametersFileName);
 load(armaxModelFile);
@@ -32,9 +32,12 @@ mpcObj.Weights.MV = zeros(N_y,numMV);
 
 for cv = 1:numCV % Not considering Cpef
     %% Cost Assignment
-    mpcObj.Weights.OV(1:N_y-1,cv) = qCostValues(cv)*ones(N_y-1,1);
-    mpcObj.Weights.OV(N_y,cv) = betaCostValues(cv);
-    mpcObj.OV(cv).ScaleFactor = 1./qNormMatrix(cv,cv)*(N_y*(numCV));
+%     mpcObj.Weights.OV(1:N_y-1,cv) = qCostValues(cv)*ones(N_y-1,1);
+%     mpcObj.Weights.OV(N_y,cv) = betaCostValues(cv);
+    mpcObj.Weights.OV(1:N_y-1,cv) = sqrt(qCostValues(cv))*ones(N_y-1,1);
+    mpcObj.Weights.OV(N_y,cv) = sqrt(betaCostValues(cv)*(N_y-1));
+%     mpcObj.OV(cv).ScaleFactor = 1./qNormMatrix(cv,cv)*(N_y*(numCV));
+    mpcObj.OV(cv).ScaleFactor = 1./qNormMatrix(cv,cv)*sqrt(((N_y-1)*(numCV)));
     %% Limits
     if tuningStruct.CV.BoolLims(cv)
         mpcObj.OV(cv).Min = yLowLims(cv);
@@ -48,7 +51,8 @@ end
 
 for mv = 1:numMV
    %% Cost Assignment
-   mpcObj.Weights.ManipulatedVariablesRate(:,mv) = rCostValues(mv);
+%    mpcObj.Weights.ManipulatedVariablesRate(:,mv) = rCostValues(mv);
+   mpcObj.Weights.ManipulatedVariablesRate(:,mv) = sqrt(rCostValues(mv)); 
    mpcObj.MV(mv).ScaleFactor = 1./rNormMatrix(mv,mv);
    %% Limits
    if tuningStruct.MV.BoolLims(mv)

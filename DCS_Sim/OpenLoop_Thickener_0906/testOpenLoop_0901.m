@@ -50,7 +50,7 @@ noiseSampleTime = Dt;
 
 %% Structure of Test
 % Will aid in analysis
-simTime = 2e5;
+simTime = 1e6;
 options.simTime = simTime;
 options.initialConditions = [Qu_0 gpt_0]';
 options.startThickener = startThickener;
@@ -67,13 +67,13 @@ if stepsMVToGenerate(1,1) == 1
 elseif stepsMVToGenerate(1,2) == 1
     typeOfTest = 'FF';
 end
-auxString = [typeOfTest '_SS_' QuStr '_' gptStr '_findDelay'];
+auxString = [typeOfTest '_SS_' QuStr '_' gptStr];
 options.stepTestType = auxString;
 % For DV uncomment below
-stepSizes = 0.033*[Qf_avg Cf_avg p1_avg];
+% stepSizes = 0.033*[Qf_avg Cf_avg p1_avg];
 options.stepSizes = stepSizes;
 options.stepDuration = 10*simTime/10;
-options.stepInitTime = 0.25*simTime/100;
+options.stepInitTime = 3*3600;
 options.timeGap = 4*simTime/10;
 
 DVToGenerate = 1*eye(3);
@@ -87,12 +87,13 @@ for i = 1:length(options.stepSizes)
     Q_f = myStepTest(simTime,Dt,options.stepSizes(i),options.stepDuration,...
         options.stepInitTime,0,Qf_avg,options.timeGap); % Change 0 for DVToGenerate(#DV,i) for DVStep
     Cp_f = myStepTest(simTime,Dt,options.stepSizes(i),options.stepDuration,...
-        options.stepInitTime,DVToGenerate(2,i),Cf_avg,options.timeGap);
+        options.stepInitTime,0,Cf_avg,options.timeGap);
     p1_f = myStepTest(simTime,Dt,options.stepSizes(i),options.stepDuration,...
         options.stepInitTime,0,p1_avg,options.timeGap);
     run parametrosEmpty.m
-%     SS = ['SS_UF' QuStr '_FF_' gptStr '.mat'];
-    load('Agosto_SimResults_1304_State.mat');
+    SS = ['SS_UF' QuStr '_FF_' gptStr '.mat'];
+    load(SS);
+%     load('Agosto_SimResults_1304_State.mat');
 
     tic;
     sim('espesadorOL_1202.slx');
@@ -168,5 +169,5 @@ matFile = ['stepTest' options.stepTestType];
 save(matFile,'torqueSteps','yieldStressSteps','Cp_uSteps','Cp_eSteps','bedLevelSteps','solidFluxSteps','residenceTimeSteps',...
     'Q_eSteps','p1_uSteps','options','startYield','Q_uControl','gptControl','Cp_fControl','Q_fControl','p1_fControl');
 % save('steadyState_UF85_FF25.mat','phi0','w0','u10','u20','u30');
-
+pause(1);
 

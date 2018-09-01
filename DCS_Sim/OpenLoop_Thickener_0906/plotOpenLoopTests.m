@@ -1,8 +1,10 @@
 %% Plots
 % Load previous .mat for display
 % clear all;
+close all;
+clear;
 clc;
-% load('stepTestDV_SS_75_25.mat');
+load('stepTestFF_SS_75_25.mat');
 [torqueSteps(1,1) yieldStressSteps(1,1) Cp_uSteps(1,1) Cp_eSteps(1,1) bedLevelSteps(1,1) p1_uSteps(1,1)];
 lololo = [num2str(torqueSteps(1,1)) ',' num2str(yieldStressSteps(1,1)) ','  num2str(Cp_uSteps(1,1)) ',' num2str(Cp_eSteps(1,1))...
      ',' num2str(bedLevelSteps(1,1)) ',' num2str(p1_uSteps(1,1))]

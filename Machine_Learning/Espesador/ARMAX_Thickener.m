@@ -3,8 +3,8 @@ close all;
 clc;
 %% Test Plant Specifics
 
-nameDataset = 'Agosto_';
-typeOfData = 'Sim_';
+nameDataset = 'ThreeMonths_';
+typeOfData = 'Real_';
 dateTest = '1408';
 %%%%%%%%%%%%%%%%%%%%%
 predictiveModelsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\PredictiveModels\';
@@ -26,14 +26,14 @@ N_y = 20;
 tau_R = 5;%5
 trainVSVal = 0.85;
 useDelayMV_CV = false;
-noiseyData = true;
+noiseyData = false;
 generateOne = true;
 
 seed = rng(1231231); % For reproducibility (should look into this after)
 %% Bool Handling
 if generateOne
-    na = 1;
-    nb = 2;
+    na = 2;
+    nb = 3;
     nc = 3;
     nk = 2;
     offsetChoice = 1;
@@ -106,7 +106,7 @@ mlParamsStruct.optimizeParams.hyperparametersRF = mlParamsStruct.optimizeParams.
 mlParamsStruct.NA = [0,6,12,36,60];
 mlParamsStruct.NB = [5,10,15,30,60];
 mlParamsStruct.NC = [0 2 5 8];
-mlParamsStruct.NK = [0 1];
+mlParamsStruct.NK = [0 1]
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;
 mlParamsStruct.optimizeParams.optimizeBool = optimizeMLHyperparameters;

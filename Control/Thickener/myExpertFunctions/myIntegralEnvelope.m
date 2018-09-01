@@ -6,6 +6,7 @@ switch selectEnvelope
         integralEnvelope = linspace(3,0,length(errorHistorySmooth));
         integralEnvelope = normpdf(integralEnvelope,0,1);
         integralEnvelope = integralEnvelope/sum(integralEnvelope);
+        integralEnvelope = fliplr(integralEnvelope);
 end
 end
 

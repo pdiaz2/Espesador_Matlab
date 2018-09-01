@@ -11,8 +11,8 @@ dateTest = '1408';
 outputMatFileName = [nameDataset '_' typeOfData '_' dateTest '_BF.mat'];
 figurePath = ['figures\' typeOfData '\'];
 saveToMatFile = false;
-csvWrite = true;
-imprint = false;
+csvWrite = false;
+imprint = true;
 plotFigures = true;
 %%
 granularity = 'g';
@@ -27,14 +27,14 @@ SimResults.CV(2).TimeSeries = [];
 SimResults.CV(3).TimeSeries = [];
 SimResults.MV(1).TimeSeries = [];
 SimResults.MV(2).TimeSeries = [];
-% Added for real real data
-SimResults.MV(3).TimeSeries = [];
-SimResults.MV(4).TimeSeries = [];
+% % Added for real real data
+% SimResults.MV(3).TimeSeries = [];
+% SimResults.MV(4).TimeSeries = [];
 SimResults.DV(1).TimeSeries = [];
 SimResults.DV(2).TimeSeries = [];
 for monthIndex = 1:length(months)
     month = months{monthIndex};
-    matFileName = ['ThickenerOperationSaul_' month '_BF.mat'];
+    matFileName = ['ThickenerOperation_' month '_BF.mat'];
     load(matFileName);
 
     numVars = length(BigData.varsIndex);
@@ -50,8 +50,8 @@ for monthIndex = 1:length(months)
 
     SimResults.MV(1).TimeSeries = [SimResults.MV(1).TimeSeries; BigData.PreProcessed(4,1:simTime)'];
     SimResults.MV(2).TimeSeries = [SimResults.MV(2).TimeSeries; FlocculantNew(1,1:simTime)'];
-    SimResults.MV(3).TimeSeries = [SimResults.MV(3).TimeSeries; BigData.PreProcessed(5,1:simTime)'];
-    SimResults.MV(4).TimeSeries = [SimResults.MV(4).TimeSeries; BigData.PreProcessed(6,1:simTime)'];
+%     SimResults.MV(3).TimeSeries = [SimResults.MV(3).TimeSeries; BigData.PreProcessed(5,1:simTime)'];
+%     SimResults.MV(4).TimeSeries = [SimResults.MV(4).TimeSeries; BigData.PreProcessed(6,1:simTime)'];
 
     % DV
 
@@ -88,7 +88,7 @@ for dv = 1:3
     SimResults.DV(dv).FFT = fft(SimResults.DV(dv).TimeSeries(fftWindow))*1/length(fftWindow);
 end
 
-for mv = 1:4
+for mv = 1:2
     SimResults.MV(mv).FFT = fft(SimResults.MV(mv).TimeSeries(fftWindow));
 end
 for dv = 1:3
@@ -124,7 +124,8 @@ CVUnits = {'%','%','m','%','hr','ton/hr','N/A','m3/hr'};
 CVSaveName = {'torque','Cp_u','intLevel','Cp_e','tauRd','SFlx','P1_U','Q_e'};
 % MV
 % MVNames = {'Discharge Flow','Flogcculant Dose','Flocculant Feedrate','Dilution Feedrate'};
-MVNames = {'Underflow Rate','Flocculant Dosage','Flocculant Feedrate','Dilution Feedrate'};
+% MVNames = {'Underflow Rate','Flocculant Dosage','Flocculant Feedrate','Dilution Feedrate'};
+MVNames = {'Underflow Rate','Flocculant Dosage'};%,'Flocculant Feedrate','Dilution Feedrate'};
 MVUnits = {'m3/hr','gpt','m3/hr','m3/hr'};
 MVSaveName = {'Q_u','gpt','FFeed','DilFeed'};
 % DV
@@ -295,6 +296,10 @@ for cv = 1:3
     plot(r(floor(length(r)/2)+1:end)/(autocorrWindowSize*Var))
     xlabel('Lags (min)')
     grid on
+    printName = [figurePath 'ACorr_' typeOfData '_' num2str(cv)];
+    if imprint
+        print(printName,'-depsc');
+    end
 end
 
 

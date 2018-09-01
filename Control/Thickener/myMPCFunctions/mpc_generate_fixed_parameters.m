@@ -4,9 +4,9 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
     RFParametersFile = ['RFParameters_' dateMatFileStr '.mat'];
     x0FileName = ['x0Control_Sim_' dateMatFileStr '.mat'];
     %% Initial Conditions
-    D0 = [325.1 0.3143];
-    U0 = [111 26]; 
-    Y0 = [21.02  73.71   2.126];
+    D0 = [326.3733 0.3143];
+    U0 = [114.8275 26.0152]; 
+    Y0 = [21.0190  73.7604   2.1261];
     numCV = length(Y0);
     numDV = length(D0);
     numMV = length(U0);
@@ -15,7 +15,7 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
     cvVariance = [10 0.1 3 0.000001];
     cvNoisePower = cvVariance./10.^(cvSNR/10);
     cvNoiseSeed = [11051993 5031995 8061958 1111960];
-%     cvNoisePower = zeros(1,numCV);
+
     %% Predictor initial state
     load(x0FileName);
     y0Memory = x0_RF.y0Memory;

@@ -3,8 +3,8 @@ clear all;
 close all;
 clc;
 %% Boolean control
-nameDataset = 'Agosto_';
-typeOfData = 'Sim_';
+nameDataset = 'ThreeMonths_';
+typeOfData = 'Real_';
 dateTest = '1408';
 predictiveModelsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\PredictiveModels\';
 resultsMLPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsML\';
@@ -15,7 +15,7 @@ saveResultsToMatFile = false;
 saveModelToMatFile = true;
 plotForestStats = true;
 %%%%%%
-cvToGenerate = 3;
+cvToGenerate = 1;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
 selectedDV = [1 2];
@@ -29,7 +29,7 @@ tau_R = 5;
 trainVSVal = 0.85;
 generateOne = true;
 useDelayMV_CV = false;
-noiseyData = true;
+noiseyData = false;
 
 seed = rng(1231231); % For reproducibility (should look into this after)
 %% Bool Handling
@@ -37,9 +37,9 @@ if generateOne
     % Input wave
     experiment = 1;
     % 1 is 0 order
-    delayUCases = 6;
+    delayYCases = 2;
     % 1 is 0 order
-    delayYCases = 6;
+    delayUCases = 6;
     nTrees = 100;
 else
    waveVector = 1:4;
@@ -102,7 +102,7 @@ mlParamsStruct.selectedVars.CV = selectedCV;
 mlParamsStruct.selectedVars.MV = selectedMV;
 mlParamsStruct.selectedVars.DV = selectedDV;
 
-mlParamsStruct.trainingParamsArray = {nTrees,1,'on',10,'on','curvature','Ensemble'};
+mlParamsStruct.trainingParamsArray = {nTrees,1,'on',10,'on','curvature','TBagger'};
 mlParamsStruct.optimizeParams.maxMinLS = 40;
 mlParamsStruct.optimizeParams.minLS = optimizableVariable('minLS',...
                                         [1,mlParamsStruct.optimizeParams.maxMinLS],...
@@ -113,7 +113,7 @@ mlParamsStruct.DelayMatrix.U = repmat([0,5,15,30,60,72,90]',1,numInputs);
 [mlParamsStruct.sizeUMatrix garbage] = size(mlParamsStruct.DelayMatrix.U);
 mlParamsStruct.delayMV_CV = controlParamsStruct.delayMV_CV;
 
-mlParamsStruct.DelayMatrix.Y = repmat([0,6,12,36,60,72,90]',1,numOutputs);
+mlParamsStruct.DelayMatrix.Y = repmat([0,6,12,36,60,72,90]',1,numOutputs)
 [mlParamsStruct.sizeYMatrix garbage] = size(mlParamsStruct.DelayMatrix.Y);
 
 mlParamsStruct.optimizeParams.bayOptIterations = 30;

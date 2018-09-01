@@ -3,26 +3,29 @@ clc;
 close all;
 %% Control Parameters
 useMPC_RF = true;
-usePID = false;
-useExpert = false;
 useMPC_ARMAX = true;
+useExpert = true; showMVComponents = false;
+usePID = true;
 %%%%%%%%%%%%%%%%%
-dvRealData = false;
-imprint = false;
+dvRealData = true;
+imprint = true;
 saveControlResults = false;
 
 % Code for names:
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
     % - SS: SmallSearch. Small pop (100-) and small gens (50-)
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
-dateOutputStr = '2108';
+dateOutputStr = '3008';
 dateMatFileStr = '1408';
-figurePath = 'figures\piow\';
+figureFolder = 'figures\';
+testName = 'tuningMPC_RF';
+% 'figures\tuningMPC_RF\';
+figurePath = [figureFolder testName '\'];
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
 %%%%%%%%%%
 simTime = 100*3600; % 10*3600
 simControlFrom = 2;
-simControlTo = 9;
+simControlTo = 3;
 %%%%%%%%%%%%%%%
 % Time sampling specifications
 Dt = 1;
@@ -35,30 +38,34 @@ kappaControl_ARMAX = 5;
 optimizationMethod = 'PSO';
 tau_C_RF = kappaControl_RF*tau_R;
 tau_C_ARMAX = kappaControl_ARMAX*tau_R;
-%%%%%%%%%%%%%%%%%%%%%
+
 % DV interaction specifics
-stepInDVArray = [false;
-                false;
-                false;
-                false;
-                false;
-                false;
-                false;
+% -  First two components are MD (Q_f, Cp_f)
+% - Third Component is "feed particle diameter" added AFTER controller
+stepInDVArray = [false;% 1
+                false; % 2
+                false; % 3
+                false; % 4
+                true; % 5
+                true; % 6
+                true; % 7
                 false;
                 false;
                 true];
 dvStepSizeArray = [
+                0 0 0;% 1
+                0 0 0;% 2
+                0 0 0;% 3
+                0 0 0;% 4
+                0 0.08 0;% 5
+                25 0 0;% 6
+                0 0 -0.04;% 7
                 0 0 0;
                 0 0 0;
+                0 -0.1 0;
                 0 0 0;
-                0 0 0;
-                0 0 0;
-                0 0 0;
-                0 0 0;
-                0 0 0;
-                0 0 0;
-                0 -0.1 0
                 ];
+
 controlClosedLoop = 1;
 startPlotTime = 1; %Wait for noise filter to stabilize
 
@@ -68,16 +75,16 @@ startPlotTime = 1; %Wait for noise filter to stabilize
 qCostValuesIterations_RF = ...%repmat([1 1 100],simControlTo,1);
                         [
 						1 10 100; % 1 OL
-						1 1e2 1e2; % 2
-                        1 1e2 1e3; % 3 Bastante bueno pero la cama sigue siendo un poco muy alta. Oscilan muchísimos los gpt y en verdad casi todo.
-						1 1e2 1e4; % 4 Baja más la cama (queda en 3m). No controla muy bien la cama. Quizás hay que ponerle aún más peso.
-						1 1e2 1e2; % 5 Bueno! No oscila tanto el flujo (aguanta un costo tan bajo).
-						1 1e2 1e2; % 6 Más o menos malo respecto al resto. Pareciera que el costo del gpt no afecta tanto
-						1 1e2 1e2; % 7 Bueno pero no es mejor que el caso 2.
-                        1 1e2 1e2; % 8 Mejor que la 7, pero es igual que el caso 2
-                        1 1e2 1e2; % 9 Bueno
-                        1 1e2 1e2; % 10
-                        1 1e2 1e2  % 11
+						1e0 1e2 1e2; % 2
+                        1e0 1e2 1e2; % 3 Bastante bueno pero la cama sigue siendo un poco muy alta. Oscilan muchísimos los gpt y en verdad casi todo.
+						1e0 1e2 1e2; % 4 Baja más la cama (queda en 3m). No controla muy bien la cama. Quizás hay que ponerle aún más peso.
+						1e0 1e2 1e2; % 5 Bueno! No oscila tanto el flujo (aguanta un costo tan bajo).
+						1e0 1e2 1e2; % 6 Más o menos malo respecto al resto. Pareciera que el costo del gpt no afecta tanto
+						1e0 1e2 1e2; % 7 Bueno pero no es mejor que el caso 2.
+                        1e0 1e2 1e2; % 8 Mejor que la 7, pero es igual que el caso 2
+                        1e0 1e2 1e2; % 9 Bueno
+                        1e0 1e2 1e2; % 10
+                        1e0 1e2 1e2  % 11
                         ];
 
 rCostValuesIterations_RF = ...%repmat([0.001 0.01],simControlTo,1);
@@ -86,7 +93,7 @@ rCostValuesIterations_RF = ...%repmat([0.001 0.01],simControlTo,1);
                         1e-3 1e-2; % 2 
                         1e-3 1e-2; % 3 
                         1e-3 1e-2; % 4 
-                        5e-4 1e-2; % 5
+                        1e-3 1e-2; % 5
                         1e-3 1e-3; % 6 
                         1e-3 1e-2; % 7 
                         1e-3 1e-2; % 8 
@@ -98,22 +105,22 @@ rCostValuesIterations_RF = ...%repmat([0.001 0.01],simControlTo,1);
 %                         0.001 0.01];
 betaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
                         [
-						1 10 100; % 1 OL
-						1e2 1e2 1e2; % 2
-                        1 1e2 1e2; % 3
-						1 1e2 1e2; % 4 
-						1 1e2 1e2; % 5
-						1 1e2 1e3; % 6 
-						1 1e3 1e2; % 7 
-                        1 1e2 1e2; % 8 
-                        1 1e2 1e2; % 9 
-                        1 1e2 1e2; % 10
-                        1 1e2 1e2 % 11
+						1 1 1; % 1 OL
+						1e0 1e2 1e2; % 2
+                        1e0 1e2 1e2; % 3
+						1e0 1e2 1e2; % 4 
+						1e0 1e2 1e2; % 5
+						1e0 1e2 1e3; % 6 
+						1e0 1e3 1e2; % 7 
+                        1e0 1e2 1e2; % 8 
+                        1e0 1e2 1e2; % 9 
+                        1e0 1e2 1e2; % 10
+                        1e0 1e2 1e2 % 11
                         ];
 lambdaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
                         [
-						1 10 100; % 1 OL
-						1 1 1; % 2
+						1 1 1; % 1 OL
+						1 1e2 1e2; % 2
                         1e4 1e4 1e4; % 3
 						1e4 1e4 1e4; % 4 
 						1e4 1e4 1e4; % 5 
@@ -127,27 +134,20 @@ lambdaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
 
 numCV = size(qCostValuesIterations_RF,2);
 numMV = size(rCostValuesIterations_RF,2);
-%% PI Tuning
-KpArray = repmat([90 3],simControlTo,1);
-
-KiArray = repmat([3.6 1e-4],simControlTo,1);
-
-KdArray = repmat([0 0],simControlTo,1);
-
 %% MPC ARIMAX Cost Values
 qCostValuesIterations_ARMAX = ...%repmat([1 1 100],simControlTo,1);
                         [
-						1 10 100; % 1 OL
-						1e2 1e2 1e2; % 2
-                        1e2 1e3 1e3; % 3 
-						1e2 1e2 1e2; % 4 
-						1e0 1e0 1e0; % 5 
-						1e2 1e2 1e2; % 6 
-						1e2 1e2 1e5; % 7 
-                        1e2 1e2 1e2; % 8 
-                        1e2 1e2 1e2; % 9 
-                        1e2 1e2 1e2; % 10
-                        1e2 1e2 1e2  % 11
+						1 1 1; % 1 OL
+						1e0 1e2 1e2; % 2
+                        1e0 1e2 1e2; % 3 
+						1e0 1e2 1e2; % 4 
+						1e0 1e2 1e2; % 5 
+						1e0 1e2 1e2; % 6 
+						1e0 1e2 1e5; % 7 
+                        1e0 1e2 1e2; % 8 
+                        1e0 1e2 1e2; % 9 
+                        1e0 1e2 1e2; % 10
+                        1e0 1e2 1e2  % 11
                         ];
 
 rCostValuesIterations_ARMAX = ...%repmat([0.001 0.01],simControlTo,1);
@@ -155,8 +155,8 @@ rCostValuesIterations_ARMAX = ...%repmat([0.001 0.01],simControlTo,1);
                         1e14 1e14; % 1 OL
                         1e-3 1e-2; % 2 
                         1e-3 1e-2; % 3 
-                        1e0 1e0; % 4 
-                        1e0 1e0; % 5
+                        1e-3 1e-2; % 4 
+                        1e-3 1e-2; % 5
                         1e-3 1e-2; % 6 
                         1e-3 1e-2; % 7 
                         1e-3 1e-2; % 8 
@@ -164,16 +164,15 @@ rCostValuesIterations_ARMAX = ...%repmat([0.001 0.01],simControlTo,1);
                        	1e-3 1e-2; % 10
                        	1e-3 1e-2 % 11
                         ];
-% rCostValuesIterations = [1e10 1e10;
-%                         0.001 0.01];
+
 betaCostValuesIterations_ARMAX = ...%repmat([1 1 1],simControlTo,1);
                         [
-						1 10 100; % 1 OL
-						1 1 1; % 2
-                        1 1e2 1e2; % 3
-						1 1e2 1e2; % 4 
-						1 1e2 1e2; % 5
-						1 1e2 1e3; % 6 
+						1 1 1; % 1 OL
+						1e0 1e2 1e2; % 2
+                        1e0 1e2 1e2; % 3
+						1e0 1e2 1e2; % 4 
+						1e0 1e2 1e2; % 5
+						1e0 1e2 1e2; % 6 
 						1e2 1e3 1e2; % 7 
                         1e4 1e4 1e4; % 8 
                         1e2 1e2 1e2; % 9 
@@ -182,8 +181,8 @@ betaCostValuesIterations_ARMAX = ...%repmat([1 1 1],simControlTo,1);
                         ];
 lambdaCostValuesIterations_ARMAX = ...%repmat([1 1 1],simControlTo,1);
                         [
-						1 10 100; % 1 OL
-						1 1 1; % 2
+						1 1 1; % 1 OL
+						1e4 1e4 1e4; % 2
                         1e4 1e4 1e4; % 3
 						1e4 1e4 1e4; % 4 
 						1e4 1e4 1e4; % 5 
@@ -201,12 +200,116 @@ boolECR = repmat(logical([1,1,1]),simControlTo,1);
 boolLimsMV = repmat(logical([1,1]),simControlTo,1);
 boolRateLimsMV = repmat(logical([1,1]),simControlTo,1);
 cvECR = repmat([0.5,0.5,0.5],simControlTo,1);
+%% Expert Tuning
+kNeighboursArray = repmat(100,simControlTo,1);
+errorRecSizeArray = repmat(400,simControlTo,1);
+tau_R_Expert = tau_R;
+useMVRegions = false;
+cvToInspect = 3;
+cvToControlBoolArray = logical([0 0 0; % 1
+                                0 1 1; % 2
+                                0 1 1; % 3
+                                0 1 1; % 4
+                                0 1 1; % 5
+                                0 1 1; % 6
+                                0 1 1; % 7
+                                0 1 1; % 8
+                                0 1 1; % 9
+                                0 1 1; % 10
+                                0 1 1 % 11
+                                ]);
+% K_pExpert = [0 4 10];
+% T_iExpert = [1e8 10 10];
+K_pExpertArray = repmat([0 1 1],simControlTo,1); % [0 4 4]; [0 4 10]
+% T_iExpertArray = repmat([1e8 1e8 1e8],simControlTo,1);
+T_iExpertArray = [
+                    1e8 1e8 1e8; % 1
+                    1e8 1e1 1e1; % 2 [1e8 1e2 1e2]
+                    1e8 1e1 1e1; % 3
+                    1e8 1e1 1e1; % 4
+                    1e8 1e1 1e1; % 5
+                    1e8 1e2 1e2; % 6
+                    1e8 1e2 1e2; % 7
+                    1e8 1e8 1e8; % 8
+                    1e8 1e8 1e8; % 9
+                    1e1 1e1 1e1; % 10
+                    1e1 1e1 1e1; % 11
+                    ];
+expertRegionsArray = [7; % 1
+                     21; % 2
+                     21; % 3
+                     21; % 4
+                     21; % 5
+                     21; % 6
+                     21; % 7
+                     21; % 8
+                     21; % 9
+                     21; % 10
+                     21 % 11
+                     ];
+
+minCVErrorThresholdsArray = [
+                        -1 -1 -4; % 1
+                        -5 -10 -4; % 2
+                        -5 -10 -4; % 3
+                        -5 -10 -4; % 4
+                        -5 -10 -4; % 5
+                        -5 -10 -4; % 6
+                        -5 -10 -4; % 7
+                        -5 -10 -4; % 8
+                        -5 -10 -4; % 9
+                        -5 -10 -4; % 10
+                        -5 -10 -4  % 11
+                        ];
+maxCVErrorThresholdsArray = [
+                            1 1 4; % 1
+                            5 10 4; % 2
+                            5 10 4; % 3
+                            5 10 4; % 4
+                            5 10 4; % 5
+                            5 10 4; % 6
+                            5 10 4; % 7
+                            5 10 4; % 8
+                            5 10 4; % 9
+                            5 10 4; % 10
+                            5 10 4 % 11
+                            ];
+dMVArray = [
+            1e-1 1e-2; % 1
+            1e-1 1e-2; % 2
+            1e-1 1e-2; % 3
+            1e-1 1e-2; % 4
+            1e-1 1e-2; % 5
+            1e-1 1e-2; % 6
+            1e-1 1e-2; % 7
+            1e-1 1e-2; % 8
+            1e-1 1e-2; % 9
+            1e-1 1e-2; % 10
+            1e-1 1e-2; % 11
+            ];
+   
+smoothFuncSelect = 1;
+selectEnvelope = 'GaussianEnvelope';
+options.selectEnvelop = selectEnvelope;
+mvToCvSigns = [-1 1;
+                -1 1;
+                1 1];
+%% PI Tuning
+KpArray = repmat([90*1e1 -3*1e0],simControlTo,1); % 90 3
+
+KiArray = repmat([3.6*1e0 -1e-4*1e-4],simControlTo,1); % 3.6 1e-4
+
+KdArray = repmat([0*1e-5 -0*1e0],simControlTo,1);
+
+
+
+
 %% Reference Values Struct
 wValuesStruct.delta = [
                         0 0 0;
-                        0 0 4;
-                        0 -0.4 0;
                         0 0 0;
+                        0 0 6;
+                        0 -1 0;
                         0 0 0;
                         0 0 0;
                         0 0 0;
@@ -224,8 +327,8 @@ wValuesStruct.delta = [
 wValuesStruct.changeBool = logical([
                                     0 0 0;
                                     0 0 0;
-                                    0 0 0;
-                                    0 0 0;
+                                    0 0 1;
+                                    0 1 0;
                                     0 0 0;
                                     0 0 0;
                                     0 0 0;
@@ -248,9 +351,9 @@ wValuesStruct.shape = {
                         };
 wValuesStruct.timeToChange = [
                                 -1 -1 -1;
-                                -1 -1 floor(simTime/1e3);
-                                -1 floor(simTime/1e2) -1;
                                 -1 -1 -1;
+                                -1 -1 floor(simTime/1e1);
+                                -1 floor(simTime/1e1) -1;
                                 -1 -1 -1;
                                 -1 -1 -1;
                                 -1 -1 -1;
@@ -270,6 +373,343 @@ wValuesStruct.addNoiseBool = [
                                 false;
                                 false
                                 ];
+
+
+%%%%%%%%%%%%%%%%%%%%%
+%{
+% % % % % DV interaction specifics
+% % % % stepInDVArray = [false;
+% % % %                 false;
+% % % %                 false;
+% % % %                 false;
+% % % %                 false;
+% % % %                 false;
+% % % %                 false;
+% % % %                 false;
+% % % %                 false;
+% % % %                 true];
+% % % % dvStepSizeArray = [
+% % % %                 0 0 0;
+% % % %                 0 0 0;
+% % % %                 0 0 0;
+% % % %                 0 0 0;
+% % % %                 0 0 0;
+% % % %                 0 0 0;
+% % % %                 0 0 0;
+% % % %                 0 0 0;
+% % % %                 0 0 0;
+% % % %                 0 -0.1 0;
+% % % %                 0 0 0;
+% % % %                 ];
+% % % % controlClosedLoop = 1;
+% % % % startPlotTime = 1; %Wait for noise filter to stabilize
+% % % % 
+% % % % 
+% % % % %% MPC RF Cost Values
+% % % % 
+% % % % qCostValuesIterations_RF = ...%repmat([1 1 100],simControlTo,1);
+% % % %                         [
+% % % % 						1 10 100; % 1 OL
+% % % % 						1 1e2 1e2; % 2
+% % % %                         1 1e2 1e3; % 3 Bastante bueno pero la cama sigue siendo un poco muy alta. Oscilan muchísimos los gpt y en verdad casi todo.
+% % % % 						1 1e2 1e4; % 4 Baja más la cama (queda en 3m). No controla muy bien la cama. Quizás hay que ponerle aún más peso.
+% % % % 						1 1e2 1e2; % 5 Bueno! No oscila tanto el flujo (aguanta un costo tan bajo).
+% % % % 						1 1e2 1e2; % 6 Más o menos malo respecto al resto. Pareciera que el costo del gpt no afecta tanto
+% % % % 						1 1e2 1e2; % 7 Bueno pero no es mejor que el caso 2.
+% % % %                         1 1e2 1e2; % 8 Mejor que la 7, pero es igual que el caso 2
+% % % %                         1 1e2 1e2; % 9 Bueno
+% % % %                         1 1e2 1e2; % 10
+% % % %                         1 1e2 1e2  % 11
+% % % %                         ];
+% % % % 
+% % % % rCostValuesIterations_RF = ...%repmat([0.001 0.01],simControlTo,1);
+% % % %                         [
+% % % %                         1e14 1e14; % 1 OL
+% % % %                         1e-3 1e-2; % 2 
+% % % %                         1e-3 1e-2; % 3 
+% % % %                         1e-3 1e-2; % 4 
+% % % %                         5e-4 1e-2; % 5
+% % % %                         1e-3 1e-3; % 6 
+% % % %                         1e-3 1e-2; % 7 
+% % % %                         1e-3 1e-2; % 8 
+% % % %                         1e-3 1e-2; % 9 
+% % % %                        	1e-3 1e-2; % 10
+% % % %                        	1e-3 1e-2 % 11
+% % % %                         ];
+% % % % % rCostValuesIterations = [1e10 1e10;
+% % % % %                         0.001 0.01];
+% % % % betaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
+% % % %                         [
+% % % % 						1 10 100; % 1 OL
+% % % % 						1e2 1e2 1e2; % 2
+% % % %                         1 1e2 1e2; % 3
+% % % % 						1 1e2 1e2; % 4 
+% % % % 						1 1e2 1e2; % 5
+% % % % 						1 1e2 1e3; % 6 
+% % % % 						1 1e3 1e2; % 7 
+% % % %                         1 1e2 1e2; % 8 
+% % % %                         1 1e2 1e2; % 9 
+% % % %                         1 1e2 1e2; % 10
+% % % %                         1 1e2 1e2 % 11
+% % % %                         ];
+% % % % lambdaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
+% % % %                         [
+% % % % 						1 10 100; % 1 OL
+% % % % 						1 1 1; % 2
+% % % %                         1e4 1e4 1e4; % 3
+% % % % 						1e4 1e4 1e4; % 4 
+% % % % 						1e4 1e4 1e4; % 5 
+% % % % 						1e4 1e4 1e4; % 6 
+% % % % 						1e4 1e4 1e4; % 7 
+% % % %                         1e4 1e4 1e4; % 8 
+% % % %                         1e4 1e4 1e4; % 9 
+% % % %                         1e4 1e4 1e4; % 10
+% % % %                         1e4 1e4 1e4 % 11
+% % % %                         ];
+% % % % 
+% % % % numCV = size(qCostValuesIterations_RF,2);
+% % % % numMV = size(rCostValuesIterations_RF,2);
+% % % % %% MPC ARIMAX Cost Values
+% % % % qCostValuesIterations_ARMAX = ...%repmat([1 1 100],simControlTo,1);
+% % % %                         [
+% % % % 						1 10 100; % 1 OL
+% % % % 						1e2 1e2 1e2; % 2
+% % % %                         1e2 1e3 1e3; % 3 
+% % % % 						1e2 1e2 1e2; % 4 
+% % % % 						1e0 1e0 1e0; % 5 
+% % % % 						1e2 1e2 1e2; % 6 
+% % % % 						1e2 1e2 1e5; % 7 
+% % % %                         1e2 1e2 1e2; % 8 
+% % % %                         1e2 1e2 1e2; % 9 
+% % % %                         1e2 1e2 1e2; % 10
+% % % %                         1e2 1e2 1e2  % 11
+% % % %                         ];
+% % % % 
+% % % % rCostValuesIterations_ARMAX = ...%repmat([0.001 0.01],simControlTo,1);
+% % % %                         [
+% % % %                         1e14 1e14; % 1 OL
+% % % %                         1e-3 1e-2; % 2 
+% % % %                         1e-3 1e-2; % 3 
+% % % %                         1e0 1e0; % 4 
+% % % %                         1e0 1e0; % 5
+% % % %                         1e-3 1e-2; % 6 
+% % % %                         1e-3 1e-2; % 7 
+% % % %                         1e-3 1e-2; % 8 
+% % % %                         1e-6 1e-6; % 9 
+% % % %                        	1e-3 1e-2; % 10
+% % % %                        	1e-3 1e-2 % 11
+% % % %                         ];
+% % % % % rCostValuesIterations = [1e10 1e10;
+% % % % %                         0.001 0.01];
+% % % % betaCostValuesIterations_ARMAX = ...%repmat([1 1 1],simControlTo,1);
+% % % %                         [
+% % % % 						1 10 100; % 1 OL
+% % % % 						1 1 1; % 2
+% % % %                         1 1e2 1e2; % 3
+% % % % 						1 1e2 1e2; % 4 
+% % % % 						1 1e2 1e2; % 5
+% % % % 						1 1e2 1e3; % 6 
+% % % % 						1e2 1e3 1e2; % 7 
+% % % %                         1e4 1e4 1e4; % 8 
+% % % %                         1e2 1e2 1e2; % 9 
+% % % %                         1e2 1e2 1e2; % 10
+% % % %                         1e2 1e2 1e2 % 11
+% % % %                         ];
+% % % % lambdaCostValuesIterations_ARMAX = ...%repmat([1 1 1],simControlTo,1);
+% % % %                         [
+% % % % 						1 10 100; % 1 OL
+% % % % 						1 1 1; % 2
+% % % %                         1e4 1e4 1e4; % 3
+% % % % 						1e4 1e4 1e4; % 4 
+% % % % 						1e4 1e4 1e4; % 5 
+% % % % 						1e4 1e4 1e4; % 6 
+% % % % 						1e4 1e4 1e4; % 7 
+% % % %                         1e4 1e4 1e4; % 8 
+% % % %                         1e4 1e4 1e4; % 9 
+% % % %                         1e4 1e4 1e4; % 10
+% % % %                         1e4 1e4 1e4 % 11
+% % % %                         ];
+% % % % 
+% % % % % CV
+% % % % boolLimsCV = repmat(logical([1,1,1]),simControlTo,1);
+% % % % boolECR = repmat(logical([1,1,1]),simControlTo,1);
+% % % % boolLimsMV = repmat(logical([1,1]),simControlTo,1);
+% % % % boolRateLimsMV = repmat(logical([1,1]),simControlTo,1);
+% % % % cvECR = repmat([0.5,0.5,0.5],simControlTo,1);
+% % % % %% Expert Tuning
+% % % % kNeighboursArray = repmat(100,simControlTo,1);
+% % % % errorRecSizeArray = repmat(400,simControlTo,1);
+% % % % tau_R_Expert = tau_R;
+% % % % useMVRegions = false;
+% % % % cvToInspect = 3;
+% % % % cvToControlBoolArray = logical([0 1 0; % 1
+% % % %                                 0 1 1; % 2
+% % % %                                 0 1 1; % 3
+% % % %                                 1 1 1; % 4
+% % % %                                 0 1 0; % 5
+% % % %                                 0 1 1; % 6
+% % % %                                 1 1 1; % 7
+% % % %                                 0 1 1; % 8
+% % % %                                 1 1 1; % 9
+% % % %                                 0 1 0; % 10
+% % % %                                 0 1 0 % 11
+% % % %                                 ]);
+% % % % % K_pExpert = [0 4 10];
+% % % % % T_iExpert = [1e8 10 10];
+% % % % K_pExpertArray = repmat([0 1 1],simControlTo,1); % [0 4 4]; [0 4 10]
+% % % % % T_iExpertArray = repmat([1e8 1e8 1e8],simControlTo,1);
+% % % % T_iExpertArray = [
+% % % %                     1e8 1e8 1e8; % 1
+% % % %                     1e8 1e1 1e1; % 2 [1e8 1e2 1e2]
+% % % %                     1e8 1e2 1e2; % 3
+% % % %                     1e8 1e2 1e2; % 4
+% % % %                     1e8 1e8 1e8; % 5
+% % % %                     1e8 1e2 1e2; % 6
+% % % %                     1e8 1e2 1e2; % 7
+% % % %                     1e8 1e8 1e8; % 8
+% % % %                     1e8 1e8 1e8; % 9
+% % % %                     1e1 1e1 1e1; % 10
+% % % %                     1e1 1e1 1e1; % 11
+% % % %                     ];
+% % % % expertRegionsArray = [7; % 1
+% % % %                      21; % 2
+% % % %                      9; % 3
+% % % %                      11; % 4
+% % % %                      7; % 5
+% % % %                      9; % 6
+% % % %                      11; % 7
+% % % %                      7; % 8
+% % % %                      9; % 9
+% % % %                      11; % 10
+% % % %                      7 % 11
+% % % %                      ];
+% % % % 
+% % % % minCVErrorThresholdsArray = [
+% % % %                         -1 -1 -4; % 1
+% % % %                         -5 -10 -4; % 2
+% % % %                         -1 -1 -4; % 3
+% % % %                         -1 -1 -4; % 4
+% % % %                         -1 -1 -4; % 5
+% % % %                         -1 -1 -4; % 6
+% % % %                         -1 -1 -4; % 7
+% % % %                         -1 -1 -4; % 8
+% % % %                         -1 -1 -4; % 9
+% % % %                         -1 -1 -4; % 10
+% % % %                         -1 -1 -4  % 11
+% % % %                         ];
+% % % % maxCVErrorThresholdsArray = [
+% % % %                             1 1 4; % 1
+% % % %                             5 10 4; % 2
+% % % %                             1 1 4; % 3
+% % % %                             1 1 4; % 4
+% % % %                             1 1 4; % 5
+% % % %                             1 1 4; % 6
+% % % %                             1 1 4; % 7
+% % % %                             1 1 4; % 8
+% % % %                             1 1 4; % 9
+% % % %                             1 1 4; % 10
+% % % %                             1 1 4 % 11
+% % % %                             ];
+% % % % dMVArray = [
+% % % %             1e-1 1e-2; % 1
+% % % %             1e-1 1e-2; % 2
+% % % %             1e-1 1e-2; % 3
+% % % %             1e-1 1e-2; % 4
+% % % %             1e-1 1e-2; % 5
+% % % %             1e-0 1e-0; % 6
+% % % %             1e-0 1e-0; % 7
+% % % %             1e-0 1e-0; % 8
+% % % %             1e-3 1e-3; % 9
+% % % %             1e-3 1e-3; % 10
+% % % %             1e-3 1e-3; % 11
+% % % %             ];
+% % % %    
+% % % % smoothFuncSelect = 1;
+% % % % selectEnvelope = 'GaussianEnvelope';
+% % % % options.selectEnvelop = selectEnvelope;
+% % % % mvToCvSigns = [-1 1;
+% % % %                 -1 1;
+% % % %                 1 1];
+% % % % %% PI Tuning
+% % % % KpArray = repmat([0*1e1 -3*1e0],simControlTo,1); % 90 3
+% % % % 
+% % % % KiArray = repmat([0*1e0 -0*1e-4],simControlTo,1); % 3.6 1e-4
+% % % % 
+% % % % KdArray = repmat([0*1e-5 -0*1e0],simControlTo,1);
+% % % % 
+% % % % 
+% % % % 
+% % % % 
+% % % % %% Reference Values Struct
+% % % % wValuesStruct.delta = [
+% % % %                         0 0 0;
+% % % %                         0 0 4;
+% % % %                         0 -0.4 0;
+% % % %                         0 0 0;
+% % % %                         0 0 0;
+% % % %                         0 0 0;
+% % % %                         0 0 0;
+% % % %                         0 0 0;
+% % % %                         0 0 0;
+% % % %                         0 -0.4 0;
+% % % %                        ];
+% % % % % wValuesStruct.changeBool = logical([
+% % % % %                                     0 0 0;
+% % % % %                                     0 0 1;
+% % % % %                                     0 1 0;
+% % % % %                                     0 0 0;
+% % % % %                                     0 0 0
+% % % % %                                     ]);
+% % % % wValuesStruct.changeBool = logical([
+% % % %                                     0 0 0;
+% % % %                                     0 0 0;
+% % % %                                     0 0 0;
+% % % %                                     0 0 0;
+% % % %                                     0 0 0;
+% % % %                                     0 0 0;
+% % % %                                     0 0 0;
+% % % %                                     0 0 0;
+% % % %                                     0 0 0;
+% % % %                                     0 1 0
+% % % %                                     ]);
+% % % % wValuesStruct.shape = {
+% % % %                         'step','step','step';
+% % % %                         'step','step','step';
+% % % %                         'step','step','step';
+% % % %                         'step','step','step';
+% % % %                         'step','step','step';
+% % % %                         'step','step','step';
+% % % %                         'step','step','step';
+% % % %                         'step','step','step';
+% % % %                         'step','step','step';
+% % % %                         'step','step','step';
+% % % %                         'step','step','step'
+% % % %                         };
+% % % % wValuesStruct.timeToChange = [
+% % % %                                 -1 -1 -1;
+% % % %                                 -1 -1 floor(simTime/1e3);
+% % % %                                 -1 floor(simTime/1e2) -1;
+% % % %                                 -1 -1 -1;
+% % % %                                 -1 -1 -1;
+% % % %                                 -1 -1 -1;
+% % % %                                 -1 -1 -1;
+% % % %                                 -1 -1 -1;
+% % % %                                 -1 -1 -1;
+% % % %                                 -1 floor(simTime/1e3) -1;
+% % % %                                 ];
+% % % % wValuesStruct.addNoiseBool = [
+% % % %                                 false; %always false for w
+% % % %                                 false;
+% % % %                                 false;
+% % % %                                 false;
+% % % %                                 false;
+% % % %                                 false;
+% % % %                                 false;
+% % % %                                 false;
+% % % %                                 false;
+% % % %                                 false
+% % % %                                 ];
+%}
 %% Sensor Values Struct
 yValuesStruct.delta = [0 0 0];
 yValuesStruct.changeBool = logical([0 0 0]);
@@ -313,7 +753,7 @@ for simIter = simControlFrom:simControlTo
     if (stepInDVArray(simIter))
         stepTimeDV(1) = floor(simTime/10);
         stepTimeDV(2) = floor(simTime/10);
-        stepTimeDV(3) = simTime;
+        stepTimeDV(3) = floor(simTime/10);
     else
         stepTimeDV(1) = simTime;
         stepTimeDV(2) = simTime;
@@ -368,22 +808,6 @@ for simIter = simControlFrom:simControlTo
             controlMovesMPC_RF(:,:,mv,simIter) = downsample(auxControlMoves(:,:,mv),tau_C_RF);
         end
     end
-    %% PI Control
-    if usePID
-        Kp = KpArray(simIter,:);
-        Ki = KiArray(simIter,:);
-        Kd = KdArray(simIter,:);
-        run parametrosEmpty.m
-        rng(120938103);
-        load('Agosto_SimResults_1304_State.mat');
-        tic;
-        sim('pid_thickener.slx');
-        toc;
-         % Store Results
-        yPID(:,:,simIter) = y.signals.values(:,:);
-        uPID(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
-        dPID(:,:,simIter) = inputs.signals.values(:,1:numDV);
-    end
     %% MPC - ARMAX
     if useMPC_ARMAX
         tuningStruct.CV.BoolLims = boolLimsCV(simIter,:);
@@ -415,9 +839,90 @@ for simIter = simControlFrom:simControlTo
         end
        
     end
+    %% Expert Control
+    if useExpert
+        %Load Parameters
+        load(parametersFileArray{3});
+        % Which CVs to Control
+        cvToControlBool = cvToControlBoolArray(simIter,:);
+        % Size of memory for CVs
+        errorRecSize = errorRecSizeArray(simIter);
+        % Softening shape
+        kNeighbours = kNeighboursArray(simIter);
+        integralEnvelope = myIntegralEnvelope(ones(1,errorRecSizeArray(simIter)),selectEnvelope);
+        % Regions for each CV
+        for cv = 1:numCV
+           errorCVThr(cv,:) = linspace(maxCVErrorThresholdsArray(simIter,cv),...
+                                        minCVErrorThresholdsArray(simIter,cv),...
+                                        expertRegionsArray(simIter)); 
+        end
+        % Finess control zone
+        intErrorThr = zeros(numCV,expertRegionsArray(simIter));
+        ceroPosition = find(errorCVThr(1,:) == 0);
+        intErrorThr(:,ceroPosition) = 1*ones(numCV,1);
+        intErrorThr(:,ceroPosition+1) = 1*ones(numCV,1);
+        % Regions and bounds for MV
+        mvLims = [uLowLims(:,1) uHighLims(:,2)];
+        % Kp and T_i
+        K_pExpert = K_pExpertArray(simIter,:);
+        T_iExpert = T_iExpertArray(simIter,:);
+        dMV = dMVArray(simIter,:);
+        for mv = 1:numMV
+           mvExpertLimits(mv,:) = linspace(mvLims(mv,1),mvLims(mv,2),expertRegionsArray(simIter));
+        end
+        
+        if useMVRegions
+            % Lower bounds for MV for each CV region
+            mvRegions(:,:,1) = [mvExpertLimits(:,1:end-1) mvExpertLimits(:,end-1)];
+            % Upper bounds
+            mvRegions(:,:,2) = [mvExpertLimits(:,2:end) mvExpertLimits(:,end)];
+        else
+            % Replicate most inferior/superior bound
+            mvRegions(:,:,1) = repmat(mvExpertLimits(:,1),1,expertRegionsArray(simIter));
+            mvRegions(:,:,2) = repmat(mvExpertLimits(:,end),1,expertRegionsArray(simIter));
+        end
+        run parametrosEmpty.m
+        rng(120938103);
+        load('Agosto_SimResults_1304_State.mat');
+        tic;
+        sim('expert_control_thickener.slx');
+        toc;
+         % Store Results
+        yExpert(:,:,simIter) = y.signals.values(:,:);
+        uExpert(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
+        dExpert(:,:,simIter) = inputs.signals.values(:,1:numDV);
+        auxMVComponents = permute(mvComponents.signals.values(:,:,:),[3 2 1]);
+        for mv = 1:numMV
+            mvComponentsExp(:,:,mv,simIter) = downsample(auxMVComponents(:,:,mv),tau_R);
+        end
+        explanationsExpert(:,:,simIter) = downsample(expGenerator.signals.values(:,:),tau_R);
+        clear errorCVThr intErrorThr mvExpertLimits mvRegions;
+    end
+    %% PI Control
+    if usePID
+        Kp = KpArray(simIter,:);
+        Ki = KiArray(simIter,:);
+        Kd = KdArray(simIter,:);
+        run parametrosEmpty.m
+        rng(120938103);
+        load('Agosto_SimResults_1304_State.mat');
+        tic;
+        sim('pid_thickener.slx');
+        toc;
+         % Store Results
+        yPID(:,:,simIter) = y.signals.values(:,:);
+        uPID(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
+        dPID(:,:,simIter) = inputs.signals.values(:,1:numDV);
+    end
+    
     %% References
     % Store references
-%     wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
+%     if usePID && ~useMPC_ARMAX && ~useMPC_RF && ~useExpert
+%         wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
+%     end
+    if usePID
+        wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
+    end
     wRefSimulink(:,:,simIter) = wRef.signals.values(:,:);
     
 end
@@ -440,23 +945,27 @@ MVSaveName = {'Q_u','gpt'};
 titlesDV = {'Feed Rate','Feed Concentration','Feed Particle Diameter'};
 DVUnits = {'m3/hr','%','N/A'};
 DVSaveName = {'Q_f','Cp_f','P1_f'};
-titlesHyp = {'ExitFlags','F.O. Values'};
+titlesHyp = {'ExitFlags','O.F. Values'};
+titlesExpert = {'Torque Contribution','Concentration Contribution','Interface Contribution';
+                'Proportional Action','Integral Action','Derivative Action'};
 % Units
 CVUnits = {'%','%','m','%'};
 MVUnits = {'m3/hr','gpt'};
 DVUnits = {'m3/s','%','N/A'};
 % Colors
-controlColors = {'r','b','k'};
-controlLineStyle = {'-','-.','--'};
-controlMarker = {'*','none','d'};
+controlColors = {'r','k','b','m'};
+controlLineStyle = {'-','--','-.',':'};
+controlMarker = {'*','d','o','none'};
 % Y Axis Limits
-usePlotLims = false;
-CVLims = [15 22;
-         65 75;
-         0 10];
-MVLims = [80 120;
-          20 30];
-controllersUsed = num2str(double([useMPC_RF useExpert usePID useMPC_ARMAX]));
+usePlotLims = true;
+CVLims = [20 22;
+         72 75;
+         0 8];
+MVLims = [65 130;
+          18 32];
+DVLims = [280 400;
+          0.2 0.4];
+controllersUsedStr = [num2str(useMPC_RF) num2str(useExpert) num2str(usePID) num2str(useMPC_ARMAX)];
 for simIter = simControlFrom:simControlTo
     iterInfo = '                               Iteration %d has figures %d,%d,%d,%d\r\n';
     iterMatrix = [simIter,1+(simIter-1)*4,2+(simIter-1)*4,3+(simIter-1)*4,4+(simIter-1)*4];
@@ -474,25 +983,33 @@ for simIter = simControlFrom:simControlTo
                    'LineStyle',controlLineStyle{1})
         end
         hold on
-        if usePID
-            plot(t(startPlotTime:end),yPID(startPlotTime:end,cv,simIter),...
+        if useMPC_ARMAX
+            plot(t(startPlotTime:end),yMPC_ARMAX(startPlotTime:end,cv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{2},...
                    'LineStyle',controlLineStyle{2})
         end
-        
-        if useMPC_ARMAX
-            plot(t(startPlotTime:end),yMPC_ARMAX(startPlotTime:end,cv,simIter),...
+        if useExpert
+            plot(t(startPlotTime:end),yExpert(startPlotTime:end,cv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{3},...
                    'LineStyle',controlLineStyle{3})
         end
+        if usePID
+            plot(t(startPlotTime:end),yPID(startPlotTime:end,cv,simIter),...
+                   'LineWidth',1.75,...
+                   'Color',controlColors{4},...
+                   'LineStyle',controlLineStyle{4},...
+                   'Marker',controlMarker{4},'MarkerSize',0.8)
+        end
+        
+        
         title(titlesCV{cv})
         plot(t(startPlotTime:end),wRefSimulink(startPlotTime:end,cv,simIter),...
                 'g--','LineWidth',1);
     %     plot(t(startPlotTime:end),yFiltered.signals.values(startPlotTime:end,cv),'g','LineWidth',1);
         ylabel(CVUnits{cv})
-        xlabel('Time (hr)')
+        xlabel('Time [hr]')
         if usePlotLims
             ylim(CVLims(cv,:));
             useLimStr = '';
@@ -509,7 +1026,7 @@ for simIter = simControlFrom:simControlTo
         hold off
     end
     if imprint
-            printName = [figurePath 'cv_' controllersUsed...
+            printName = [figurePath 'cv_' controllersUsedStr...
                         '_IT_' num2str(simIter) '_' useLimStr...
                         'tCA_' num2str(kappaControl_ARMAX) '_' dateOutputStr];
             print(printName,'-depsc');
@@ -533,8 +1050,16 @@ for simIter = simControlFrom:simControlTo
                    'LineStyle',controlLineStyle{1})
         end
         hold on
+        title(titlesDV{dv})
         ylabel(DVUnits{dv})
-        xlabel('Time (hr)')
+        xlabel('Time [hr]')
+        if usePlotLims
+            ylim(DVLims(dv,:));
+            useLimStr = '';
+        else
+            useLimStr = 'nl_';
+            ylim auto
+        end
         dLegend = ['$d_' num2str(dv) '$'];
 %         legend({dLegend},'Interpreter','latex');
         grid on
@@ -542,7 +1067,7 @@ for simIter = simControlFrom:simControlTo
     end
     
     if imprint
-            printName = [figurePath 'dv_' controllersUsed...
+            printName = [figurePath 'dv_' controllersUsedStr...
                         '_IT_' num2str(simIter) '_' useLimStr...
                         'tCA_' num2str(kappaControl_ARMAX) '_' dateOutputStr];
             print(printName,'-depsc');
@@ -563,22 +1088,30 @@ for simIter = simControlFrom:simControlTo
                    'LineStyle',controlLineStyle{1})
         end
         hold on
-        if usePID
-            plot(t(startPlotTime:end),uPID(startPlotTime:end,mv,simIter),...
+        if useMPC_ARMAX
+            plot(t(startPlotTime:end),uMPC_ARMAX(startPlotTime:end,mv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{2},...
                    'LineStyle',controlLineStyle{2})
         end
-        
-        if useMPC_ARMAX
-            plot(t(startPlotTime:end),uMPC_ARMAX(startPlotTime:end,mv,simIter),...
+        if useExpert
+            plot(t(startPlotTime:end),uExpert(startPlotTime:end,mv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{3},...
                    'LineStyle',controlLineStyle{3})
         end
+        if usePID
+            plot(t(startPlotTime:end),uPID(startPlotTime:end,mv,simIter),...
+                   'LineWidth',1.75,...
+                   'Color',controlColors{4},...
+                   'LineStyle',controlLineStyle{4},...
+                   'Marker',controlMarker{4},'MarkerSize',0.8)
+        end
+        
+        
         title(titlesMV{mv})
         ylabel(MVUnits{mv})
-        xlabel('Time (hr)')
+        xlabel('Time [hr]')
         if usePlotLims
             ylim(MVLims(mv,:));
         else
@@ -592,56 +1125,146 @@ for simIter = simControlFrom:simControlTo
     end
     
     if imprint
-            printName = [figurePath 'mv_' controllersUsed...
+            printName = [figurePath 'mv_' controllersUsedStr...
                         '_IT_' num2str(simIter) '_' useLimStr...
                         'tCA_' num2str(kappaControl_ARMAX) '_' dateOutputStr];
             print(printName,'-depsc');
             print(printName,'-djpeg');
     end
-    f4 = figure(4+(simIter-1)*4);
-    fig = gcf;
-    movegui(fig,'southeast')
-    [~,hyperResults] = size(solverResults.signals.values);
     
-    for hyp = 1:hyperResults
-        subplot(hyperResults,1,hyp)
-        if useMPC_RF
-            [controllerHits,~,~] = size(optMPC_RF);
-            plot(1:controllerHits,optMPC_RF(:,hyp,simIter),...
-                'Marker',controlMarker{1},...
-                'Color',controlColors{1},...
-                'LineStyle','none')
-        end
-        hold on
-        
-        if useMPC_ARMAX
-            [controllerHits,~,~] = size(optMPC_ARMAX);
-            if hyp == 1
-                solverSteps_ARMAX(:,simIter) = optMPC_ARMAX(:,hyp,simIter);
-                successIndex = solverSteps_ARMAX >= 1;
-                optMPC_ARMAX(successIndex(:,simIter),hyp,simIter) = 1;
+    if useMPC_ARMAX || useMPC_RF
+        f4 = figure(4+(simIter-1)*4);
+        fig = gcf;
+        movegui(fig,'southeast')
+        [~,hyperResults] = size(solverResults.signals.values);
+        for hyp = 1:hyperResults
+            subplot(hyperResults,1,hyp)
+            if useMPC_RF
+                [controllerHits,~,~] = size(optMPC_RF);
+                plot((1:controllerHits)*tau_C_RF/3600,optMPC_RF(:,hyp,simIter),...
+                    'Marker',controlMarker{1},...
+                    'Color',controlColors{1},...
+                    'LineStyle','none')
             end
-            % Under development
-            plot(1:controllerHits,optMPC_ARMAX(:,hyp,simIter),...
+            hold on
+
+            if useMPC_ARMAX
+                [controllerHits,~,~] = size(optMPC_ARMAX);
+                if hyp == 1
+                    solverSteps_ARMAX(:,simIter) = optMPC_ARMAX(:,hyp,simIter);
+                    successIndex = solverSteps_ARMAX >= 1;
+                    optMPC_ARMAX(successIndex(:,simIter),hyp,simIter) = 1;
+                end
+                % Under development
+                plot((1:controllerHits)*tau_C_ARMAX/3600,optMPC_ARMAX(:,hyp,simIter),...
+                    'Marker',controlMarker{2},...
+                    'Color',controlColors{2},...
+                    'LineStyle','none')
+            end
+            title(titlesHyp{hyp})
+%             xlabel(['Controller Sample Hits [' num2str(tau_C_RF/60) 'min/hit]'])
+            xlabel(['Time [hr]'])
+            xlim([0 simTime/3600])
+            grid on
+
+        end
+        if imprint
+                printName = [figurePath 'op_' controllersUsedStr...
+                            '_IT_' num2str(simIter) '_' useLimStr...
+                            'tCA_' num2str(kappaControl_ARMAX) '_' dateOutputStr];
+                print(printName,'-depsc');
+                print(printName,'-djpeg');
+        end
+    end
+    % Expert plots
+    if useExpert && ~useMPC_RF && ~useMPC_ARMAX
+        f4 = figure(4+(simIter-1)*4);
+        fig = gcf;
+        movegui(fig,'northwest')
+        controllerHits = size(explanationsExpert,1);
+        for cv = 1:numCV
+            subplot(numCV,1,cv)
+            plot((1:controllerHits)*tau_R_Expert/3600,explanationsExpert(:,cv,simIter),...
                 'Marker',controlMarker{3},...
                 'Color',controlColors{3},...
                 'LineStyle','none')
+            title(titlesCV{cv})
+%             xlabel(['Controller Sample Hits [' num2str(tau_R/60) 'min/hit]'])
+            xlabel(['Time [hr]'])
+            xlim([0 simTime/3600])
+            grid on
         end
-        title(titlesHyp{hyp})
-        xlabel(['Controller Sample Hits [' num2str(tau_C_RF/60) 'min/hit]'])
-        grid on
-        
+        if imprint
+                printName = [figurePath 'expExp_' controllersUsedStr...
+                            '_IT_' num2str(simIter) '_' useLimStr...
+                            dateOutputStr];
+                print(printName,'-depsc');
+                print(printName,'-djpeg');
+        end
     end
-    if imprint
-            printName = [figurePath 'op_' controllersUsed...
-                        '_IT_' num2str(simIter) '_' useLimStr...
-                        'tCA_' num2str(kappaControl_ARMAX) '_' dateOutputStr];
-            print(printName,'-depsc');
-            print(printName,'-djpeg');
-    end  
 %     close all
     pause(1)
 end
+
+for simIter = simControlFrom:simControlTo
+    
+    
+    if showMVComponents
+        figure
+        fig = gcf;
+        movegui(fig,'southeast')
+        for comp = 1:3
+            subplot(3,1,comp)
+            % Only plotting MV(1)
+            plot((1:controllerHits)*tau_R_Expert/3600,mvComponentsExp(:,comp,1,simIter),...
+                'Marker',controlMarker{3},...
+                'Color',controlColors{3},...
+                'LineStyle','none')
+            if cvToInspect == -1
+                title(titlesExpert{1,comp})
+            else
+                title(titlesExpert{2,comp})
+            end
+%             xlabel(['Controller Sample Hits [' num2str(tau_R/60) 'min/hit]']);
+            xlabel(['Time [hr]'])
+            xlim([0 simTime/3600])
+        end
+    end
+end
+%% Performance Indicators
+% Only calculate performance when all controlles are being mentioned
+ControllerResultsStruct = struct;
+controllersUsed = [useMPC_RF useMPC_ARMAX useExpert usePID];
+% Pile everything into one big struct}
+cont = 1;
+
+if useMPC_RF
+    ControllerResultsStruct(cont).cvTimeSeries = yMPC_RF(:,1:numCV,:);
+    ControllerResultsStruct(cont).mvTimeSeries = uMPC_RF(:,1:numMV,:);
+    ControllerResultsStruct(cont).Name = 'MPC_RF';
+    cont = cont+1;
+end
+if useMPC_ARMAX
+    ControllerResultsStruct(cont).cvTimeSeries = yMPC_ARMAX(:,1:numCV,:);
+    ControllerResultsStruct(cont).mvTimeSeries = uMPC_ARMAX(:,1:numMV,:);
+    ControllerResultsStruct(cont).Name = 'MPC_ARMAX';
+    cont = cont+1;
+end
+if useExpert
+    ControllerResultsStruct(cont).cvTimeSeries = yExpert(:,1:numCV,:);
+    ControllerResultsStruct(cont).mvTimeSeries = uExpert(:,1:numMV,:);
+    ControllerResultsStruct(cont).Name = 'EXPERT';
+    cont = cont+1;
+end
+if usePID
+    ControllerResultsStruct(cont).cvTimeSeries = yPID(:,1:numCV,:);    
+    ControllerResultsStruct(cont).mvTimeSeries = uPID(:,1:numMV,:);
+    ControllerResultsStruct(cont).Name = 'PID';
+    cont = cont+1;
+end
+
+
+    
 
 %% Save Specific Parameters
 saveTuningName = [figurePath 'mpcTuning_rf_' dateOutputStr '.mat'];
@@ -649,14 +1272,15 @@ if imprint
     save(saveTuningName,'qCostValuesIterations_RF','rCostValuesIterations_RF','betaCostValuesIterations_RF',...
                         'lambdaCostValuesIterations_RF','N_y','N_u','OptimSolverStruct',...
                         'bFilter','tau_C_RF','kappaControl_RF','KpArray','KiArray',...
-                        'KdArray');
+                        'KdArray',...
+                        'qCostValuesIterations_ARMAX','rCostValuesIterations_ARMAX','betaCostValuesIterations_ARMAX',...
+                        'lambdaCostValuesIterations_ARMAX');
 end
 
 if saveControlResults
-   save([resultsPath 'ControlResults_' dateOutputStr '.mat'],...
-         'yMPC_RF','uMPC_RF','yHatMPC_RF','optMPC_RF','controlMovesMPC_RF',...
-         'yPID','uPID',...
-         'yMPC_ARMAX','uMPC_ARMAX','yHatMPC_ARMAX','optMPC_ARMAX','controlMovesMPC_ARMAX',...
+   save([resultsPath 'ControlResults_' testName '_' dateOutputStr '.mat'],...
+         'ControllerResultsStruct','yHatMPC_RF','optMPC_RF','controlMovesMPC_RF',...
+         'xHatMPC_ARMAX','optMPC_ARMAX','controlMovesMPC_ARMAX',...
          'dMPC_RF','wRefSimulink','t',...
          'numCV','numMV','numDV',...
          'simControlFrom','simControlTo','startPlotTime',...

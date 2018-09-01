@@ -4,8 +4,8 @@ close all;
 % DV identical in all experiments
 %% UF 75 FF 25
 % Initial Parameters for steady state
-Qu_0Vector = [111];
-gpt_0Vector = [26];
+Qu_0Vector = [65 75 95];
+gpt_0Vector = [25];
 for q = 1:length(Qu_0Vector)
     Qu_0 = Qu_0Vector(q); % m3/s.
     gpt_0 = gpt_0Vector(1);
@@ -14,7 +14,7 @@ for q = 1:length(Qu_0Vector)
 %     Qu_0 = Qu_0Vector(q); % m3/s.
 %     gpt_0 = 25;
     stepsMVToGenerate = [1 0];
-    stepSizes = [-30:10:30];
+    stepSizes = [-10:10:20];
     run testOpenLoop_0901.m;
     clearvars -except q Qu_0Vector gpt_0Vector;
     disp('Se terminaron los escalones UF de la iteración')
