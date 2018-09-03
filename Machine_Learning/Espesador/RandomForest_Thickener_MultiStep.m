@@ -3,8 +3,8 @@ clear all;
 close all;
 clc;
 %% Boolean control
-nameDataset = 'Agosto_';
-typeOfData = 'Sim_';
+nameDataset = 'ThreeMonths_';
+typeOfData = 'Real_';
 dateTest = '1408';
 predictiveModelsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\PredictiveModels\';
 resultsMLPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsML\';
@@ -16,10 +16,10 @@ saveModelToMatFile = true;
 plotForestStats = true;
 %%%%%%
 % Crucial parameters for system identification
-N_y = 48;
+N_y = 24;
 tau_R = 5;
 %%%%%%%%%%%%%%%%%%%%%
-cvToGenerate = 2;
+cvToGenerate = 1;
 forestToView = N_y;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
@@ -32,7 +32,7 @@ optimizeMLHyperparameters = false;
 trainVSVal = 0.85;
 generateOne = true;
 useDelayMV_CV = false;
-noiseyData = true;
+noiseyData = false;
 
 seed = rng(1231231); % For reproducibility (should look into this after)
 %% Bool Handling
@@ -285,7 +285,7 @@ if generateOne
                             'na' num2str(delayYCases) '_nb' num2str(delayUCases)...
                             '_' dateTest];
         if saveModelToMatFile
-            save(outputmatFileName,'ML_Model','resultsIter','mOrder','mlParamsStruct','controlParamsStruct','forestStats');
+            save(outputmatFileName,'ML_Model','resultsIter','mOrder','mlParamsStruct','controlParamsStruct','forestStats','-v7.3','-nocompression');
         end
     else
         outputmatFileName = [predictiveModelsPath ...

@@ -15,10 +15,11 @@ imprint = false;
 useTimePlot = true;
 %%%%%%
 % RF Specifics
-numTreesInput = 30;
+numTreesInput = 50;
+numForestsInput = 48;
 tau_RInput = 5;
-naInput = 5;
-nbInput = 5;
+naInput = 6;
+nbInput = 6;
 cvToGenerate = 2;
 
 % ARMAX Specifics
@@ -32,10 +33,10 @@ selectedDV = [1 2];
 trainVSValInput = 0.85;
 tau_R = tau_RInput;
 N_y = 20;
-pastDataSamples = 640; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
+pastDataSamples = 348; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
 K_ahead = 24; % 20
 K_forecast = 48; % >= 1 48
-varStringRF = ['B' num2str(numTreesInput) ...
+varStringRF = ['B' num2str(numTreesInput) '_Ny_' num2str(numForestsInput) ...
               '_k' num2str(tau_RInput) '_'...
               'na' num2str(naInput) '_nb' num2str(nbInput)];
 varStringARMAX = ['k' num2str(tau_RInput) '_'...

@@ -2,7 +2,7 @@ close all;
 clear;
 clc;
 %%
-month = 'Septiembre';
+month = 'Agosto';
 nameDataset = month;
 typeOfData = 'Sim';
 dateTest = '1408';
@@ -14,6 +14,18 @@ figurePath = ['figures\' typeOfData '\'];
 saveToMatFile = false;
 imprint = true;
 plotFigures = true;
+%%
+
+% Data validation and machine learning parameters
+trainVSVal = 0.85;
+nSamples = length(SimResults.CV(1).GroupedTimeSeries);
+trainingSamples = floor(trainVSVal*nSamples);
+limitTestDataIndex = nSamples;
+validationSamples = limitTestDataIndex - trainingSamples;
+ix = {1:trainingSamples, trainingSamples+1:limitTestDataIndex};
+colors = 'br';
+
+
 %%
 granularity = 'g';
 viewFreq = 100;
@@ -87,8 +99,8 @@ else
 end
 % options.simTime/3600 = in hours
 time = linspace(0,options.simTime/3600,samples+1);
-% timeToWatch = length(time)-1;
-timeToWatch = 100*60;
+timeToWatch = length(time)-1;
+% timeToWatch = 100*60;
 SimResultsRaw.CV(5).TimeSeries = filloutliers(SimResultsRaw.CV(5).TimeSeries,'clip','median');
 dynamicRangeCV = zeros(numel(CVNames),3);
 dynamicRangeMV = zeros(numel(MVNames),3);
@@ -108,7 +120,7 @@ if (plotFigures)
             plot(time(1:timeToWatch-compensatePhase),SimResults.CV(cv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
         end
         ylabel(CVUnits{cv})
-        xlabel('Hours [hr]')
+        xlabel('Time [hr]')
 %         legend('Semi-Raw','PreProcessed')
         grid on
         printName = [figurePath month '_' CVSaveName{cv} options.stepTestType '_' dateTest figAppendName];
@@ -135,7 +147,7 @@ if (plotFigures)
         end
         grid on
         ylabel(MVUnits{mv})
-        xlabel('Hours [hr]')
+        xlabel('Time [hr]')
 %         legend('Semi-Raw','PreProcessed')
         printName = [figurePath month '_' MVSaveName{mv} options.stepTestType '_' dateTest figAppendName];
         if imprint
@@ -162,7 +174,7 @@ if (plotFigures)
         end
         grid on
         ylabel(DVUnits{dv})
-        xlabel('Hours [hr]')
+        xlabel('Time [hr]')
 %         legend('Semi-Raw','PreProcessed')
         printName = [figurePath month '_' DVSaveName{dv} options.stepTestType '_' dateTest  figAppendName];
         if imprint
@@ -235,7 +247,7 @@ for cv = 1:3
     subplot(2,1,1)
     plot((0:autocorrWindowSize)/60,SimResults.CV(cv).GroupedTimeSeries(startAutocorr:...
                               startAutocorr+autocorrWindowSize))
-    xlabel('Hours [hr]')
+    xlabel('Time [hr]')
     grid on
     subplot(2,1,2)
     plot(r(floor(length(r)/2)+1:end)/(autocorrWindowSize*Var))
@@ -257,4 +269,87 @@ for mv = 1:length(MVNames)
 end
 for dv = 1:length(DVNames)
     SimResults.DV(dv).Name = SimResultsRaw.DV(dv).Name;
+end
+%% Train & Validation Segments
+if (plotFigures)
+    % CV Plots5
+    for cv = 1:3%length(CVNames)
+        figure
+        title(CVNames{cv})
+        hold on
+        if strcmp('s',granularity)
+            plot(time(1:timeToWatch),SimResultsRaw.CV(cv).TimeSeries(1:timeToWatch))
+            plot(time(1:timeToWatch),SimResults.CV(cv).TimeSeries(1:timeToWatch)) 
+        else
+%             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.CV(cv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+            for seg = 1:2
+                plot(ix{seg}/60,SimResults.CV(cv).GroupedTimeSeries(ix{seg}),'Color', colors(seg))
+                hold on
+            end
+        end
+        ylabel(CVUnits{cv})
+        xlabel('Time [hr]')
+%         legend('Semi-Raw','PreProcessed')
+        grid on
+        printName = [figurePath month '_TV_' CVSaveName{cv} options.stepTestType '_' dateTest figAppendName];
+        if imprint
+            % Latex
+            print(printName,'-depsc');
+        end
+        hold off
+    end
+    % MV Plots
+    for mv = 1:length(MVNames)
+        figure
+        title(MVNames{mv})
+        hold on
+        if strcmp('s',granularity)
+            plot(time(1:timeToWatch),SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch))
+            plot(time(1:timeToWatch),SimResults.MV(mv).TimeSeries(1:timeToWatch)) 
+        else
+%             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.MV(mv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+%             plot(time(1:timeToWatch-compensatePhase),SimResults.MV(mv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+            for seg = 1:2
+                plot(ix{seg}/60,SimResults.MV(mv).GroupedTimeSeries(ix{seg}),'Color', colors(seg))
+                hold on
+            end
+        end
+        grid on
+        ylabel(MVUnits{mv})
+        xlabel('Time [hr]')
+%         legend('Semi-Raw','PreProcessed')
+        printName = [figurePath month '_TV_' MVSaveName{mv} options.stepTestType '_' dateTest figAppendName];
+        if imprint
+            % Latex
+            print(printName,'-depsc');
+        end
+        hold off
+    end
+    % DV Plots
+    for dv = 1:length(DVNames)
+        figure
+        title(DVNames{dv})
+        hold on
+        if strcmp('s',granularity)
+            plot(time(1:timeToWatch),SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch))
+            plot(time(1:timeToWatch),SimResults.DV(dv).TimeSeries(1:timeToWatch))
+        else
+%             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.DV(dv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+%             plot(time(1:timeToWatch-compensatePhase),SimResults.DV(dv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+            for seg = 1:2
+                plot(ix{seg}/60,SimResults.DV(dv).GroupedTimeSeries(ix{seg}),'Color', colors(seg))
+                hold on
+            end
+        end
+        grid on
+        ylabel(DVUnits{dv})
+        xlabel('Time [hr]')
+%         legend('Semi-Raw','PreProcessed')
+        printName = [figurePath month '_TV_' DVSaveName{dv} options.stepTestType '_' dateTest  figAppendName];
+        if imprint
+            % Latex
+            print(printName,'-depsc');
+        end
+        hold off
+    end
 end

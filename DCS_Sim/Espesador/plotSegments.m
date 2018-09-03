@@ -4,3 +4,5 @@ figure; cla;
 for i=1:3
     plot(ix{i},ix{i},'Color',colors(i)); hold on
 end
+
+
