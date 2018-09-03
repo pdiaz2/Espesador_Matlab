@@ -953,7 +953,7 @@ CVUnits = {'%','%','m','%'};
 MVUnits = {'m3/hr','gpt'};
 DVUnits = {'m3/s','%','N/A'};
 % Colors
-controlColors = {'r','k','b','m'};
+controlColors = {'r','k','g','m'};
 controlLineStyle = {'-','--','-.',':'};
 controlMarker = {'*','d','o','none'};
 % Y Axis Limits
@@ -1006,7 +1006,7 @@ for simIter = simControlFrom:simControlTo
         
         title(titlesCV{cv})
         plot(t(startPlotTime:end),wRefSimulink(startPlotTime:end,cv,simIter),...
-                'g--','LineWidth',1);
+                'b--','LineWidth',1);
     %     plot(t(startPlotTime:end),yFiltered.signals.values(startPlotTime:end,cv),'g','LineWidth',1);
         ylabel(CVUnits{cv})
         xlabel('Time [hr]')
