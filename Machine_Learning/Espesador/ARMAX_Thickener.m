@@ -34,7 +34,7 @@ seed = rng(1231231); % For reproducibility (should look into this after)
 if generateOne
     na = 2;
     nb = 3;
-    nc = 3;
+    nc = 2;
     nk = 2;
     offsetChoice = 1;
     focusChoice = 1;

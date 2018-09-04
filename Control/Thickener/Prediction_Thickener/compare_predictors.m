@@ -5,18 +5,18 @@ close all;
 % load('Agosto_Sim_1408_rawData.mat');
 % load('ThreeMonths_Real_1408_BF.mat');
 % load('Abril_A_Julio_Real18_%%%_1708'
-nameDataset = 'Agosto_';
-typeOfData = 'Sim_';
+nameDataset = 'ThreeMonths_';
+typeOfData = 'Real_';
 dateTest = '1408';
 figurePath = ['figures\' typeOfData '\'];
 
 % Save and print bools
-imprint = false;
+imprint = true;
 useTimePlot = true;
 %%%%%%
 % RF Specifics
 numTreesInput = 50;
-numForestsInput = 48;
+numForestsInput = 24;
 tau_RInput = 5;
 naInput = 6;
 nbInput = 6;
@@ -33,9 +33,9 @@ selectedDV = [1 2];
 trainVSValInput = 0.85;
 tau_R = tau_RInput;
 N_y = 20;
-pastDataSamples = 348; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
+pastDataSamples = 640; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
 K_ahead = 24; % 20
-K_forecast = 48; % >= 1 48
+K_forecast = 24; % >= 1 48
 varStringRF = ['B' num2str(numTreesInput) '_Ny_' num2str(numForestsInput) ...
               '_k' num2str(tau_RInput) '_'...
               'na' num2str(naInput) '_nb' num2str(nbInput)];
@@ -50,7 +50,7 @@ mlMethod = 'RF';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 useDelayMV_CV = false;
-noiseyData = true;
+noiseyData = false;
 generateOne = true;
 showGood = true;
 %%%%%%%%%%%%%%%%%%%%
@@ -234,7 +234,8 @@ predictInputData = iddata(validationOutputs,inputTimeSeries,controlParamsStruct.
 [armaxPredict,x0Predicted,sys_pred] = predict(armaxModel,predictInputData,K_ahead,pOptions);
 icForecast = idpar(x0Predicted);
 armaxPredict = armaxPredict.OutputData;
-
+realStates = x0Predicted ~=0;
+x0Predicted = x0Predicted(realStates);
 
 if isequal(validationOutputs(1+pastDataSamples:pastDataSamples+K_forecast,1),...
         testSubsetRF(1).OutputData(1+(K_ahead-1)+pastDataSamples:(K_ahead-1)+pastDataSamples+K_forecast))
@@ -386,7 +387,7 @@ if strcmp(typeOfData,'Sim_')
         futureData = [externalInput(1:forecastBatches*K_forecast,:) zeros(forecastBatches*K_forecast,3)];
         tForecast = [0:tau_R_RC:(forecastBatches*K_forecast-1)*tau_R_RC]';
         augmentedSys = ss(armaxModel,'augmented');
-        yRC_ARMAX = lsim(augmentedSys,futureData,tForecast,x0Forecast);
+        yRC_ARMAX = lsim(augmentedSys,futureData,tForecast,x0Predicted);
         ReactionCurveStruct(simIter).y_ARMAX = yRC_ARMAX';
     end
 end
@@ -479,5 +480,7 @@ if strcmp(typeOfData,'Sim_')
     end
 end
 %% IC for September control ARIMAX
-x0_ARMAX = x0Forecast;
-save(['x0Control_' typeOfData dateTest '.mat'],'x0_RF','x0Forecast');
+x0_ARMAX = x0Predicted;
+if strcmp(typeOfData,'Sim_')
+    save(['x0Control_' typeOfData dateTest '.mat'],'x0_RF','x0_ARMAX');
+end

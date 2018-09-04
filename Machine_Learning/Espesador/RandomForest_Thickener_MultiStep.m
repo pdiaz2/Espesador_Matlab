@@ -19,7 +19,7 @@ plotForestStats = true;
 N_y = 24;
 tau_R = 5;
 %%%%%%%%%%%%%%%%%%%%%
-cvToGenerate = 1;
+cvToGenerate = 3;
 forestToView = N_y;
 selectedCV = [1 2 3];
 selectedMV = [1 2];

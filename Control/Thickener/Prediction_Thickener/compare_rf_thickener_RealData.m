@@ -33,7 +33,7 @@ trainVSValInput = 0.85;
 tau_R = tau_RInput;
 N_y = 20;
 pastDataSamples = 640; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
-K_ahead = 20;
+K_ahead = 24;
 K_forecast = 48; % >= 1
 varStringRF = ['B' num2str(numTreesInput) ...
               '_k' num2str(tau_RInput) '_'...
@@ -232,7 +232,8 @@ predictInputData = iddata(validationOutputs,inputTimeSeries,controlParamsStruct.
 [armaxPredict,x0Predicted,sys_pred] = predict(armaxModel,predictInputData,K_ahead,pOptions);
 icForecast = idpar(x0Predicted);
 armaxPredict = armaxPredict.OutputData;
-
+realStates = x0Predicted ~=0;
+x0Predicted = x0Predicted(realStates);
 
 if isequal(validationOutputs(1+pastDataSamples:pastDataSamples+K_forecast,1),...
         testSubsetRF(1).OutputData(1+pastDataSamples:pastDataSamples+K_forecast))
@@ -306,16 +307,16 @@ if strcmp(typeOfData,'Sim_')
     [numMakes ~] = size(makeStepMatrix);
     stepInitTime = 300;
     groupBy = 60; % This should be automatic
-    tau_R = 5*groupBy;
-    simTime = 5*K_forecast*tau_R+stepInitTime;
+    tau_R_RC = 5*groupBy;
+    simTime = 5*K_forecast*tau_R_RC+stepInitTime;
     for simIter = 1:size(makeStepMatrix)
         make = makeStepMatrix(simIter,:);
         if stepTests
-            Q_fVals = myStepTest(simTime,Dt,15,3*K_forecast*tau_R+stepInitTime,stepInitTime,1,0,simTime/4);
-            Cp_fVals = myStepTest(simTime,Dt,0.05,3*K_forecast*tau_R+stepInitTime,stepInitTime,1,0,simTime/4);
-            p1_fVals = myStepTest(simTime,Dt,1/2,3*K_forecast*tau_R+stepInitTime,stepInitTime,1,0,simTime/4);
-            Q_uVals = myStepTest(simTime,Dt,-20,3*K_forecast*tau_R+stepInitTime,stepInitTime,1,0,simTime/4);
-            gptVals = myStepTest(simTime,Dt,-3,3*K_forecast*tau_R+stepInitTime,stepInitTime,1,0,simTime/4);
+            Q_fVals = myStepTest(simTime,Dt,15,3*K_forecast*tau_R_RC+stepInitTime,stepInitTime,1,0,simTime/4);
+            Cp_fVals = myStepTest(simTime,Dt,0.05,3*K_forecast*tau_R_RC+stepInitTime,stepInitTime,1,0,simTime/4);
+            p1_fVals = myStepTest(simTime,Dt,1/2,3*K_forecast*tau_R_RC+stepInitTime,stepInitTime,1,0,simTime/4);
+            Q_uVals = myStepTest(simTime,Dt,-20,3*K_forecast*tau_R_RC+stepInitTime,stepInitTime,1,0,simTime/4);
+            gptVals = myStepTest(simTime,Dt,-3,3*K_forecast*tau_R_RC+stepInitTime,stepInitTime,1,0,simTime/4);
             %%
             Q_fVals = Q_fVals.signals.values;
             Cp_fVals = Cp_fVals.signals.values;
@@ -362,12 +363,12 @@ if strcmp(typeOfData,'Sim_')
         tic;
         sim('rf_thickener_open_loop.slx');
         toc;
-        yThickener = downsample(ySimThickener.signals.values(:,1:numOutputs),tau_R);
+        yThickener = downsample(ySimThickener.signals.values(:,1:numOutputs),tau_R_RC);
         ReactionCurveStruct(simIter).yThickener = yThickener(1:forecastBatches*K_forecast,:);
-        Q_fDS = downsample(inputs.signals.values(:,1),tau_R);
-        Cp_fDS = downsample(inputs.signals.values(:,2),tau_R);
-        Q_uDS = downsample(inputs.signals.values(:,3),tau_R);
-        gptDS = downsample(inputs.signals.values(:,4),tau_R);
+        Q_fDS = downsample(inputs.signals.values(:,1),tau_R_RC);
+        Cp_fDS = downsample(inputs.signals.values(:,2),tau_R_RC);
+        Q_uDS = downsample(inputs.signals.values(:,3),tau_R_RC);
+        gptDS = downsample(inputs.signals.values(:,4),tau_R_RC);
         externalInput = [Q_fDS Cp_fDS Q_uDS gptDS];
         for cv = 1:3
             rfFileName = ['TBag_RF_Y' num2str(cv) '_' typeOfData...
@@ -382,9 +383,9 @@ if strcmp(typeOfData,'Sim_')
         end
         ReactionCurveStruct(simIter).y_RF = yRC_RF';
         futureData = [externalInput(1:forecastBatches*K_forecast,:) zeros(forecastBatches*K_forecast,3)];
-        tForecast = [0:tau_R:(forecastBatches*K_forecast-1)*tau_R]';
+        tForecast = [0:tau_R_RC:(forecastBatches*K_forecast-1)*tau_R_RC]';
         augmentedSys = ss(armaxModel,'augmented');
-        yRC_ARMAX = lsim(augmentedSys,futureData,tForecast,x0Forecast);
+        yRC_ARMAX = lsim(augmentedSys,futureData,tForecast,x0Predicted);
         ReactionCurveStruct(simIter).y_ARMAX = yRC_ARMAX';
     end
 end
@@ -398,7 +399,7 @@ kAheadStr = [num2str(K_ahead)  showGoodStr '_'];
 if useTimePlot
     timePrediction = linspace(0,(size(RFPredictionStruct(1).yHat,1)-1)*tau_R/60,size(RFPredictionStruct(1).yHat,1));
     timeForecast = linspace(1,K_forecast*tau_R/60,K_forecast);
-    xLabelStr = 'Hours [hr]';
+    xLabelStr = 'Time [hr]';
 else
     timePrediction = linspace(0,size(RFPredictionStruct(1).yHat,1)-1,size(RFPredictionStruct(1).yHat,1));
     timeForecast = linspace(1,K_forecast,K_forecast);
@@ -477,5 +478,7 @@ if strcmp(typeOfData,'Sim_')
     end
 end
 %% IC for September control ARIMAX
-x0_ARMAX = x0Forecast;
-save(['x0Control_' typeOfData dateTest '.mat'],'x0_RF','x0Forecast');
+x0_ARMAX = x0Predicted;
+if strcmp(typeOfData,'Sim_')
+    save(['x0Control_' typeOfData dateTest '.mat'],'x0_RF','x0_ARMAX');
+end
