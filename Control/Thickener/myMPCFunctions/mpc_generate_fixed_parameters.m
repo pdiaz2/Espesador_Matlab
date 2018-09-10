@@ -1,8 +1,10 @@
 function mpc_generate_fixed_parameters(dateMatFileStr)
     %% Mat File Handling
     matFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
-    RFParametersFile = ['RFParameters_' dateMatFileStr '.mat'];
-    x0FileName = ['x0Control_Sim_' dateMatFileStr '.mat'];
+%     RFParametersFile = ['RFParameters_' dateMatFileStr '.mat'];
+%     x0FileName = ['x0Control_Sim_1408' dateMatFileStr '.mat'];
+    RFParametersFile = ['RFParameters_1408.mat'];
+    x0FileName = ['x0Control_Sim_1408.mat'];
     %% Initial Conditions
     D0 = [326.3733 0.3143];
     U0 = [114.8275 26.0152]; 
@@ -33,28 +35,26 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
 
     % Constraints 
     % On MV (1 pps => 5 pp5s)
-    deltaULowLim(1) = -15;
-    deltaULowLim(2) = -5;
-    deltaUHighLim(1) = 15;
-    deltaUHighLim(2) = 5;
+    deltaULowLim(1) = -10; % -15
+    deltaULowLim(2) = -2; % -5
+    deltaUHighLim(1) = 10;
+    deltaUHighLim(2) = 2;
 
-    % Restriction only on y2: 0.95*Y0(2)<= y <= 1.05*Y0(2)
-
-    yLowLims(1,:) = 0.8*Y0(1);
-    yHighLims(1,:) = 1.2*Y0(1);
+    yLowLims(1,:) = 0.95*Y0(1);
+    yHighLims(1,:) = 1.05*Y0(1);
     yLowLims(2,:) = 0.97*Y0(2);
     yHighLims(2,:) = 1.03*Y0(2);
     yLowLims(3,:) = 1.5;
-    yHighLims(3,:) = 8;
+    yHighLims(3,:) = 4;
 %     yLowLims(4,:) = 0;
 %     yHighLims(4,:) = 0.1;
 %     
     
     
-    uLowLims(1,:) = 70;
+    uLowLims(1,:) = 90; % 70
     uHighLims(1,:) = 125;
     uLowLims(2,:) = 18; %23
-    uHighLims(2,:) = 31; % 29
+    uHighLims(2,:) = 36; % 31
     %% Normalization Parameters
     % Factor that multiplies cost matrixes of MPC to normalize the error
     % w.r.t the setpoints/dynamic range of each variable

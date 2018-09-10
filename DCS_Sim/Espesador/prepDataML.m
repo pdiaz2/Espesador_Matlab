@@ -1,4 +1,4 @@
-load('Agosto_Sim_'
+% load('Agosto_Sim_')
 %% FFT of Signals
 fftWindow = 15*3600:60*3600;
 

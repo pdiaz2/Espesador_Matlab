@@ -11,6 +11,13 @@ for cv = 1:n
             case 'step'
                 trajectory{1,cv} = [0,signalValuesStruct.IC(cv)];
                 trajectory{1,cv} = [trajectory{1,cv};signalTimeToChange,signalFinalValue];
+            case 'mountain'
+                trajectory{1,cv} = [0,signalValuesStruct.IC(cv)];
+                trajectory{1,cv} = [trajectory{1,cv};
+                                    signalTimeToChange, signalFinalValue;
+                                    4*signalTimeToChange, signalValuesStruct.IC(cv);
+                                    7*signalTimeToChange, signalValuesStruct.IC(cv)-signalValuesStruct.delta(cv)
+                                    ];
         end
     else
         trajectory{1,cv} = [0,signalValuesStruct.IC(cv)];

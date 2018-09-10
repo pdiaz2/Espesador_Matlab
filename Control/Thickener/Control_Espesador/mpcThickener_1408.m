@@ -15,17 +15,19 @@ saveControlResults = false;
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
     % - SS: SmallSearch. Small pop (100-) and small gens (50-)
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
-dateOutputStr = '3008';
+    % - <tL_CV>: tight limits in CV
+    % - <tL_CV_MV>: tight limits in CV and MV
+dateOutputStr = '1009_tL_CV_MV';
 dateMatFileStr = '1408';
 figureFolder = 'figures\';
-testName = 'tuningMPC_RF';
+testName = 'tightLimits';
 % 'figures\tuningMPC_RF\';
 figurePath = [figureFolder testName '\'];
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
 %%%%%%%%%%
 simTime = 100*3600; % 10*3600
 simControlFrom = 2;
-simControlTo = 3;
+simControlTo = 7;
 %%%%%%%%%%%%%%%
 % Time sampling specifications
 Dt = 1;
@@ -39,7 +41,7 @@ optimizationMethod = 'PSO';
 tau_C_RF = kappaControl_RF*tau_R;
 tau_C_ARMAX = kappaControl_ARMAX*tau_R;
 
-% DV interaction specifics
+%% DV interaction specifics
 % -  First two components are MD (Q_f, Cp_f)
 % - Third Component is "feed particle diameter" added AFTER controller
 stepInDVArray = [false;% 1
@@ -69,6 +71,75 @@ dvStepSizeArray = [
 controlClosedLoop = 1;
 startPlotTime = 1; %Wait for noise filter to stabilize
 
+%% Reference Values Struct
+wValuesStruct.delta = [
+                        0 0 0;
+                        0 0 0;
+                        0 0 6;
+                        0 -1 0;
+                        0 0 0;
+                        0 0 0;
+                        0 0 0;
+                        0 0 0;
+                        0 0 0;
+                        0 -0.4 0;
+                       ];
+% wValuesStruct.changeBool = logical([
+%                                     0 0 0;
+%                                     0 0 1;
+%                                     0 1 0;
+%                                     0 0 0;
+%                                     0 0 0
+%                                     ]);
+wValuesStruct.changeBool = logical([
+                                    0 0 0;
+                                    0 0 0;
+                                    0 0 1;
+                                    0 1 0;
+                                    0 0 0;
+                                    0 0 0;
+                                    0 0 0;
+                                    0 0 0;
+                                    0 0 0;
+                                    0 1 0
+                                    ]);
+wValuesStruct.shape = {
+                        'step','step','step';
+                        'step','step','step';
+                        'step','step','step';
+                        'step','mountain','step';
+                        'step','step','step';
+                        'step','step','step';
+                        'step','step','step';
+                        'step','step','step';
+                        'step','step','step';
+                        'step','step','step';
+                        'step','step','step'
+                        };
+wValuesStruct.timeToChange = [
+                                -1 -1 -1;
+                                -1 -1 -1;
+                                -1 -1 floor(simTime/1e1);
+                                -1 floor(simTime/1e1) -1;
+                                -1 -1 -1;
+                                -1 -1 -1;
+                                -1 -1 -1;
+                                -1 -1 -1;
+                                -1 -1 -1;
+                                -1 floor(simTime/1e3) -1;
+                                ];
+wValuesStruct.addNoiseBool = [
+                                false; %always false for w
+                                false;
+                                false;
+                                false;
+                                false;
+                                false;
+                                false;
+                                false;
+                                false;
+                                false
+                                ];
 
 %% MPC RF Cost Values
 
@@ -295,84 +366,16 @@ mvToCvSigns = [-1 1;
                 -1 1;
                 1 1];
 %% PI Tuning
-KpArray = repmat([90*1e1 -3*1e0],simControlTo,1); % 90 3
+KpArray = repmat([-90*1e1 3*1e0],simControlTo,1); % 90 -3
 
-KiArray = repmat([3.6*1e0 -1e-4*1e-4],simControlTo,1); % 3.6 1e-4
+KiArray = repmat([-3.6*1e0 1*1e-4],simControlTo,1); % 3.6 -1e-4*1e-4
 
 KdArray = repmat([0*1e-5 -0*1e0],simControlTo,1);
 
 
 
 
-%% Reference Values Struct
-wValuesStruct.delta = [
-                        0 0 0;
-                        0 0 0;
-                        0 0 6;
-                        0 -1 0;
-                        0 0 0;
-                        0 0 0;
-                        0 0 0;
-                        0 0 0;
-                        0 0 0;
-                        0 -0.4 0;
-                       ];
-% wValuesStruct.changeBool = logical([
-%                                     0 0 0;
-%                                     0 0 1;
-%                                     0 1 0;
-%                                     0 0 0;
-%                                     0 0 0
-%                                     ]);
-wValuesStruct.changeBool = logical([
-                                    0 0 0;
-                                    0 0 0;
-                                    0 0 1;
-                                    0 1 0;
-                                    0 0 0;
-                                    0 0 0;
-                                    0 0 0;
-                                    0 0 0;
-                                    0 0 0;
-                                    0 1 0
-                                    ]);
-wValuesStruct.shape = {
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step'
-                        };
-wValuesStruct.timeToChange = [
-                                -1 -1 -1;
-                                -1 -1 -1;
-                                -1 -1 floor(simTime/1e1);
-                                -1 floor(simTime/1e1) -1;
-                                -1 -1 -1;
-                                -1 -1 -1;
-                                -1 -1 -1;
-                                -1 -1 -1;
-                                -1 -1 -1;
-                                -1 floor(simTime/1e3) -1;
-                                ];
-wValuesStruct.addNoiseBool = [
-                                false; %always false for w
-                                false;
-                                false;
-                                false;
-                                false;
-                                false;
-                                false;
-                                false;
-                                false;
-                                false
-                                ];
+
 
 
 %%%%%%%%%%%%%%%%%%%%%
@@ -723,7 +726,7 @@ designParametersFileName = ['mpc_design_parameters_' dateMatFileStr '.mat'];
 parametersFileArray = {RFParamatersFile,fixedParametersFileName,designParametersFileName};
 %% Generate Fixed parameters
 % Fixed parameters
-mpc_generate_fixed_parameters(dateMatFileStr);
+mpc_generate_fixed_parameters(dateOutputStr);
 %% Load Parameters
 for strFile = 1:2
    load(parametersFileArray{strFile}); 
@@ -751,9 +754,9 @@ ySensor = mpc_generate_input(yValuesStruct);
 for simIter = simControlFrom:simControlTo
     %% DV Design
     if (stepInDVArray(simIter))
-        stepTimeDV(1) = floor(simTime/10);
-        stepTimeDV(2) = floor(simTime/10);
-        stepTimeDV(3) = floor(simTime/10);
+        stepTimeDV(1) = floor(4*simTime/10);
+        stepTimeDV(2) = floor(6*simTime/10);
+        stepTimeDV(3) = floor(5*simTime/10);
     else
         stepTimeDV(1) = simTime;
         stepTimeDV(2) = simTime;
@@ -780,7 +783,7 @@ for simIter = simControlFrom:simControlTo
     %% MPC - Random Forest
     if useMPC_RF
     % Design parameters
-        mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMethod,...
+        mpc_generate_design_parameters(dateOutputStr,N_y,N_u,optimizationMethod,...
                                     qCostValuesIterations_RF(simIter,:),...
                                     rCostValuesIterations_RF(simIter,:),...
                                     betaCostValuesIterations_RF(simIter,:),...
@@ -815,12 +818,12 @@ for simIter = simControlFrom:simControlTo
         tuningStruct.CV.ECR = cvECR(simIter,:);
         tuningStruct.MV.BoolLims = boolLimsMV(simIter,:);
         tuningStruct.MV.BoolRateLims = boolRateLimsMV(simIter,:);
-        mpc_design_armax_object(dateMatFileStr,N_y,N_u,kappaControl_RF,...
+        mpc_design_armax_object(dateOutputStr,N_y,N_u,kappaControl_RF,...
                                 qCostValuesIterations_ARMAX(simIter,:),...
                                 rCostValuesIterations_ARMAX(simIter,:),...
                                 betaCostValuesIterations_ARMAX(simIter,:),...
                                 tuningStruct);
-        load(['mpc_armax_object_' dateMatFileStr '.mat']);
+        load(['mpc_armax_object_' dateOutputStr '.mat']);
         run parametrosEmpty.m
         rng(120938103);
         load('Agosto_SimResults_1304_State.mat');
@@ -951,7 +954,7 @@ titlesExpert = {'Torque Contribution','Concentration Contribution','Interface Co
 % Units
 CVUnits = {'%','%','m','%'};
 MVUnits = {'m3/hr','gpt'};
-DVUnits = {'m3/s','%','N/A'};
+DVUnits = {'m3/hr','%','N/A'};
 % Colors
 controlColors = {'r','k','g','m'};
 controlLineStyle = {'-','--','-.',':'};
@@ -964,7 +967,7 @@ CVLims = [20 22;
 MVLims = [65 130;
           18 32];
 DVLims = [280 400;
-          0.2 0.4];
+          15 45];
 controllersUsedStr = [num2str(useMPC_RF) num2str(useExpert) num2str(usePID) num2str(useMPC_ARMAX)];
 for simIter = simControlFrom:simControlTo
     iterInfo = '                               Iteration %d has figures %d,%d,%d,%d\r\n';
@@ -1037,14 +1040,19 @@ for simIter = simControlFrom:simControlTo
     movegui(fig,'northwest')
     for dv = 1:numDV
         subplot(numDV,1,dv)
+        if dv == 2
+            kPlot = 100;
+        else
+            kPlot = 1;
+        end
         if useMPC_RF
-            plot(t(startPlotTime:end),dMPC_RF(startPlotTime:end,dv,simIter),...
+            plot(t(startPlotTime:end),kPlot*dMPC_RF(startPlotTime:end,dv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{1},...
                    'LineStyle',controlLineStyle{1})
         end
         if useMPC_ARMAX
-            plot(t(startPlotTime:end),dMPC_ARMAX(startPlotTime:end,dv,simIter),...
+            plot(t(startPlotTime:end),kPlot*dMPC_ARMAX(startPlotTime:end,dv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{1},...
                    'LineStyle',controlLineStyle{1})

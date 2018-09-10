@@ -12,7 +12,7 @@ outputMatFileName = [nameDataset '_' typeOfData '_' dateTest '_BF.mat'];
 figurePath = ['figures\' typeOfData '\'];
 saveToMatFile = false;
 csvWrite = false;
-imprint = true;
+imprint = false;
 plotFigures = true;
 
 % Data validation and machine learning parameters
@@ -90,7 +90,7 @@ SimResults.fftWindow = fftWindow;
 % hypothesis that noise properties and fundamental frequencies do not
 % change so much over time (stationary process)
 for cv = 1:8
-    SimResults.CV(cv).FFT = fft(SimResults.CV(cv).TimeSeries(fftWindow))*1/length(fftWindow);
+    SimResults.CV(cv).FFT = fft(detrend(SimResults.CV(cv).TimeSeries(fftWindow),''))*1/length(fftWindow);
     
 end
 
@@ -99,11 +99,9 @@ for dv = 1:3
 end
 
 for mv = 1:2
-    SimResults.MV(mv).FFT = fft(SimResults.MV(mv).TimeSeries(fftWindow));
+    SimResults.MV(mv).FFT = fft(detrend(SimResults.MV(mv).TimeSeries(fftWindow),''));
 end
-for dv = 1:3
-    SimResults.DV(dv).FFT = fft(SimResults.DV(dv).TimeSeries(fftWindow));
-end
+
 %% Filter Design
 lpFilt = designfilt('lowpassiir','FilterOrder',2, ...
          'PassbandFrequency',4e-4,...
