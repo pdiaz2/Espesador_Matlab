@@ -32,7 +32,7 @@ selectedDV = [1 2];
 trainVSValInput = 0.85;
 tau_R = tau_RInput;
 N_y = 20;
-pastDataSamples = 640; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
+pastDataSamples = 348; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
 K_ahead = 24;
 K_forecast = 48; % >= 1
 varStringRF = ['B' num2str(numTreesInput) ...

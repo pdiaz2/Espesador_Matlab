@@ -34,14 +34,14 @@ simTime = 100*3600; % 10*3600
 % 6: Q_f
 % 7: UD
 simControlFrom = 2;
-simControlTo = 3;
+simControlTo = 7;
 %%%%%%%%%%%%%%%
 % Time sampling specifications
 Dt = 1;
 groupBy = 60; 
 tau_R = 5*groupBy;
 N_y = 18; % 18
-N_u = 3;%3
+N_u = 6;%3
 kappaControl_RF = 1; %5
 kappaControl_ARMAX = 1; % 5
 optimizationMethod = 'PSO';
@@ -67,7 +67,7 @@ dvStepSizeArray = [
                 0 0 0;% 3
                 0 0 0;% 4
                 0 0.08 0;% 5
-                25 0 0;% 6
+                -38 0 0;% 6
                 0 0 -0.04;% 7
                 0 0 0;
                 0 0 0;
@@ -761,7 +761,7 @@ ySensor = mpc_generate_input(yValuesStruct);
 for simIter = simControlFrom:simControlTo
     %% DV Design
     if (stepInDVArray(simIter))
-        stepTimeDV(1) = floor(4*simTime/10);
+        stepTimeDV(1) = floor(4*simTime/10); %4
         stepTimeDV(2) = floor(6*simTime/10);
         stepTimeDV(3) = floor(5*simTime/10);
     else

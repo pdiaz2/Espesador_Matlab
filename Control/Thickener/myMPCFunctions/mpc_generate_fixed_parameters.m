@@ -4,7 +4,7 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
 %     RFParametersFile = ['RFParameters_' dateMatFileStr '.mat'];
 %     x0FileName = ['x0Control_Sim_1408' dateMatFileStr '.mat'];
     RFParametersFile = ['RFParameters_1408.mat'];
-    x0FileName = ['x0Control_Sim_1408.mat'];
+    x0FileName = ['x0Control_Sim_1209.mat'];
     %% Initial Conditions
     D0 = [326.3733 0.3143];
     U0 = [114.8275 26.0152]; 
