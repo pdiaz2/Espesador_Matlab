@@ -5,8 +5,8 @@ close all;
 % load('Agosto_Sim_1408_rawData.mat');
 % load('ThreeMonths_Real_1408_BF.mat');
 % load('Abril_A_Julio_Real18_%%%_1708'
-nameDataset = 'Agosto_';
-typeOfData = 'Sim_';
+nameDataset = 'ThreeMonths_';
+typeOfData = 'Real_';
 dateTest = '1408';
 figurePath = ['figures\' typeOfData '\'];
 
@@ -49,7 +49,7 @@ mlMethod = 'RF';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 useDelayMV_CV = false;
-noiseyData = true;
+noiseyData = false;
 generateOne = true;
 showGood = true;
 %%%%%%%%%%%%%%%%%%%%
