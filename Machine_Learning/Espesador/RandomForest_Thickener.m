@@ -3,8 +3,8 @@ clear all;
 close all;
 clc;
 %% Boolean control
-nameDataset = 'ThreeMonths_';
-typeOfData = 'Real_';
+nameDataset = 'Agosto_';
+typeOfData = 'Sim_';
 dateTest = '1408';
 predictiveModelsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\PredictiveModels\';
 resultsMLPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsML\';
@@ -12,10 +12,10 @@ figurePath = ['figures\'];
 % Save and print bools
 imprint = true;
 saveResultsToMatFile = false;
-saveModelToMatFile = true;
+saveModelToMatFile = false;
 plotForestStats = true;
 %%%%%%
-cvToGenerate = 1;
+cvToGenerate = 3;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
 selectedDV = [1 2];
@@ -29,7 +29,7 @@ tau_R = 5;
 trainVSVal = 0.85;
 generateOne = true;
 useDelayMV_CV = false;
-noiseyData = false;
+noiseyData = true;
 
 seed = rng(1231231); % For reproducibility (should look into this after)
 %% Bool Handling
@@ -37,7 +37,7 @@ if generateOne
     % Input wave
     experiment = 1;
     % 1 is 0 order
-    delayYCases = 2;
+    delayYCases = 6;
     % 1 is 0 order
     delayUCases = 6;
     nTrees = 100;
@@ -204,7 +204,7 @@ if generateOne
                 std(10*log10(forestStats.OOBError)),'g--')
             plot(mean(10*log10(forestStats.OOBError))*ones(1,numTrees)-...
                 std(10*log10(forestStats.OOBError)),'g--')
-            legend('CumOOBError','Mean PDE', 'Std PDE');
+            legend('Cum OOB Error','Mean OOB Error', 'Std OOB Error');
             grid on
             hold off
             printName = [figurePath 'OOBErr' num2str(cvToGenerate) '_' typeOfData ioDTStr noiseStr...
@@ -230,7 +230,7 @@ if generateOne
                 std(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos)),'g--')
             plot(mean(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos))-...
                 std(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos)),'g--')
-            legend('PDE','Mean PDE', 'Std PDE');
+            legend({'PDE','Mean PDE', 'Std PDE'},'Location','southeast');
             grid on
             hold off
             printName = [figurePath 'PDE_' num2str(cvToGenerate) '_' typeOfData ioDTStr noiseStr...
@@ -256,7 +256,7 @@ if generateOne
                 std(10*log10(predictorSplitPos)),'g--')
             plot(mean(10*log10(predictorSplitPos))*ones(1,length(predictorSplitPos))-...
                 std(10*log10(predictorSplitPos)),'g--')
-            legend('PS','Mean PS', 'Std PS');
+            legend({'PS','Mean PS', 'Std PS'},'Location','southeast');
             grid on
             hold off
             printName = [figurePath 'PS' num2str(cvToGenerate) '_' typeOfData ioDTStr noiseStr...
