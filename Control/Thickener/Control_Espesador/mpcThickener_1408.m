@@ -17,15 +17,22 @@ saveControlResults = false;
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
     % - <tL_CV>: tight limits in CV
     % - <tL_CV_MV>: tight limits in CV and MV
-dateOutputStr = '1009_tL_CV_MV';
+dateOutputStr = '1009';
 dateMatFileStr = '1408';
 figureFolder = 'figures\';
-testName = 'tightLimits';
+testName = 'fastARMAX'; % fastARMAX has the best results
 % 'figures\tuningMPC_RF\';
 figurePath = [figureFolder testName '\'];
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
 %%%%%%%%%%
 simTime = 100*3600; % 10*3600
+% 1: OL
+% 2: Inertia
+% 3: Bed Level
+% 4: C_u
+% 5: C_f
+% 6: Q_f
+% 7: UD
 simControlFrom = 2;
 simControlTo = 7;
 %%%%%%%%%%%%%%%
@@ -35,8 +42,8 @@ groupBy = 60;
 tau_R = 5*groupBy;
 N_y = 18;
 N_u = 3;%4
-kappaControl_RF = 5;
-kappaControl_ARMAX = 5;
+kappaControl_RF = 1; %5
+kappaControl_ARMAX = 1; % 5
 optimizationMethod = 'PSO';
 tau_C_RF = kappaControl_RF*tau_R;
 tau_C_ARMAX = kappaControl_ARMAX*tau_R;
@@ -75,7 +82,7 @@ startPlotTime = 1; %Wait for noise filter to stabilize
 wValuesStruct.delta = [
                         0 0 0;
                         0 0 0;
-                        0 0 6;
+                        0 0 2;
                         0 -1 0;
                         0 0 0;
                         0 0 0;
@@ -172,8 +179,8 @@ rCostValuesIterations_RF = ...%repmat([0.001 0.01],simControlTo,1);
                        	1e-3 1e-2; % 10
                        	1e-3 1e-2 % 11
                         ];
-% rCostValuesIterations = [1e10 1e10;
-%                         0.001 0.01];
+rCostValuesIterations_RF = rCostValuesIterations_RF*5e1;
+
 betaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
                         [
 						1 1 1; % 1 OL
@@ -235,7 +242,7 @@ rCostValuesIterations_ARMAX = ...%repmat([0.001 0.01],simControlTo,1);
                        	1e-3 1e-2; % 10
                        	1e-3 1e-2 % 11
                         ];
-
+rCostValuesIterations_ARMAX = rCostValuesIterations_ARMAX*5e1;
 betaCostValuesIterations_ARMAX = ...%repmat([1 1 1],simControlTo,1);
                         [
 						1 1 1; % 1 OL
@@ -721,8 +728,8 @@ yValuesStruct.timeToChange = [-1 -1 floor(simTime/22)];
 yValuesStruct.addNoiseBool = false;
 %%
 RFParamatersFile = ['RFParameters_' dateMatFileStr '.mat'];
-fixedParametersFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
-designParametersFileName = ['mpc_design_parameters_' dateMatFileStr '.mat'];
+fixedParametersFileName = ['mpc_fixed_parameters_' dateOutputStr '.mat'];
+designParametersFileName = ['mpc_design_parameters_' dateOutputStr '.mat'];
 parametersFileArray = {RFParamatersFile,fixedParametersFileName,designParametersFileName};
 %% Generate Fixed parameters
 % Fixed parameters

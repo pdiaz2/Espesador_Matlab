@@ -35,26 +35,34 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
 
     % Constraints 
     % On MV (1 pps => 5 pp5s)
-    deltaULowLim(1) = -10; % -15
-    deltaULowLim(2) = -2; % -5
-    deltaUHighLim(1) = 10;
-    deltaUHighLim(2) = 2;
+    deltaULowLim(1) = -15;%-10; % -15
+    deltaULowLim(2) = -5;%; % -5
+    deltaUHighLim(1) = 15;%;
+    deltaUHighLim(2) = 5;%;
 
-    yLowLims(1,:) = 0.95*Y0(1);
-    yHighLims(1,:) = 1.05*Y0(1);
+    yLowLims(1,:) = 0.95*Y0(1); % 0.8
+    yHighLims(1,:) = 1.05*Y0(1); % 1.2
     yLowLims(2,:) = 0.97*Y0(2);
     yHighLims(2,:) = 1.03*Y0(2);
-    yLowLims(3,:) = 1.5;
-    yHighLims(3,:) = 4;
+    yLowLims(3,:) = 0.9*Y0(3); %0.7055
+    yHighLims(3,:) = 2*Y0(3); % 3.7628
+    fprintf('CV Low Limits are %2.4f \r\n',yLowLims);
+    fprintf('CV High Limits are %2.4f \r\n',yHighLims);
 %     yLowLims(4,:) = 0;
 %     yHighLims(4,:) = 0.1;
 %     
     
     
-    uLowLims(1,:) = 90; % 70
+    uLowLims(1,:) = 70; % 90
     uHighLims(1,:) = 125;
     uLowLims(2,:) = 18; %23
-    uHighLims(2,:) = 36; % 31
+    uHighLims(2,:) = 31; % 36
+    
+    fprintf('MV Low Limits are %d \r\n',uLowLims);
+    fprintf('uV High Limits are %d \r\n',uHighLims);
+    
+    fprintf('MV Rate Limits are %d \r\n',deltaUHighLim);
+    
     %% Normalization Parameters
     % Factor that multiplies cost matrixes of MPC to normalize the error
     % w.r.t the setpoints/dynamic range of each variable
