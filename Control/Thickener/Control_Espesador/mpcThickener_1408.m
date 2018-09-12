@@ -8,7 +8,7 @@ useExpert = true; showMVComponents = false;
 usePID = true;
 %%%%%%%%%%%%%%%%%
 dvRealData = true;
-imprint = true;
+imprint = false;
 saveControlResults = false;
 
 % Code for names:
@@ -17,10 +17,10 @@ saveControlResults = false;
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
     % - <tL_CV>: tight limits in CV
     % - <tL_CV_MV>: tight limits in CV and MV
-dateOutputStr = '1009';
+dateOutputStr = '1009_BigNu';
 dateMatFileStr = '1408';
 figureFolder = 'figures\';
-testName = 'fastARMAX'; % fastARMAX has the best results
+testName = 'fastRF'; % fastARMAX has the best results
 % 'figures\tuningMPC_RF\';
 figurePath = [figureFolder testName '\'];
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
@@ -34,14 +34,14 @@ simTime = 100*3600; % 10*3600
 % 6: Q_f
 % 7: UD
 simControlFrom = 2;
-simControlTo = 7;
+simControlTo = 3;
 %%%%%%%%%%%%%%%
 % Time sampling specifications
 Dt = 1;
 groupBy = 60; 
 tau_R = 5*groupBy;
-N_y = 18;
-N_u = 3;%4
+N_y = 18; % 18
+N_u = 3;%3
 kappaControl_RF = 1; %5
 kappaControl_ARMAX = 1; % 5
 optimizationMethod = 'PSO';

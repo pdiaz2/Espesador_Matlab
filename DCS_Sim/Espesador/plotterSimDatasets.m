@@ -22,8 +22,7 @@ nSamples = length(SimResults.CV(1).GroupedTimeSeries);
 trainingSamples = floor(trainVSVal*nSamples);
 limitTestDataIndex = nSamples;
 validationSamples = limitTestDataIndex - trainingSamples;
-ix = {1:trainingSamples, trainingSamples+1:limitTestDataIndex};
-colors = 'br';
+
 
 
 %%
@@ -99,12 +98,16 @@ else
 end
 % options.simTime/3600 = in hours
 time = linspace(0,options.simTime/3600,samples+1);
-timeToWatch = length(time)-1;
+timeToWatchFrom = 50*60;
+timeToWatchTo = length(time)-1;
 % timeToWatch = 100*60;
 SimResultsRaw.CV(5).TimeSeries = filloutliers(SimResultsRaw.CV(5).TimeSeries,'clip','median');
 dynamicRangeCV = zeros(numel(CVNames),3);
 dynamicRangeMV = zeros(numel(MVNames),3);
 dynamicRangeDV = zeros(numel(DVNames),3);
+
+ix = {timeToWatchFrom:trainingSamples, trainingSamples+1:limitTestDataIndex};
+colors = 'br';
 
 if (plotFigures)
     % CV Plots5
@@ -113,11 +116,11 @@ if (plotFigures)
         title(CVNames{cv})
         hold on
         if strcmp('s',granularity)
-            plot(time(1:timeToWatch),SimResultsRaw.CV(cv).TimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.CV(cv).TimeSeries(1:timeToWatch)) 
+            plot(time(timeToWatchFrom:timeToWatchTo),SimResultsRaw.CV(cv).TimeSeries(timeToWatchFrom:timeToWatchTo))
+            plot(time(timeToWatchFrom:timeToWatchTo),SimResults.CV(cv).TimeSeries(timeToWatchFrom:timeToWatchTo)) 
         else
 %             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.CV(cv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
-            plot(time(1:timeToWatch-compensatePhase),SimResults.CV(cv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+            plot(time(timeToWatchFrom:timeToWatchTo-compensatePhase),SimResults.CV(cv).GroupedTimeSeries(timeToWatchFrom:timeToWatchTo-compensatePhase))
         end
         ylabel(CVUnits{cv})
         xlabel('Time [hr]')
@@ -129,8 +132,8 @@ if (plotFigures)
             print(printName,'-depsc');
         end
         hold off
-        dynamicRangeCV(cv,1) = min(SimResultsRaw.CV(cv).TimeSeries(1:timeToWatch));
-        dynamicRangeCV(cv,2) = max(SimResultsRaw.CV(cv).TimeSeries(1:timeToWatch));
+        dynamicRangeCV(cv,1) = min(SimResultsRaw.CV(cv).TimeSeries(timeToWatchFrom:timeToWatchTo));
+        dynamicRangeCV(cv,2) = max(SimResultsRaw.CV(cv).TimeSeries(timeToWatchFrom:timeToWatchTo));
         dynamicRangeCV(cv,3) = dynamicRangeCV(cv,2)-dynamicRangeCV(cv,1);
     end
     % MV Plots
@@ -139,11 +142,11 @@ if (plotFigures)
         title(MVNames{mv})
         hold on
         if strcmp('s',granularity)
-            plot(time(1:timeToWatch),SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.MV(mv).TimeSeries(1:timeToWatch)) 
+            plot(time(timeToWatchFrom:timeToWatchTo),SimResultsRaw.MV(mv).TimeSeries(timeToWatchFrom:timeToWatchTo))
+            plot(time(timeToWatchFrom:timeToWatchTo),SimResults.MV(mv).TimeSeries(timeToWatchFrom:timeToWatchTo)) 
         else
 %             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.MV(mv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
-            plot(time(1:timeToWatch-compensatePhase),SimResults.MV(mv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+            plot(time(timeToWatchFrom:timeToWatchTo-compensatePhase),SimResults.MV(mv).GroupedTimeSeries(timeToWatchFrom:timeToWatchTo-compensatePhase))
         end
         grid on
         ylabel(MVUnits{mv})
@@ -156,8 +159,8 @@ if (plotFigures)
         end
         hold off
         
-        dynamicRangeMV(mv,1) = min(SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch));
-        dynamicRangeMV(mv,2) = max(SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch));
+        dynamicRangeMV(mv,1) = min(SimResultsRaw.MV(mv).TimeSeries(timeToWatchFrom:timeToWatchTo));
+        dynamicRangeMV(mv,2) = max(SimResultsRaw.MV(mv).TimeSeries(timeToWatchFrom:timeToWatchTo));
         dynamicRangeMV(mv,3) = dynamicRangeMV(mv,2)-dynamicRangeMV(mv,1);
     end
     % DV Plots
@@ -166,11 +169,11 @@ if (plotFigures)
         title(DVNames{dv})
         hold on
         if strcmp('s',granularity)
-            plot(time(1:timeToWatch),SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.DV(dv).TimeSeries(1:timeToWatch))
+            plot(time(timeToWatchFrom:timeToWatchTo),SimResultsRaw.DV(dv).TimeSeries(timeToWatchFrom:timeToWatchTo))
+            plot(time(timeToWatchFrom:timeToWatchTo),SimResults.DV(dv).TimeSeries(timeToWatchFrom:timeToWatchTo))
         else
 %             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.DV(dv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
-            plot(time(1:timeToWatch-compensatePhase),SimResults.DV(dv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
+            plot(time(timeToWatchFrom:timeToWatchTo-compensatePhase),SimResults.DV(dv).GroupedTimeSeries(timeToWatchFrom:timeToWatchTo-compensatePhase))
         end
         grid on
         ylabel(DVUnits{dv})
@@ -182,8 +185,8 @@ if (plotFigures)
             print(printName,'-depsc');
         end
         hold off
-        dynamicRangeDV(dv,1) = min(SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch));
-        dynamicRangeDV(dv,2) = max(SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch));
+        dynamicRangeDV(dv,1) = min(SimResultsRaw.DV(dv).TimeSeries(timeToWatchFrom:timeToWatchTo));
+        dynamicRangeDV(dv,2) = max(SimResultsRaw.DV(dv).TimeSeries(timeToWatchFrom:timeToWatchTo));
         dynamicRangeDV(dv,3) = dynamicRangeDV(dv,2)-dynamicRangeDV(dv,1);
     end
 end
@@ -278,8 +281,8 @@ if (plotFigures)
         title(CVNames{cv})
         hold on
         if strcmp('s',granularity)
-            plot(time(1:timeToWatch),SimResultsRaw.CV(cv).TimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.CV(cv).TimeSeries(1:timeToWatch)) 
+            plot(time(timeToWatchFrom:timeToWatchTo),SimResultsRaw.CV(cv).TimeSeries(timeToWatchFrom:timeToWatchTo))
+            plot(time(timeToWatchFrom:timeToWatchTo),SimResults.CV(cv).TimeSeries(timeToWatchFrom:timeToWatchTo)) 
         else
 %             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.CV(cv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
             for seg = 1:2
@@ -304,8 +307,8 @@ if (plotFigures)
         title(MVNames{mv})
         hold on
         if strcmp('s',granularity)
-            plot(time(1:timeToWatch),SimResultsRaw.MV(mv).TimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.MV(mv).TimeSeries(1:timeToWatch)) 
+            plot(time(timeToWatchFrom:timeToWatchTo),SimResultsRaw.MV(mv).TimeSeries(timeToWatchFrom:timeToWatchTo))
+            plot(time(timeToWatchFrom:timeToWatchTo),SimResults.MV(mv).TimeSeries(timeToWatchFrom:timeToWatchTo)) 
         else
 %             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.MV(mv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
 %             plot(time(1:timeToWatch-compensatePhase),SimResults.MV(mv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
@@ -331,8 +334,8 @@ if (plotFigures)
         title(DVNames{dv})
         hold on
         if strcmp('s',granularity)
-            plot(time(1:timeToWatch),SimResultsRaw.DV(dv).TimeSeries(1:timeToWatch))
-            plot(time(1:timeToWatch),SimResults.DV(dv).TimeSeries(1:timeToWatch))
+            plot(time(timeToWatchFrom:timeToWatchTo),SimResultsRaw.DV(dv).TimeSeries(timeToWatchFrom:timeToWatchTo))
+            plot(time(timeToWatchFrom:timeToWatchTo),SimResults.DV(dv).TimeSeries(timeToWatchFrom:timeToWatchTo))
         else
 %             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.DV(dv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
 %             plot(time(1:timeToWatch-compensatePhase),SimResults.DV(dv).GroupedTimeSeries(1:timeToWatch-compensatePhase))

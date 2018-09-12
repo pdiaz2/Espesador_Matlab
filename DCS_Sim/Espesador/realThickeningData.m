@@ -12,7 +12,7 @@ outputMatFileName = [nameDataset '_' typeOfData '_' dateTest '_BF.mat'];
 figurePath = ['figures\' typeOfData '\'];
 saveToMatFile = false;
 csvWrite = false;
-imprint = false;
+imprint = true;
 plotFigures = true;
 
 % Data validation and machine learning parameters
@@ -166,7 +166,8 @@ else
 end
 % options.simTime/3600 = in hours
 time = linspace(0,options.simTime*length(months)/3600,samples+1);
-timeToWatch = length(time)-1;
+% timeToWatch = length(time)-1;
+timeToWatch = limitTestDataIndex;
 SimResultsRaw.CV(5).TimeSeries = filloutliers(SimResultsRaw.CV(5).TimeSeries,'clip','median');
 dynamicRangeCV = zeros(numel(CVNames),3);
 dynamicRangeMV = zeros(numel(MVNames),3);
@@ -183,7 +184,7 @@ if (plotFigures)
             plot(time(1:timeToWatch),SimResults.CV(cv).TimeSeries(1:timeToWatch)) 
         else
 %             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.CV(cv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
-            plot(time(1:timeToWatch-compensatePhase),SimResults.CV(cv).GroupedTimeSeries(1:end))
+            plot(time(1:timeToWatch-compensatePhase),SimResults.CV(cv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
         end
         ylabel(CVUnits{cv})
         xlabel('Time [hr]')
@@ -209,7 +210,7 @@ if (plotFigures)
             plot(time(1:timeToWatch),SimResults.MV(mv).TimeSeries(1:timeToWatch)) 
         else
 %             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.MV(mv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
-            plot(time(1:timeToWatch-compensatePhase),SimResults.MV(mv).GroupedTimeSeries(1:end))
+            plot(time(1:timeToWatch-compensatePhase),SimResults.MV(mv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
         end
         grid on
         ylabel(MVUnits{mv})
@@ -236,7 +237,7 @@ if (plotFigures)
             plot(time(1:timeToWatch),SimResults.DV(dv).TimeSeries(1:timeToWatch))
         else
 %             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.DV(dv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
-            plot(time(1:timeToWatch-compensatePhase),SimResults.DV(dv).GroupedTimeSeries(1:end))
+            plot(time(1:timeToWatch-compensatePhase),SimResults.DV(dv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
         end
         grid on
         ylabel(DVUnits{dv})
@@ -342,6 +343,7 @@ if saveToMatFile
 end
 
 %% Train & Validation Segments
+xlim([0 limitTestDataIndex])
 if (plotFigures)
     % CV Plots5
     for cv = 1:3%length(CVNames)
@@ -355,6 +357,7 @@ if (plotFigures)
 %             plot(time(1:timeToWatch-compensatePhase),SimResultsRaw.CV(cv).GroupedTimeSeries(1:timeToWatch-compensatePhase))
             for seg = 1:2
                 plot(ix{seg}/60,SimResults.CV(cv).GroupedTimeSeries(ix{seg}),'Color', colors(seg))
+                xlim([0 limitTestDataIndex/60])
                 hold on
             end
         end
@@ -383,6 +386,7 @@ if (plotFigures)
             for seg = 1:2
                 plot(ix{seg}/60,SimResults.MV(mv).GroupedTimeSeries(ix{seg}),'Color', colors(seg))
                 hold on
+                xlim([0 limitTestDataIndex/60])
             end
         end
         grid on
@@ -410,6 +414,7 @@ if (plotFigures)
             for seg = 1:2
                 plot(ix{seg}/60,SimResults.DV(dv).GroupedTimeSeries(ix{seg}),'Color', colors(seg))
                 hold on
+                xlim([0 limitTestDataIndex/60])
             end
         end
         grid on

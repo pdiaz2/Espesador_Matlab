@@ -11,7 +11,7 @@ dateTest = '1408';
 figurePath = ['figures\' typeOfData '\'];
 
 % Save and print bools
-imprint = true;
+imprint = false;
 useTimePlot = true;
 %%%%%%
 % RF Specifics
@@ -22,7 +22,7 @@ nbInput = 6;
 cvToGenerate = 2;
 
 % ARMAX Specifics
-NAInput = 4;
+NAInput = 5;
 NBInput = 4;
 NCInput = 3;
 selectedCV = [1 2 3];
