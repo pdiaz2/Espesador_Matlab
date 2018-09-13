@@ -17,7 +17,7 @@ saveControlResults = false;
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
     % - <tL_CV>: tight limits in CV
     % - <tL_CV_MV>: tight limits in CV and MV
-dateOutputStr = '1009_BigNu';
+dateOutputStr = '1009';
 dateMatFileStr = '1408';
 figureFolder = 'figures\';
 testName = 'fastRF'; % fastARMAX has the best results
@@ -41,8 +41,8 @@ Dt = 1;
 groupBy = 60; 
 tau_R = 5*groupBy;
 N_y = 18; % 18
-N_u = 6;%3
-kappaControl_RF = 1; %5
+N_u = 3;%3 Try 6
+kappaControl_RF = 1; %1
 kappaControl_ARMAX = 1; % 5
 optimizationMethod = 'PSO';
 tau_C_RF = kappaControl_RF*tau_R;
@@ -152,7 +152,7 @@ wValuesStruct.addNoiseBool = [
 
 qCostValuesIterations_RF = ...%repmat([1 1 100],simControlTo,1);
                         [
-						1 10 100; % 1 OL
+						1 1 1; % 1 OL
 						1e0 1e2 1e2; % 2
                         1e0 1e2 1e2; % 3 Bastante bueno pero la cama sigue siendo un poco muy alta. Oscilan muchísimos los gpt y en verdad casi todo.
 						1e0 1e2 1e2; % 4 Baja más la cama (queda en 3m). No controla muy bien la cama. Quizás hay que ponerle aún más peso.
@@ -967,7 +967,7 @@ controlColors = {'r','k','g','m'};
 controlLineStyle = {'-','--','-.',':'};
 controlMarker = {'*','d','o','none'};
 % Y Axis Limits
-usePlotLims = true;
+usePlotLims = false;
 CVLims = [20 22;
          72 75;
          0 8];
@@ -988,9 +988,9 @@ for simIter = simControlFrom:simControlTo
         subplot(numCV,1,cv)
         if useMPC_RF
             plot(t(startPlotTime:end),yMPC_RF(startPlotTime:end,cv,simIter),...
-                   'LineWidth',1,...
-                   'Color',controlColors{1},...
-                   'LineStyle',controlLineStyle{1})
+                    'LineWidth',1,...
+                    'Color',controlColors{1},...
+                    'LineStyle',controlLineStyle{1})
         end
         hold on
         if useMPC_ARMAX
@@ -1015,8 +1015,8 @@ for simIter = simControlFrom:simControlTo
         
         
         title(titlesCV{cv})
-        plot(t(startPlotTime:end),wRefSimulink(startPlotTime:end,cv,simIter),...
-                'b--','LineWidth',1);
+%         plot(t(startPlotTime:end),wRefSimulink(startPlotTime:end,cv,simIter),...
+%                 'b--','LineWidth',1);
     %     plot(t(startPlotTime:end),yFiltered.signals.values(startPlotTime:end,cv),'g','LineWidth',1);
         ylabel(CVUnits{cv})
         xlabel('Time [hr]')
