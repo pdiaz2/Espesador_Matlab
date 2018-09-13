@@ -4,7 +4,7 @@ function mpc_design_armax_object( dateMatFileStr,N_y,N_u,kappaControl_ARMAX,...
 %   Detailed explanation goes here
 %% Mat File Handling
 fixedParametersFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
-armaxModelFile = ['ARMAX_MDL_Sim_Noise_k5_na5_nb4_nc3_1408.mat']; % change to be function of datMatFileStr
+armaxModelFile = ['ARMAX_MDL_Sim_Noise_k5_na5_nb4_nc3_1408.mat']; % change to be function of datMatFileStr 5 4 3
 mpcObjectFileName = ['mpc_armax_object_' dateMatFileStr '.mat'];
 load(fixedParametersFileName);
 load(armaxModelFile);

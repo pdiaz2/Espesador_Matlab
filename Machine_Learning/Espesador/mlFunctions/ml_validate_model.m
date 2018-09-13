@@ -6,11 +6,12 @@ cvToGenerate = mlParamsStruct.cvToGenerate;
 tBagOrEnsemble = mlParamsStruct.trainingParamsArray{7};
 deadTimeMV_CV = mlParamsStruct.delayMV_CV;
 %%
-assessmentValues = ml_assessment_values(testData);
+
 %%
 switch mlMethod
     case 'RF'
         if generateOneBool
+            assessmentValues = ml_assessment_values(testData);
             cv = cvToGenerate;
             % Validation is tau_R ahead value of actual data
             validationOutputs = testData(cv).OutputData(:);
@@ -92,6 +93,7 @@ switch mlMethod
         Results.Fit.AIC = ML_Model.Model.Report.Fit.AIC;
         Results.Fit.MSE = ML_Model.Model.Report.Fit.MSE;
     case 'ARMAX'
+        assessmentValues = ml_assessment_values_ARMAX(testData);
         UDC = mean(testData.InputData)';
         YDC = mean(testData.OutputData)';
         maxDeadTime = max(max(deadTimeMV_CV));

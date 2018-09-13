@@ -5,13 +5,13 @@ close all;
 % load('Agosto_Sim_1408_rawData.mat');
 % load('ThreeMonths_Real_1408_BF.mat');
 % load('Abril_A_Julio_Real18_%%%_1708'
-nameDataset = 'ThreeMonths_';
-typeOfData = 'Real_';
+nameDataset = 'Agosto_';
+typeOfData = 'Sim_';
 dateTest = '1408';
 figurePath = ['figures\' typeOfData '\'];
 
 % Save and print bools
-imprint = false;
+imprint = true;
 useTimePlot = true;
 %%%%%%
 % RF Specifics
@@ -33,8 +33,8 @@ trainVSValInput = 0.85;
 tau_R = tau_RInput;
 N_y = 20;
 pastDataSamples = 348; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
-K_ahead = 24;
-K_forecast = 48; % >= 1
+K_ahead = 1;
+K_forecast = 3; % >= 1
 varStringRF = ['B' num2str(numTreesInput) ...
               '_k' num2str(tau_RInput) '_'...
               'na' num2str(naInput) '_nb' num2str(nbInput)];
@@ -49,7 +49,7 @@ mlMethod = 'RF';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 useDelayMV_CV = false;
-noiseyData = false;
+noiseyData = true;
 generateOne = true;
 showGood = true;
 %%%%%%%%%%%%%%%%%%%%
@@ -480,5 +480,5 @@ end
 %% IC for September control ARIMAX
 x0_ARMAX = x0Predicted;
 if strcmp(typeOfData,'Sim_')
-    save(['x0Control_' typeOfData dateTest '.mat'],'x0_RF','x0_ARMAX');
+    save(['x0Control_' typeOfData dateTest '_333.mat'],'x0_RF','x0_ARMAX');
 end

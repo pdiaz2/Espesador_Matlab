@@ -3,8 +3,8 @@ close all;
 clc;
 %% Test Plant Specifics
 
-nameDataset = 'ThreeMonths_';
-typeOfData = 'Real_';
+nameDataset = 'Agosto_';
+typeOfData = 'Sim_';
 dateTest = '1408';
 %%%%%%%%%%%%%%%%%%%%%
 predictiveModelsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\PredictiveModels\';
@@ -22,19 +22,19 @@ optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
 
 % Crucial parameters for system identification
-N_y = 20;
+N_y = 48;
 tau_R = 5;%5
 trainVSVal = 0.85;
 useDelayMV_CV = false;
-noiseyData = false;
+noiseyData = true;
 generateOne = true;
 
 seed = rng(1231231); % For reproducibility (should look into this after)
 %% Bool Handling
 if generateOne
-    na = 2;
+    na = 3;
     nb = 3;
-    nc = 2;
+    nc = 3;
     nk = 2;
     offsetChoice = 1;
     focusChoice = 1;
