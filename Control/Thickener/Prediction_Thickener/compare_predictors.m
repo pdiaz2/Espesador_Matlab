@@ -5,25 +5,25 @@ close all;
 % load('Agosto_Sim_1408_rawData.mat');
 % load('ThreeMonths_Real_1408_BF.mat');
 % load('Abril_A_Julio_Real18_%%%_1708'
-nameDataset = 'ThreeMonths_';
-typeOfData = 'Real_';
+nameDataset = 'Agosto_';
+typeOfData = 'Sim_';
 dateTest = '1408';
 figurePath = ['figures\' typeOfData '\'];
 
 % Save and print bools
-imprint = true;
+imprint = false;
 useTimePlot = true;
 %%%%%%
 % RF Specifics
 numTreesInput = 50;
-numForestsInput = 24;
+numForestsInput = 48;
 tau_RInput = 5;
 naInput = 6;
 nbInput = 6;
 cvToGenerate = 2;
 
 % ARMAX Specifics
-NAInput = 4;
+NAInput = 5;
 NBInput = 4;
 NCInput = 3;
 selectedCV = [1 2 3];
@@ -33,9 +33,9 @@ selectedDV = [1 2];
 trainVSValInput = 0.85;
 tau_R = tau_RInput;
 N_y = 20;
-pastDataSamples = 640; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
+pastDataSamples = 530; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
 K_ahead = 24; % 20
-K_forecast = 24; % >= 1 48
+K_forecast = 48; % >= 1 48
 varStringRF = ['B' num2str(numTreesInput) '_Ny_' num2str(numForestsInput) ...
               '_k' num2str(tau_RInput) '_'...
               'na' num2str(naInput) '_nb' num2str(nbInput)];
@@ -50,7 +50,7 @@ mlMethod = 'RF';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 useDelayMV_CV = false;
-noiseyData = false;
+noiseyData = true;
 generateOne = true;
 showGood = true;
 %%%%%%%%%%%%%%%%%%%%
@@ -484,3 +484,9 @@ x0_ARMAX = x0Predicted;
 if strcmp(typeOfData,'Sim_')
     save(['x0Control_' typeOfData dateTest '.mat'],'x0_RF','x0_ARMAX');
 end
+%% Save for plot
+pMatName = ['predictionResults_' kAheadStr num2str(pastDataSamples) '_' varStringRF '.mat'];
+save(pMatName,'RFPredictionStruct','armaxForecast','armaxPredict','ReactionCurveStruct',...
+              'validationOutputs','tForecast','timeForecast','timePrediction',...
+              'K_ahead','pastDataSamples','K_forecast','n','armaxToRFWindowUB',...
+               'makeStepMatrix');     

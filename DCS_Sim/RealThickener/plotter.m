@@ -20,7 +20,7 @@ MVUnits = {'m3/hr','gpt'};
 MVSaveName = {'Q_u','gpt'};
 % DV
 DVNames = {'Flujo de Alimentación','Concentración de Alimentación','Granulometría de Alimentación'};
-DVUnits = {'m3/s','%','N/A'};
+DVUnits = {'m3/hr','%','N/A'};
 DVSaveName = {'Q_f','Cp_f','P1_f'};
 if strcmp('s',granularity)
     samples = length(SimResults.CV(1).TimeSeries);

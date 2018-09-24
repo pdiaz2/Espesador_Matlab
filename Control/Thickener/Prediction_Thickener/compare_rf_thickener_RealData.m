@@ -11,7 +11,7 @@ dateTest = '1408';
 figurePath = ['figures\' typeOfData '\'];
 
 % Save and print bools
-imprint = true;
+imprint = false;
 useTimePlot = true;
 %%%%%%
 % RF Specifics
@@ -32,9 +32,9 @@ selectedDV = [1 2];
 trainVSValInput = 0.85;
 tau_R = tau_RInput;
 N_y = 20;
-pastDataSamples = 348; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
+pastDataSamples = 530; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
 K_ahead = 1;
-K_forecast = 3; % >= 1
+K_forecast = 48; % >= 1
 varStringRF = ['B' num2str(numTreesInput) ...
               '_k' num2str(tau_RInput) '_'...
               'na' num2str(naInput) '_nb' num2str(nbInput)];
@@ -482,3 +482,9 @@ x0_ARMAX = x0Predicted;
 if strcmp(typeOfData,'Sim_')
     save(['x0Control_' typeOfData dateTest '_333.mat'],'x0_RF','x0_ARMAX');
 end
+%% Save for plot
+pMatName = ['predictionResults_' kAheadStr num2str(pastDataSamples) '_' varStringRF '.mat'];
+save(pMatName,'RFPredictionStruct','armaxForecast','armaxPredict','ReactionCurveStruct',...
+              'validationOutputs','tForecast','timeForecast','timePrediction',...
+              'K_ahead','pastDataSamples','K_forecast','n','armaxToRFWindowUB',...
+               'makeStepMatrix');        

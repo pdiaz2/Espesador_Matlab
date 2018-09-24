@@ -206,14 +206,16 @@ if generateOne
             hold on
             plot(mean(10*log10(forestStats.OOBError))*ones(1,numTrees),'r')
             plot(mean(10*log10(forestStats.OOBError))*ones(1,numTrees)+...
-                std(10*log10(forestStats.OOBError)),'g--')
+                std(10*log10(forestStats.OOBError)),'k--')
             plot(mean(10*log10(forestStats.OOBError))*ones(1,numTrees)-...
-                std(10*log10(forestStats.OOBError)),'g--')
-            legend('Cum. OOB Error','Mean OOB', 'Std OOB Error');
+                std(10*log10(forestStats.OOBError)),'k--')
+            legend('Cum OOB Error','Mean OOB Error', 'Std OOB Error');
+            xlabel('Forest Size [n]');
+            ylabel('MSE')
             grid on
             hold off
             printName = [figurePath 'OOBErr' num2str(cvToGenerate) '_' typeOfData ioDTStr noiseStr...
-                        'B' num2str(numTrees) '_RF_' num2str(forest) ...
+                        'B' num2str(numTrees) '_RF_' num2str(forestToView) ...
                         '_k' num2str(controlParamsStruct.tau_R) '_'...
                         'na' num2str(delayYCases) '_nb' num2str(delayUCases)...
                         '_' dateTest];
@@ -228,18 +230,31 @@ if generateOne
             permutedDeltaPos = forestStats.OOBPermutedDelta(positiveIndexes);
             permutedDeltaNeg = forestStats.OOBPermutedDelta(~positiveIndexes);
             figure
-            plot(10*log10(permutedDeltaPos),'b*')
+            y1 = plot(10*log10(permutedDeltaPos),'b*');
             hold on
-            plot(mean(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos)),'r')
-            plot(mean(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos))+...
-                std(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos)),'g--')
+            y2 = plot(mean(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos)),'r');
+            y3 = plot(mean(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos))+...
+                std(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos)),'k--');
             plot(mean(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos))-...
-                std(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos)),'g--')
-            legend('PDE','Mean PDE', 'Std PDE');
+                std(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos)),'k--');
+            
+            grid on
+            xlabel('Predictor Number [n]');
+            ylabel('PDE');
+            xlim([0 mOrder.na(cvToGenerate)*5]);
+            names = {['y_' num2str(cvToGenerate)],num2str(mOrder.na(cvToGenerate)),'d_1',...
+                        num2str(mOrder.na(cvToGenerate)*2),'d_2',num2str(mOrder.na(cvToGenerate)*3),...
+                        'u_1',num2str(mOrder.na(cvToGenerate)*4),'u_2',num2str(mOrder.na(cvToGenerate)*5)};
+            set(gca,'xtick',[mOrder.na(cvToGenerate)/2:mOrder.na(cvToGenerate)/2:mOrder.na(cvToGenerate)*5],'xticklabel',names);
+            axes = gca;
+            for divLine = mOrder.na(cvToGenerate):mOrder.na(cvToGenerate):mOrder.na(cvToGenerate)*5
+                line([divLine divLine],get(axes,'YLim'),'Color',[1 0 1],'LineStyle',':');
+            end
+            legend([y1 y2 y3],{'PDE','Mean PDE', 'Std PDE'},'Location','southeast');
             grid on
             hold off
             printName = [figurePath 'PDE_' num2str(cvToGenerate) '_' typeOfData ioDTStr noiseStr...
-                        'B' num2str(numTrees) '_RF_' num2str(forest) ...
+                        'B' num2str(numTrees) '_RF_' num2str(forestToView) ...
                         '_k' num2str(controlParamsStruct.tau_R) '_'...
                         'na' num2str(delayYCases) '_nb' num2str(delayUCases)...
                         '_' dateTest];
@@ -254,25 +269,41 @@ if generateOne
             predictorSplitPos = forestStats.PredictorSplit(positiveIndexes);
             predictorSplitNeg = forestStats.PredictorSplit(~positiveIndexes);
             figure
-            plot(10*log10(predictorSplitPos),'b*')
+            y1 = plot(10*log10(predictorSplitPos),'b*');
             hold on
-            plot(mean(10*log10(predictorSplitPos))*ones(1,length(predictorSplitPos)),'r')
-            plot(mean(10*log10(predictorSplitPos))*ones(1,length(predictorSplitPos))+...
-                std(10*log10(predictorSplitPos)),'g--')
+            y2 = plot(mean(10*log10(predictorSplitPos))*ones(1,length(predictorSplitPos)),'r');
+            y3 = plot(mean(10*log10(predictorSplitPos))*ones(1,length(predictorSplitPos))+...
+                std(10*log10(predictorSplitPos)),'k--');
             plot(mean(10*log10(predictorSplitPos))*ones(1,length(predictorSplitPos))-...
-                std(10*log10(predictorSplitPos)),'g--')
-            legend('PS','Mean PS', 'Std PS');
+                std(10*log10(predictorSplitPos)),'k--');
+            xlabel('Predictor Number [n]');
+            ylabel('PS');
+            xlim([0 mOrder.na(cvToGenerate)*5]);
+            names = {['y_' num2str(cvToGenerate)],num2str(mOrder.na(cvToGenerate)),'d_1',...
+                        num2str(mOrder.na(cvToGenerate)*2),'d_2',num2str(mOrder.na(cvToGenerate)*3),...
+                        'u_1',num2str(mOrder.na(cvToGenerate)*4),'u_2',num2str(mOrder.na(cvToGenerate)*5)};
+            set(gca,'xtick',[mOrder.na(cvToGenerate)/2:mOrder.na(cvToGenerate)/2:mOrder.na(cvToGenerate)*5],'xticklabel',names);
+            axes = gca;
+            for divLine = mOrder.na(cvToGenerate):mOrder.na(cvToGenerate):mOrder.na(cvToGenerate)*5
+                line([divLine divLine],get(axes,'YLim'),'Color',[1 0 1],'LineStyle',':');
+            end
+            legend([y1 y2 y3],{'PS','Mean PS', 'Std PS'},'Location','northeast');
+            printName = [figurePath 'PDE_' num2str(cvToGenerate) '_' typeOfData ioDTStr noiseStr...
+                        'B' num2str(numTrees) ...
+                        '_k' num2str(controlParamsStruct.tau_R) '_'...
+                        'na' num2str(delayYCases) '_nb' num2str(delayUCases)...
+                        '_' dateTest];
             grid on
             hold off
             printName = [figurePath 'PS' num2str(cvToGenerate) '_' typeOfData ioDTStr noiseStr...
-                        'B' num2str(numTrees) '_RF_' num2str(forest) ...
+                        'B' num2str(numTrees) '_RF_' num2str(forestToView) ...
                         '_k' num2str(controlParamsStruct.tau_R) '_'...
                         'na' num2str(delayYCases) '_nb' num2str(delayUCases)...
                         '_' dateTest];
             if imprint
                 % Latex
                 print(printName,'-depsc');
-                print(printName,'-djpeg');
+%                 print(printName,'-djpeg');
             end
             
             forestStats.positiveIndexPredSplit = positiveIndexes;
