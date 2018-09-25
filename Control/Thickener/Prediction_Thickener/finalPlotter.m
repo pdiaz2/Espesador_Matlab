@@ -1,5 +1,5 @@
 close all;
-imprint = false;
+imprint = true;
 figurePath = 'figures\FinalSim\';
 %% Options for plotting
 
