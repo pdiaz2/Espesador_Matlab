@@ -48,7 +48,7 @@ for cv = 1:n
         print(printName,'-depsc');
     end
 end
-
+%%
 % Forecast comparison 530
 load('predictionResults_1G_530_B100_k5_na6_nb6');
 for cv = 1:n
@@ -84,6 +84,7 @@ for cv = 1:n
         print(printName,'-depsc');
     end
 end
+
 %%
 % Prediction comparison
 load('predictionResults_1G_530_B50_Ny_48_k5_na6_nb6')
@@ -291,6 +292,44 @@ for cv = 1:n
     location = locateLegends(locationStr);
     legend(legendCell,'Location',location);
     printName = [figurePath 'predictFinal_48_' CVSaveName{cv}];
+    if imprint
+        print(printName,'-depsc');
+    end
+end
+
+close all
+%%
+% Forecast comparison 920
+load('predictionResults_24G_920_B100_k5_na6_nb6');
+for cv = 1:n
+    figure
+    plot(timeForecast,validationOutputs(1+pastDataSamples:pastDataSamples+K_forecast,cv),'LineWidth',2)
+    hold on
+    title(CVNames{cv})
+    plot(timeForecast,armaxForecast(:,cv),'--k','LineWidth',1.5)
+    plot(timeForecast,RFPredictionStruct(cv).yForecast(:),'-.m','LineWidth',1.5)
+    
+    xlabel(xLabelStr);
+    hold off
+    grid on
+%     printName = [figurePath 'forecast_' CVSaveName{cv} typeOfData ioDTStr noiseStr...
+%                 kAheadStr varStringRF '_' dateTest];
+%     if imprint
+%         Latex
+%         print(printName,'-depsc');
+%         print(printName,'-djpeg');
+%     end
+end
+load('predictionResults_24G_920_B50_Ny_48_k5_na6_nb6');
+for cv = 1:n
+   figure(cv)
+   hold on
+   plot(timeForecast,RFPredictionStruct(cv).yForecast(:),'-r','LineWidth',1.5)
+   legendCell = {'Validation','ARIMAX','RF_{r}','RF_{b}'};
+    locationStr = input('Loc','s');
+    location = locateLegends(locationStr);
+    legend(legendCell,'Location',location);
+    printName = [figurePath 'forecast_' CVSaveName{cv} '3'];
     if imprint
         print(printName,'-depsc');
     end

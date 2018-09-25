@@ -2,14 +2,14 @@ clear all;
 clc;
 close all;
 %% Control Parameters
-useMPC_RF = false;
+useMPC_RF = true;
 useMPC_ARMAX = true;
 useExpert = true; showMVComponents = false;
 usePID = true;
 %%%%%%%%%%%%%%%%%
 dvRealData = true;
 imprint = false;
-saveControlResults = false;
+saveControlResults = true;
 
 % Code for names:
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
@@ -17,15 +17,15 @@ saveControlResults = false;
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
     % - <tL_CV>: tight limits in CV
     % - <tL_CV_MV>: tight limits in CV and MV
-dateOutputStr = '1009';
+dateOutputStr = '2409';
 dateMatFileStr = '1408';
 figureFolder = 'figures\';
-testName = 'fastRF'; % fastARMAX has the best results
+testName = 'MVP'; % fastARMAX has the best results
 % 'figures\tuningMPC_RF\';
 figurePath = [figureFolder testName '\'];
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
 %%%%%%%%%%
-simTime = 100*3600; % 10*3600
+simTime = 10*3600; % 10*3600
 % 1: OL
 % 2: Inertia
 % 3: Bed Level
@@ -34,7 +34,7 @@ simTime = 100*3600; % 10*3600
 % 6: Q_f
 % 7: UD
 simControlFrom = 2;
-simControlTo = 7;
+simControlTo = 2;
 %%%%%%%%%%%%%%%
 % Time sampling specifications
 Dt = 1;
@@ -958,5 +958,9 @@ if saveControlResults
          'dMPC_RF','wRefSimulink','t',...
          'numCV','numMV','numDV',...
          'simControlFrom','simControlTo','startPlotTime',...
+         'useMPC_RF','useMPC_ARMAX',...
+         'tau_C_ARMAX','tau_C_RF',...
+         'N_y','N_u',...
+         'mpcObj',...
          'figurePath');
 end

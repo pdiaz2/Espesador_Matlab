@@ -1,10 +1,27 @@
 % load('')
 close all;
 %%
+imprint = false;
 simIter = 2;
-controllerHitTimes = [1 10 20 30];
+zoomInTimes = [1 2 3];
+
 plotTrajectory = true;
 plotMVSequence = true;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+useMPC_RF = true;
+useMPC_ARMAX = true;
+groupBy = 60; 
+tau_R = 5*groupBy;
+N_y = 18; % 18
+N_u = 3;%3 Try 6
+kappaControl_RF = 1; %1
+kappaControl_ARMAX = 1; % 5
+optimizationMethod = 'PSO';
+tau_C_RF = kappaControl_RF*tau_R;
+tau_C_ARMAX = kappaControl_ARMAX*tau_R;
+%%
+controllerHitTimes = floor(zoomInTimes*3600/tau_C_RF);
+% controllerHitTimes = [1 10 20 30];
 %%
 titlesCV = {'Torque Trajectory','Underflow Concentration Trajectory','Interface Level Trajectory','Overflow Concentration','Residence Time',...
             'Solid Throughput','Underflow Particle Diameter','Overflow'};
@@ -58,7 +75,7 @@ if plotTrajectory
             %             [yf,x0,sysf,yf_sd,x,x_sd] = forecast(idss(mpcObj.Model.Plant),pastData,N_y,futureData,opt);
             %}
             % Use d(t) up to this instant
-            dPast = downsample(dMPC_ARMAX(1:tau_C_ARMAX*controllerHit,:,simIter),tau_R);
+            dPast = downsample(dMPC_RF(1:tau_C_ARMAX*controllerHit,:,simIter),tau_R);
             localControlMove_ARMAX = permute(controlMovesMPC_ARMAX(controllerHit,:,:,simIter),[3,2,1]);
             futureData = [repmat(dPast(end,:),N_y,1) localControlMove_ARMAX' zeros(N_y,numCV)];
             tForecast = [0:tau_R:(N_y-1)*tau_R]';
@@ -92,10 +109,10 @@ if plotTrajectory
             title(titlesCV{cv})
             ylabel(CVUnits{cv})
             xlabel(['Samples [' num2str(tau_R/60)  'min/sample]']);
-%             ylim(MVLims(mv,:));
-            ylim auto
-            yLegend_1 = ['$y*_' num2str(mv) '$ RF'];
-            yLegend_2 = ['$y*_' num2str(mv) '$ ARIMAX'];
+            ylim(CVLims(cv,:));
+%             ylim auto
+            yLegend_1 = ['$y*_' num2str(cv) '$ RF'];
+            yLegend_2 = ['$y*_' num2str(cv) '$ ARIMAX'];
     %         legend({mLegend_1,mLegend_2},'Interpreter','latex');
             grid on
             
