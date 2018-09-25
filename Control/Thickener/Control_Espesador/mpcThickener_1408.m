@@ -9,7 +9,7 @@ usePID = true;
 %%%%%%%%%%%%%%%%%
 dvRealData = true;
 imprint = false;
-saveControlResults = true;
+saveControlResults = false;
 
 % Code for names:
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
@@ -17,7 +17,7 @@ saveControlResults = true;
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
     % - <tL_CV>: tight limits in CV
     % - <tL_CV_MV>: tight limits in CV and MV
-dateOutputStr = '2409';
+dateOutputStr = '2509';
 dateMatFileStr = '1408';
 figureFolder = 'figures\';
 testName = 'MVP'; % fastARMAX has the best results
@@ -172,13 +172,14 @@ rCostValuesIterations_RF = ...%repmat([0.001 0.01],simControlTo,1);
                         1e-3 1e-2; % 3 
                         1e-3 1e-2; % 4 
                         1e-3 1e-2; % 5
-                        1e-3 1e-3; % 6 
+                        1e-3 1e-2; % 6 
                         1e-3 1e-2; % 7 
                         1e-3 1e-2; % 8 
                         1e-3 1e-2; % 9 
                        	1e-3 1e-2; % 10
                        	1e-3 1e-2 % 11
                         ];
+%%%                        
 rCostValuesIterations_RF = rCostValuesIterations_RF*5e1;
 
 betaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
@@ -221,7 +222,7 @@ qCostValuesIterations_ARMAX = ...%repmat([1 1 100],simControlTo,1);
 						1e0 1e2 1e2; % 4 
 						1e0 1e2 1e2; % 5 
 						1e0 1e2 1e2; % 6 
-						1e0 1e2 1e5; % 7 
+						1e0 1e2 1e2; % 7 
                         1e0 1e2 1e2; % 8 
                         1e0 1e2 1e2; % 9 
                         1e0 1e2 1e2; % 10
@@ -251,7 +252,7 @@ betaCostValuesIterations_ARMAX = ...%repmat([1 1 1],simControlTo,1);
 						1e0 1e2 1e2; % 4 
 						1e0 1e2 1e2; % 5
 						1e0 1e2 1e2; % 6 
-						1e2 1e3 1e2; % 7 
+						1e0 1e3 1e2; % 7 
                         1e4 1e4 1e4; % 8 
                         1e2 1e2 1e2; % 9 
                         1e2 1e2 1e2; % 10
