@@ -10,9 +10,9 @@ predictiveModelsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador
 resultsMLPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsML\';
 figurePath = ['figures\'];
 % Save and print bools
-imprint = true;
+imprint = false;
 saveResultsToMatFile = false;
-saveModelToMatFile = false;
+saveModelToMatFile = true;
 plotForestStats = true;
 %%%%%%
 cvToGenerate = 3;
@@ -23,7 +23,7 @@ selectedDV = [1 2];
 mlMethod = 'RF';
 optimizeMLHyperparameters = false;
 % Crucial parameters for system identification
-N_y = 20;
+N_y = 48;
 tau_R = 5;
 % Data validation and machine learning parameters
 trainVSVal = 0.85;

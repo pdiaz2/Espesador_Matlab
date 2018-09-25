@@ -1,6 +1,6 @@
 close all;
 imprint = true;
-figurePath = 'FinalSim';
+figurePath = 'figures\FinalSim\';
 %% Options for plotting
 
 CVNames = {'Torque','Underflow Concentration','Interface Level','Overflow Concentration','Residence Time',...
@@ -43,7 +43,7 @@ for cv = 1:n
     locationStr = input('Loc','s');
     location = locateLegends(locationStr);
     legend(legendCell,'Location',location);
-    printName = [figurePath 'forecast_' CVSaveName{cv}];
+    printName = [figurePath 'forecast_' CVSaveName{cv} '1'];
     if imprint
         print(printName,'-depsc');
     end
@@ -79,7 +79,7 @@ for cv = 1:n
     locationStr = input('Loc','s');
     location = locateLegends(locationStr);
     legend(legendCell,'Location',location);
-    printName = [figurePath 'forecast_' CVSaveName{cv}];
+    printName = [figurePath 'forecast_' CVSaveName{cv} '2'];
     if imprint
         print(printName,'-depsc');
     end
