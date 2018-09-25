@@ -1,5 +1,5 @@
 close all;
-imprint = true;
+imprint = false;
 figurePath = 'figures\FinalSim\';
 %% Options for plotting
 
@@ -243,5 +243,55 @@ for simIter = 1:size(makeStepMatrix)
         if imprint
             print(printName,'-depsc');
         end
+    end
+end
+
+close all
+%%
+load('predictionResults_24G_530_B50_Ny_48_k5_na6_nb6')
+for cv = 1:n
+    figure
+    title(CVNames{cv})
+    hold on % (-1)
+    plot(timePrediction(1:end),validationOutputs(1:end-armaxToRFWindowUB,cv),'LineWidth',2)
+    plot(timePrediction(1:end),armaxPredict(1:end-armaxToRFWindowUB,cv),'--k','LineWidth',LineWidth);
+    plot(timePrediction(1:end),RFPredictionStruct(cv).yHat(:,24),'-.r','LineWidth',LineWidth)
+    ylabel(CVUnits{cv})
+    xlabel(xLabelStr)
+    xlim([0 102])
+    ylim(cvLims(cv,:))
+    grid on
+    legendCell = {'Validation','ARIMAX','RF_{b}'};
+    locationStr = input('Loc','s');
+    location = locateLegends(locationStr);
+    legend(legendCell,'Location',location);
+    printName = [figurePath 'predictFinal_24_' CVSaveName{cv}];
+    if imprint
+        print(printName,'-depsc');
+    end
+    hold off
+    
+end
+load('predictionResults_48G_530_B50_Ny_48_k5_na6_nb6');
+for cv = 1:n
+    figure
+    title(CVNames{cv})
+    hold on % (-1)
+    plot(timePrediction(1:end),validationOutputs(1:end-armaxToRFWindowUB,cv),'LineWidth',2)
+    plot(timePrediction(1:end),armaxPredict(1:end-armaxToRFWindowUB,cv),'--k','LineWidth',LineWidth);
+    plot(timePrediction(1:end),RFPredictionStruct(cv).yHat(:,48),'-.r','LineWidth',LineWidth)
+    ylabel(CVUnits{cv})
+    xlabel(xLabelStr)
+    xlim([0 97])
+    ylim(cvLims(cv,:))
+    grid on
+    hold off
+    legendCell = {'Validation','ARIMAX','RF_{b}'};
+    locationStr = input('Loc','s');
+    location = locateLegends(locationStr);
+    legend(legendCell,'Location',location);
+    printName = [figurePath 'predictFinal_48_' CVSaveName{cv}];
+    if imprint
+        print(printName,'-depsc');
     end
 end
