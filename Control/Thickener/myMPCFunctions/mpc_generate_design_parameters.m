@@ -59,7 +59,7 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMetho
                                     0.001*stabilityFactor; %ObjectiveLimit
                                     1e-3; % Champion distance tolerance
                                     ceil(championCounterFraction*gens); % Champion tolerance break counter
-                                    floor(50*60/25); % Plot from contol hit (end-4 always);
+                                    floor(10*60/5); % Plot from contol hit (end-4 always);
                                     0; %Plot Progress within Generations. 1 => plot; 2 => verbose (end-3) always
                                     1; % Use OutputFcn, (end-2 always);
                                     2; % 2 => PSO is being used (end-1 always)

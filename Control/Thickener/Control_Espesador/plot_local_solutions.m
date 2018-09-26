@@ -1,9 +1,10 @@
 % load('')
+load('ControlResults_MVP_2509.mat');
 close all;
 %%
 imprint = false;
-simIter = 4;
-zoomInTimes = [10 20 50];
+simIter = 5;
+zoomInTimes = [61:15/60:63];
 
 plotTrajectory = true;
 plotMVSequence = true;
@@ -160,7 +161,8 @@ if plotMVSequence
             end
             title(titlesMV{mv})
             ylabel(MVUnits{mv})
-            xlabel(['Samples [' num2str(tau_R/60)  'min/sample]']);
+%             xlabel(['Samples [' num2str(tau_R/60)  'min/sample]']);
+            xlabel(['Time [min]'])
 %             ylim(MVLims(mv,:));
             ylim auto
             mLegend_1 = ['$u*_' num2str(mv) '$ RF'];

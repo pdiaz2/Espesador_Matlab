@@ -20,7 +20,7 @@ saveControlResults = true;
 dateOutputStr = '2509';
 dateMatFileStr = '1408';
 figureFolder = 'figures\';
-testName = 'MVP'; % fastARMAX has the best results
+testName = 'MVP'; 
 % 'figures\tuningMPC_RF\';
 figurePath = [figureFolder testName '\'];
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
@@ -598,10 +598,11 @@ for simIter = simControlFrom:simControlTo
 end
 % For the time being, multiply Cp_u by 100
 % wRef.signals.values(:,2) = wRef.signals.values(:,2)*100;
-%% Plot
+%% Start Plot
 clc;
 close all;
 t = inputs.time/3600;
+%% Plot
 % Titles
 titlesCV = {'Torque','Underflow Concentration','Interface Level','Overflow Concentration','Residence Time',...
             'Solid Throughput','Underflow Particle Diameter','Overflow'};
@@ -623,18 +624,23 @@ CVUnits = {'%','%','m','%'};
 MVUnits = {'m3/hr','gpt'};
 DVUnits = {'m3/hr','%','N/A'};
 % Colors
-controlColors = {'r','k','g','m'};
-controlLineStyle = {'-','--','-.',':'};
+controlColors = {'r','k','b','m'};
+controlLineStyle = {'-','--',':','-.'};
 controlMarker = {'*','d','o','none'};
 % Y Axis Limits
 usePlotLims = true;
 CVLims = [20 22;
-         72 75;
+         72.5 75;
          0 8];
 MVLims = [65 130;
           18 32];
 DVLims = [280 400;
           15 45];
+CVTicks = [20 20.5 21 21.5 22;
+            72.5 73.25 74 74.5 75;
+            0 2 4 6 8];
+MVTicks = [70 85 100 115 130;
+           18 21 25 28 32];
 controllersUsedStr = [num2str(useMPC_RF) num2str(useExpert) num2str(usePID) num2str(useMPC_ARMAX)];
 for simIter = simControlFrom:simControlTo
     iterInfo = '                               Iteration %d has figures %d,%d,%d,%d\r\n';
@@ -687,6 +693,7 @@ for simIter = simControlFrom:simControlTo
             useLimStr = 'nl_';
             ylim auto
         end
+        yticks(CVTicks(cv,:))
         yLegend_1 = ['$y_' num2str(cv) '$ MPC-RF'];
         yLegend_2 = ['$y_' num2str(cv) '$ PI'];
         wLegend = ['$w_' num2str(cv) '$'];
@@ -792,6 +799,7 @@ for simIter = simControlFrom:simControlTo
         else
             ylim auto
         end
+        yticks(MVTicks(mv,:));
         mLegend_1 = ['$u_' num2str(mv) '$ MPC'];
         mLegend_2 = ['$u_' num2str(mv) '$ PI'];
 %         legend({mLegend_1,mLegend_2},'Interpreter','latex');
@@ -954,13 +962,16 @@ end
 
 if saveControlResults
    save([resultsPath 'ControlResults_' testName '_' dateOutputStr '.mat'],...
-         'ControllerResultsStruct','yHatMPC_RF','optMPC_RF','controlMovesMPC_RF',...
-         'xHatMPC_ARMAX','optMPC_ARMAX','controlMovesMPC_ARMAX',...
-         'dMPC_RF','wRefSimulink','t',...
+         'ControllerResultsStruct',...
+         'yMPC_RF','uMPC_RF','dMPC_RF','optMPC_RF','yHatMPC_RF','controlMovesMPC_RF',...
+         'solverResults',...
+         'yMPC_ARMAX','uMPC_ARMAX','dMPC_ARMAX','xHatMPC_ARMAX','optMPC_ARMAX','controlMovesMPC_ARMAX',...
+         'yPID','uPID','yExpert','uExpert',...
+         'wRefSimulink','t',...
          'numCV','numMV','numDV',...
          'simControlFrom','simControlTo','startPlotTime',...
-         'useMPC_RF','useMPC_ARMAX',...
-         'tau_C_ARMAX','tau_C_RF',...
+         'useMPC_RF','useMPC_ARMAX','useExpert','usePID',...
+         'tau_C_ARMAX','tau_C_RF','tau_R',...
          'N_y','N_u',...
          'mpcObj',...
          'figurePath');

@@ -89,18 +89,20 @@ switch state
                 ax.XLim = [0 (optimValues.iteration+1)];
                 legendArray = {};               
                 for cv = 1:n
-                    plot(0:optimValues.iteration,bestMeanTerminalError(cv,:),...
-                        'Marker',markerType{cv},'Color',colorType{1})
-                    hold on
                     plot(0:optimValues.iteration,bestMeanTrackingError(cv,:),...
                         'Marker',markerType{cv},'Color',colorType{2})
-                    plot(0:optimValues.iteration,bestMeanLimBreakError(cv,:),...
-                        'Marker',markerType{cv},'Color',colorType{3})
-                    legendArray{end+1} = ['MeanTerm_' num2str(cv)];
+                    hold on
+                    plot(0:optimValues.iteration,bestMeanTerminalError(cv,:),...
+                        'Marker',markerType{cv},'Color',colorType{1})
+%                     plot(0:optimValues.iteration,bestMeanLimBreakError(cv,:),...
+%                         'Marker',markerType{cv},'Color',colorType{3})
                     legendArray{end+1} = ['MeanTrack_' num2str(cv)];
-                    legendArray{end+1} = ['MeanLim_' num2str(cv) ];
+                    legendArray{end+1} = ['MeanTerm_' num2str(cv)];
+%                     legendArray{end+1} = ['MeanLim_' num2str(cv) ];
                 end
+                title('Mean Predicted Errors')
                 hold off
+                xlabel('Iteration [I]')
                 grid on
                 legend(legendArray,'Location','southwest')
                 
@@ -110,18 +112,20 @@ switch state
                 ax.XLim = [0 (optimValues.iteration+1)];
                 legendArray = {};
                 for cv = 1:n
-                    plot(0:optimValues.iteration,bestMaxTerminalError(cv,:),...
-                        'Marker',markerType{cv},'Color',colorType{1})
-                    hold on
                     plot(0:optimValues.iteration,bestMaxTrackingError(cv,:),...
                         'Marker',markerType{cv},'Color',colorType{2})
-                    plot(0:optimValues.iteration,bestMaxLimBreakError(cv,:),...
-                        'Marker',markerType{cv},'Color',colorType{3})
-                    legendArray{end+1} = ['MaxTerm_' num2str(cv)];
+                    hold on
+                    plot(0:optimValues.iteration,bestMaxTerminalError(cv,:),...
+                        'Marker',markerType{cv},'Color',colorType{1})
+%                     plot(0:optimValues.iteration,bestMaxLimBreakError(cv,:),...
+%                         'Marker',markerType{cv},'Color',colorType{3})
                     legendArray{end+1} = ['MaxTrack_' num2str(cv)];
-                    legendArray{end+1} = ['MaxLim_' num2str(cv) ];
+                    legendArray{end+1} = ['MaxTerm_' num2str(cv)];
+%                     legendArray{end+1} = ['MaxLim_' num2str(cv) ];
                 end
+                title('Maximum Predicted Errors')
                 hold off
+                xlabel('Iteration [I]')
                 grid on
                 legend(legendArray,'Location','southwest')
             end
@@ -137,19 +141,22 @@ switch state
                 figure(h3)
                 ax = gca;
                 ax.XLim = [0 (optimValues.iteration+1)];
-                plot(0:optimValues.iteration,bestTrackingCost,'r*')
+                plot(0:optimValues.iteration,bestTrackingCost,'-r*')
                 hold on
-                plot(0:optimValues.iteration,bestTerminalCost,'b.')
-                plot(0:optimValues.iteration,bestLimBreakCost,'go')
+                title('Objective Function Value')
+                plot(0:optimValues.iteration,bestTerminalCost,'-b.')
+                plot(0:optimValues.iteration,bestLimBreakCost,'-go')
+                xlabel('Iteration [I]')
                 hold off
                 grid on
-                legend({'Track Cost','Terminal Cost','LimBreak Cost'},'Location','northeast')
+                legend({'Track Cost','Terminal Cost','Lim Break Cost'},'Location','northeast')
                 fprintf('Generation %d\r\n',optimValues.iteration);
                 fprintf('Stall iterations %d\r\n',optimValues.stalliterations)
                 fprintf('Delta U(0) is %4.4f\r\n',bestIndividual(1:2))
                 fprintf('F.O.Value Now is %4.8f\r\n',bestScore)
                 fprintf('Total Function Evaluations %d\r\n',optimValues.funccount)
                 fprintf('Champion Distance Counter is %d\r\n',championToleranceBreakCounter);
+                fprintf('Simulation Time is %3.2f hours\r\n',controlHit*5/60)
                 pause()
             end
         else
