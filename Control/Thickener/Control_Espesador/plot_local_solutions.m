@@ -2,23 +2,23 @@
 close all;
 %%
 imprint = false;
-simIter = 2;
-zoomInTimes = [1 2 3];
+simIter = 4;
+zoomInTimes = [10 20 50];
 
 plotTrajectory = true;
 plotMVSequence = true;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-useMPC_RF = true;
-useMPC_ARMAX = true;
+% useMPC_RF = true;
+% useMPC_ARMAX = true;
 groupBy = 60; 
 tau_R = 5*groupBy;
-N_y = 18; % 18
-N_u = 3;%3 Try 6
-kappaControl_RF = 1; %1
-kappaControl_ARMAX = 1; % 5
-optimizationMethod = 'PSO';
-tau_C_RF = kappaControl_RF*tau_R;
-tau_C_ARMAX = kappaControl_ARMAX*tau_R;
+% N_y = 18; % 18
+% N_u = 3;%3 Try 6
+% kappaControl_RF = 1; %1
+% kappaControl_ARMAX = 1; % 5
+% optimizationMethod = 'PSO';
+% tau_C_RF = kappaControl_RF*tau_R;
+% tau_C_ARMAX = kappaControl_ARMAX*tau_R;
 %%
 controllerHitTimes = floor(zoomInTimes*3600/tau_C_RF);
 % controllerHitTimes = [1 10 20 30];
@@ -92,7 +92,7 @@ if plotTrajectory
             subplot(numCV,1,cv)
             % Add for
             if useMPC_RF
-                plot(0:(N_y-1),optimalTrajectory_RF(cv,:),...
+                plot([0:(N_y-1)]*tau_R/60,optimalTrajectory_RF(cv,:),...
                        'LineWidth',1,...
                        'Color',controlColors{1},...
                        'LineStyle',controlLineStyle{1},...
@@ -100,7 +100,7 @@ if plotTrajectory
             end
             hold on
             if useMPC_ARMAX
-                plot(0:(N_y-1),optimalTrajectory_ARMAX(cv,:),...
+                plot([0:(N_y-1)]*tau_R/60,optimalTrajectory_ARMAX(cv,:),...
                        'LineWidth',1,...
                        'Color',controlColors{3},...
                        'LineStyle',controlLineStyle{3},...
@@ -108,9 +108,10 @@ if plotTrajectory
             end
             title(titlesCV{cv})
             ylabel(CVUnits{cv})
-            xlabel(['Samples [' num2str(tau_R/60)  'min/sample]']);
-            ylim(CVLims(cv,:));
-%             ylim auto
+%             xlabel(['Samples [' num2str(tau_R/60)  'min/sample]']);
+            xlabel(['Time [min]'])
+%             ylim(CVLims(cv,:));
+            ylim auto
             yLegend_1 = ['$y*_' num2str(cv) '$ RF'];
             yLegend_2 = ['$y*_' num2str(cv) '$ ARIMAX'];
     %         legend({mLegend_1,mLegend_2},'Interpreter','latex');
@@ -143,7 +144,7 @@ if plotMVSequence
             subplot(numMV,1,mv)
             % Add for
             if useMPC_RF
-                plot(0:(N_y-1),localControlMove_RF(mv,:),...
+                plot([0:(N_y-1)]*tau_R/60,localControlMove_RF(mv,:),...
                        'LineWidth',1,...
                        'Color',controlColors{1},...
                        'LineStyle',controlLineStyle{1},...
@@ -151,7 +152,7 @@ if plotMVSequence
             end
             hold on
             if useMPC_ARMAX
-                plot(0:(N_y-1),localControlMove_ARMAX(mv,:),...
+                plot([0:(N_y-1)]*tau_R/60,localControlMove_ARMAX(mv,:),...
                        'LineWidth',1,...
                        'Color',controlColors{3},...
                        'LineStyle',controlLineStyle{3},...

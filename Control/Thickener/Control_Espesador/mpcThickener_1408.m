@@ -8,8 +8,8 @@ useExpert = true; showMVComponents = false;
 usePID = true;
 %%%%%%%%%%%%%%%%%
 dvRealData = true;
-imprint = false;
-saveControlResults = false;
+imprint = true;
+saveControlResults = true;
 
 % Code for names:
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
@@ -25,7 +25,7 @@ testName = 'MVP'; % fastARMAX has the best results
 figurePath = [figureFolder testName '\'];
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
 %%%%%%%%%%
-simTime = 10*3600; % 10*3600
+simTime = 100*3600; % 10*3600
 % 1: OL
 % 2: Inertia
 % 3: Bed Level
@@ -34,7 +34,7 @@ simTime = 10*3600; % 10*3600
 % 6: Q_f
 % 7: UD
 simControlFrom = 2;
-simControlTo = 2;
+simControlTo = 7;
 %%%%%%%%%%%%%%%
 % Time sampling specifications
 Dt = 1;
@@ -627,7 +627,7 @@ controlColors = {'r','k','g','m'};
 controlLineStyle = {'-','--','-.',':'};
 controlMarker = {'*','d','o','none'};
 % Y Axis Limits
-usePlotLims = false;
+usePlotLims = true;
 CVLims = [20 22;
          72 75;
          0 8];
@@ -675,8 +675,8 @@ for simIter = simControlFrom:simControlTo
         
         
         title(titlesCV{cv})
-%         plot(t(startPlotTime:end),wRefSimulink(startPlotTime:end,cv,simIter),...
-%                 'b--','LineWidth',1);
+        plot(t(startPlotTime:end),wRefSimulink(startPlotTime:end,cv,simIter),...
+                'b--','LineWidth',1);
     %     plot(t(startPlotTime:end),yFiltered.signals.values(startPlotTime:end,cv),'g','LineWidth',1);
         ylabel(CVUnits{cv})
         xlabel('Time [hr]')
