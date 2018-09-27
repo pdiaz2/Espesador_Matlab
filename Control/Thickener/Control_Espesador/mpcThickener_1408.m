@@ -625,7 +625,7 @@ MVUnits = {'m3/hr','gpt'};
 DVUnits = {'m3/hr','%','N/A'};
 % Colors
 controlColors = {'r','k','m','m'};
-controlLineStyle = {'-','--','-.','-.'};
+controlLineStyle = {'-','--','-.','-.'}; % Put both PID and Expert in m -. for comparison between opt v/s trad
 controlMarker = {'*','d','o','none'};
 usePID = true;
 useExpert = true;
@@ -641,14 +641,14 @@ usePlotLims = true;
 % Limits and Ticks for full plots
 CVLims = [20 22;
          72.5 75;
-         0 8];
+         0 6];
 MVLims = [65 130;
           18 32];
 DVLims = [280 400;
           15 45];
 CVTicks = [20 20.5 21 21.5 22;
             72.5 73.25 73.85 74.5 75;
-            0 2 4 6 8];
+            0 1.5 3 4.5 6];
 MVTicks = [70 85 100 115 130;
            18 21 25 28 32];
 % CVLims = [20.5 21.25;
@@ -663,7 +663,7 @@ MVTicks = [70 85 100 115 130;
 %             0 2 4];
 % MVTicks = [70 85 100 115 130;
 %            18 21 25 28 32];
-controllersUsedStr = [num2str(useMPC_RF) num2str(useExpert) num2str(usePID) num2str(useMPC_ARMAX)];
+controllersUsedStr = [num2str(useMPC_RF) num2str(useMPC_ARMAX) num2str(useExpert) num2str(usePID)];
 for simIter = simControlFrom:simControlTo
     iterInfo = '                               Iteration %d has figures %d,%d,%d,%d\r\n';
     iterMatrix = [simIter,1+(simIter-1)*4,2+(simIter-1)*4,3+(simIter-1)*4,4+(simIter-1)*4];
@@ -730,7 +730,7 @@ for simIter = simControlFrom:simControlTo
                         '_IT_' num2str(simIter) '_' useLimStr...
                         'tCA_' num2str(kappaControl_ARMAX) '_' dateOutputStr];
             print(printName,'-depsc');
-            print(printName,'-djpeg');
+%             print(printName,'-djpeg');
     end
     f2 = figure(2+(simIter-1)*4);
     fig = gcf;
@@ -777,7 +777,7 @@ for simIter = simControlFrom:simControlTo
                         '_IT_' num2str(simIter) '_' useLimStr...
                         'tCA_' num2str(kappaControl_ARMAX) '_' dateOutputStr];
             print(printName,'-depsc');
-            print(printName,'-djpeg');
+%             print(printName,'-djpeg');
     end
         
     
@@ -838,7 +838,7 @@ for simIter = simControlFrom:simControlTo
                         '_IT_' num2str(simIter) '_' useLimStr...
                         'tCA_' num2str(kappaControl_ARMAX) '_' dateOutputStr];
             print(printName,'-depsc');
-            print(printName,'-djpeg');
+%             print(printName,'-djpeg');
     end
     
     if useMPC_ARMAX || useMPC_RF
@@ -883,7 +883,7 @@ for simIter = simControlFrom:simControlTo
                             '_IT_' num2str(simIter) '_' useLimStr...
                             'tCA_' num2str(kappaControl_ARMAX) '_' dateOutputStr];
                 print(printName,'-depsc');
-                print(printName,'-djpeg');
+%                 print(printName,'-djpeg');
         end
     end
     % Expert plots
@@ -909,7 +909,7 @@ for simIter = simControlFrom:simControlTo
                             '_IT_' num2str(simIter) '_' useLimStr...
                             dateOutputStr];
                 print(printName,'-depsc');
-                print(printName,'-djpeg');
+%                 print(printName,'-djpeg');
         end
     end
 %     close all
