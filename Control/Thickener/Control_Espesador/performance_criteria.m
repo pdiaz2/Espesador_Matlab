@@ -87,7 +87,7 @@ CVLims = [15 22;
 MVLims = [80 120;
           20 30];
 %% Graphical Results
-selectIteration = 7; % Select which test do you wish to see results
+selectIteration = 4; % Select which test do you wish to see results
 selectControllersStr = '1111'; % RF,ARMAX,Exp,PI
 selectedCV = [2 3];
 selectedMV = [1 2];
@@ -97,9 +97,9 @@ endPlotTime = length(t); %length(t)
 
 xLimVector = [0 100];
 % For zooming in on certain parts, uncomment below
-startPlotTime = 45*3600;
-endPlotTime = 60*3600;
-xLimVector = [startPlotTime endPlotTime]/3600;
+% startPlotTime = 45*3600;
+% endPlotTime = 60*3600;
+% xLimVector = [startPlotTime endPlotTime]/3600;
 selectControllers = [];
 if selectControllersStr(1) == '1'
     selectControllers = [selectControllers 1];
