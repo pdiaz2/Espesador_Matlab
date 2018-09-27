@@ -637,6 +637,8 @@ startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
 xLimVector = [0 simTime/3600];
 % For zooming in on certain parts, uncomment below
+% startPlotTime = 55*3600;
+% endPlotTime = 80*3600;
 % xLimVector = [startPlotTime endPlotTime]/3600;
 % Y Axis Limits
 usePlotLims = true;
@@ -653,16 +655,16 @@ CVTicks = [20 20.5 21 21.5 22;
             0 1.5 3 4.5 6];
 MVTicks = [70 85 100 115 130;
            18 21 25 28 32];
-% CVLims = [20.5 21.25;
-%          73.25 75;
+% CVLims = [20.75 21.25;
+%          73.25 74.5;
 %          0 5.5];
 % MVLims = [65 130;
 %           18 32];
 % DVLims = [280 400;
 %           15 45];
 % CVTicks = [20.75 21 21.25;
-%             73.5 74 74.5;
-%             0 2 4];
+%             73.25 73.85 74.5;
+%             0 2.5 5];
 % MVTicks = [70 85 100 115 130;
 %            18 21 25 28 32];
 controllersUsedStr = [num2str(useMPC_RF) num2str(useMPC_ARMAX) num2str(useExpert) num2str(usePID)];
