@@ -3,9 +3,9 @@ close all;
 clc;
 %%
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
-dateOutputStr = '2108';
+dateOutputStr = '2509';
 figurePath = 'figures\performanceCriteria\';
-load([resultsPath 'ControlResults_' dateOutputStr '.mat']);
+load([resultsPath 'ControlResults_MVP_' dateOutputStr '.mat']);
 imprint = false;
 plotGraphs = true;
 %% Compute
@@ -35,7 +35,7 @@ for controller = 1:size(ControllerResultsStruct,2)
             max(abs(PerformanceCriteriaStruct(controller).trackError),[],1);
     % MSE
     PerformanceCriteriaStruct(controller).MSE = ...
-            mean(PerformanceCriteriaStruct(controller).squaredErrorDt,1);
+            mean(PerformanceCriteriaStruct(controller).trackError.^2,1);
     % NMSE 
     PerformanceCriteriaStruct(controller).NMSE = ...
             PerformanceCriteriaStruct(controller).MSE./mean(wRefSimulink,1).^2;
@@ -75,7 +75,7 @@ MVUnits = {'m3/hr','gpt'};
 DVUnits = {'m3/s','%','N/A'};
 % Colors
 controlColors = {'r','k','b','m'};
-controlLineStyle = {'-','--','-.','-'};
+controlLineStyle = {'-','--','-','-.'};
 controlMarker = {'*','d','o','d'};
 % Y Axis Limits
 usePlotLims = false;
@@ -84,17 +84,31 @@ CVLims = [15 22;
          0 10];
 MVLims = [80 120;
           20 30];
-%% Grahical Results
+%% Graphical Results
 selectIteration = 2; % Select which test do you wish to see results
-selectControllers = [1 2];
+selectControllersStr = '1111'; % RF,ARMAX,Exp,PI
 selectedCV = [2];
-selectedMV = [2];
-varString = 'trackError';
-f1 = figure(1+(controller-1)*length(selectControllers));
+selectedMV = [1];
+contString = '';
+selectControllers = [];
+if selectControllersStr(1) == '1'
+    selectControllers = [selectControllers 1];
+end
+if selectControllersStr(2) == '1'
+    selectControllers = [selectControllers 2];
+end
+if selectControllersStr(3) == '1'
+    selectControllers = [selectControllers 3];
+end
+if selectControllersStr(4) == '1'
+    selectControllers = [selectControllers 4];
+end
 % Plotting section
 if plotGraphs
+    figure
+    %% Tracking Error
+    varString = 'trackError';
     for controller = selectControllers
-    
         fig = gcf;
         movegui(fig,'southwest')
         plot(t(startPlotTime:end),...
@@ -117,36 +131,123 @@ if plotGraphs
         %         legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex');
         grid on   
         if imprint
-                printName = [figurePath varString '_controller_' num2str(controller)...
+                printName = [figurePath varString '_' selectControllersStr...
                             '_cv_' num2str(selectedCV)...
                             '_IT_' num2str(simIter) '_' useLimStr...
                             dateOutputStr];
                 print(printName,'-depsc');
-                print(printName,'-djpeg');
+        end
+    
+    end
+    %% IAE Evolution
+    figure
+    varString = 'iaeEvol';
+    for controller = selectControllers
+        fig = gcf;
+        movegui(fig,'southwest')
+        plot(t(startPlotTime:end),...
+            PerformanceCriteriaStruct(controller).absoluteErrorDt(startPlotTime:end,selectedCV,selectIteration),...
+               'LineWidth',1,...
+               'Color',controlColors{controller},...
+               'LineStyle',controlLineStyle{controller})
+        hold on
+        title(titlesCV{selectedCV})
+        ylabel(CVUnits{selectedCV})
+        xlabel('Time (hr)')
+        if usePlotLims
+            ylim(CVLims(selectedCV,:));
+            useLimStr = '';
+        else
+            useLimStr = 'nl_';
+            ylim auto
+        end
+        %     yFiltLegend = ['$\tilde{y}_' num2str(cv) '$'];
+        %         legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex');
+        grid on   
+        if imprint
+                printName = [figurePath varString '_' selectControllersStr...
+                            '_cv_' num2str(selectedCV)...
+                            '_IT_' num2str(simIter) '_' useLimStr...
+                            dateOutputStr];
+                print(printName,'-depsc');
+        end
+    
+    end
+    %% deltaMV
+    figure
+    varString = 'deltaMV';
+    for controller = selectControllers
+        fig = gcf;
+        movegui(fig,'southwest')
+        plot(t(startPlotTime:end-1),...
+            PerformanceCriteriaStruct(controller).deltaMV(startPlotTime:end,selectedMV,selectIteration),...
+               'LineWidth',1,...
+               'Color',controlColors{controller},...
+               'LineStyle',controlLineStyle{controller})
+        hold on
+        title(titlesMV{selectedMV})
+        ylabel(MVUnits{selectedMV})
+        xlabel('Time (hr)')
+        if usePlotLims
+            ylim(CVLims(selectedCV,:));
+            useLimStr = '';
+        else
+            useLimStr = 'nl_';
+            ylim auto
+        end
+        grid on   
+        if imprint
+                printName = [figurePath varString '_' selectControllersStr...
+                            '_mv_' num2str(selectedMV)...
+                            '_IT_' num2str(simIter) '_' useLimStr...
+                            dateOutputStr];
+                print(printName,'-depsc');
         end
     
     end
 end
 %% Tabular Results
-selectIteration = 2; % Select which test do you wish to see results
-selectControllers = [1 2];
-selectedCV = [1 2 3];
+selectIteration = 7; % Select which test do you wish to see results
+selectedCV = [2 3];
 selectedMV = [1 2];
 % Table section
-for controller = selectControllers
-    fprintf('IAE\r\n')
-    PerformanceCriteriaStruct(controller).IAE(1,selectedCV',selectIteration)
+% for controller = selectControllers
+%     fprintf('IAE\r\n')
+%     PerformanceCriteriaStruct(controller).IAE(1,selectedCV',selectIteration)
+%     fprintf('MSE\r\n')
+%     PerformanceCriteriaStruct(controller).MSE(1,selectedCV',selectIteration)
+%     fprintf('NMSE\r\n')
+%     PerformanceCriteriaStruct(controller).NMSE(1,selectedCV',selectIteration)
+%     fprintf('MAE\r\n')
+%     PerformanceCriteriaStruct(controller).maxTrackError(1,selectedCV',selectIteration)
+%     fprintf('MAO\r\n')
+%     PerformanceCriteriaStruct(controller).maxAbsOvershoot(1,selectedCV',selectIteration)
+%     fprintf('ISU\r\n')
+%     PerformanceCriteriaStruct(controller).ISU(1,selectedMV',selectIteration)
+%     fprintf('DMV\r\n')
+%     PerformanceCriteriaStruct(controller).costDeltaMV(1,selectedMV',selectIteration)
+%     fprintf('###############################\r\n')
+% end
+for cv = selectedCV
     fprintf('MSE\r\n')
-    PerformanceCriteriaStruct(controller).MSE(1,selectedCV',selectIteration)
-    fprintf('NMSE\r\n')
-    PerformanceCriteriaStruct(controller).NMSE(1,selectedCV',selectIteration)
-    fprintf('MAE\r\n')
-    PerformanceCriteriaStruct(controller).maxTrackError(1,selectedCV',selectIteration)
-    fprintf('MAO\r\n')
-    PerformanceCriteriaStruct(controller).maxAbsOvershoot(1,selectedCV',selectIteration)
-    fprintf('ISU\r\n')
-    PerformanceCriteriaStruct(controller).ISU(1,selectedMV',selectIteration)
-    fprintf('DMV\r\n')
-    PerformanceCriteriaStruct(controller).costDeltaMV(1,selectedMV',selectIteration)
+    for controller = selectControllers
+        PerformanceCriteriaStruct(controller).MSE(1,cv,selectIteration)*1e2
+        fprintf('  ')
+    end
+    fprintf('\r\n############\r\nIAE\r\n')
+    for controller = selectControllers
+        PerformanceCriteriaStruct(controller).IAE(1,cv,selectIteration)*1e-4
+        fprintf('  ')
+    end
+    fprintf('\r\n############\r\nMAE\r\n')
+    for controller = selectControllers
+        PerformanceCriteriaStruct(controller).maxTrackError(1,cv,selectIteration)
+        fprintf('  ')
+    end
+    fprintf('\r\n############\r\nISU\r\n')
+    for controller = selectControllers
+        PerformanceCriteriaStruct(controller).ISU(1,selectedMV',selectIteration)*1e-6
+        fprintf('  ')
+    end
     fprintf('###############################\r\n')
 end

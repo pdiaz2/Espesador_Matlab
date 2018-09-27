@@ -624,11 +624,21 @@ CVUnits = {'%','%','m','%'};
 MVUnits = {'m3/hr','gpt'};
 DVUnits = {'m3/hr','%','N/A'};
 % Colors
-controlColors = {'r','k','b','m'};
-controlLineStyle = {'-','--',':','-.'};
+controlColors = {'r','k','m','m'};
+controlLineStyle = {'-','--','-.','-.'};
 controlMarker = {'*','d','o','none'};
+usePID = true;
+useExpert = true;
+simControlFrom = 2;
+simControlTo = 7;
+startPlotTime = 1; %1
+endPlotTime = length(t); %length(t)
+xLimVector = [0 simTime/3600];
+% For zooming in on certain parts, uncomment below
+% xLimVector = [startPlotTime endPlotTime]/3600;
 % Y Axis Limits
 usePlotLims = true;
+% Limits and Ticks for full plots
 CVLims = [20 22;
          72.5 75;
          0 8];
@@ -637,10 +647,22 @@ MVLims = [65 130;
 DVLims = [280 400;
           15 45];
 CVTicks = [20 20.5 21 21.5 22;
-            72.5 73.25 74 74.5 75;
+            72.5 73.25 73.85 74.5 75;
             0 2 4 6 8];
 MVTicks = [70 85 100 115 130;
            18 21 25 28 32];
+% CVLims = [20.5 21.25;
+%          73.25 75;
+%          0 5.5];
+% MVLims = [65 130;
+%           18 32];
+% DVLims = [280 400;
+%           15 45];
+% CVTicks = [20.75 21 21.25;
+%             73.5 74 74.5;
+%             0 2 4];
+% MVTicks = [70 85 100 115 130;
+%            18 21 25 28 32];
 controllersUsedStr = [num2str(useMPC_RF) num2str(useExpert) num2str(usePID) num2str(useMPC_ARMAX)];
 for simIter = simControlFrom:simControlTo
     iterInfo = '                               Iteration %d has figures %d,%d,%d,%d\r\n';
@@ -653,26 +675,26 @@ for simIter = simControlFrom:simControlTo
     for cv = 1:numCV
         subplot(numCV,1,cv)
         if useMPC_RF
-            plot(t(startPlotTime:end),yMPC_RF(startPlotTime:end,cv,simIter),...
+            plot(t(startPlotTime:endPlotTime),yMPC_RF(startPlotTime:endPlotTime,cv,simIter),...
                     'LineWidth',1,...
                     'Color',controlColors{1},...
                     'LineStyle',controlLineStyle{1})
         end
         hold on
         if useMPC_ARMAX
-            plot(t(startPlotTime:end),yMPC_ARMAX(startPlotTime:end,cv,simIter),...
+            plot(t(startPlotTime:endPlotTime),yMPC_ARMAX(startPlotTime:endPlotTime,cv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{2},...
                    'LineStyle',controlLineStyle{2})
         end
         if useExpert
-            plot(t(startPlotTime:end),yExpert(startPlotTime:end,cv,simIter),...
+            plot(t(startPlotTime:endPlotTime),yExpert(startPlotTime:endPlotTime,cv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{3},...
                    'LineStyle',controlLineStyle{3})
         end
         if usePID
-            plot(t(startPlotTime:end),yPID(startPlotTime:end,cv,simIter),...
+            plot(t(startPlotTime:endPlotTime),yPID(startPlotTime:endPlotTime,cv,simIter),...
                    'LineWidth',1.75,...
                    'Color',controlColors{4},...
                    'LineStyle',controlLineStyle{4},...
@@ -681,9 +703,9 @@ for simIter = simControlFrom:simControlTo
         
         
         title(titlesCV{cv})
-        plot(t(startPlotTime:end),wRefSimulink(startPlotTime:end,cv,simIter),...
+        plot(t(startPlotTime:endPlotTime),wRefSimulink(startPlotTime:endPlotTime,cv,simIter),...
                 'b--','LineWidth',1);
-    %     plot(t(startPlotTime:end),yFiltered.signals.values(startPlotTime:end,cv),'g','LineWidth',1);
+    %     plot(t(startPlotTime:endPlotTime),yFiltered.signals.values(startPlotTime:endPlotTime,cv),'g','LineWidth',1);
         ylabel(CVUnits{cv})
         xlabel('Time [hr]')
         if usePlotLims
@@ -694,6 +716,7 @@ for simIter = simControlFrom:simControlTo
             ylim auto
         end
         yticks(CVTicks(cv,:))
+        xlim(xLimVector);
         yLegend_1 = ['$y_' num2str(cv) '$ MPC-RF'];
         yLegend_2 = ['$y_' num2str(cv) '$ PI'];
         wLegend = ['$w_' num2str(cv) '$'];
@@ -720,13 +743,13 @@ for simIter = simControlFrom:simControlTo
             kPlot = 1;
         end
         if useMPC_RF
-            plot(t(startPlotTime:end),kPlot*dMPC_RF(startPlotTime:end,dv,simIter),...
+            plot(t(startPlotTime:endPlotTime),kPlot*dMPC_RF(startPlotTime:endPlotTime,dv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{1},...
                    'LineStyle',controlLineStyle{1})
         end
         if useMPC_ARMAX
-            plot(t(startPlotTime:end),kPlot*dMPC_ARMAX(startPlotTime:end,dv,simIter),...
+            plot(t(startPlotTime:endPlotTime),kPlot*dMPC_ARMAX(startPlotTime:endPlotTime,dv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{1},...
                    'LineStyle',controlLineStyle{1})
@@ -742,6 +765,7 @@ for simIter = simControlFrom:simControlTo
             useLimStr = 'nl_';
             ylim auto
         end
+        xlim(xLimVector);
         dLegend = ['$d_' num2str(dv) '$'];
 %         legend({dLegend},'Interpreter','latex');
         grid on
@@ -764,26 +788,26 @@ for simIter = simControlFrom:simControlTo
         subplot(numMV,1,mv)
         % Add for
         if useMPC_RF
-            plot(t(startPlotTime:end),uMPC_RF(startPlotTime:end,mv,simIter),...
+            plot(t(startPlotTime:endPlotTime),uMPC_RF(startPlotTime:endPlotTime,mv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{1},...
                    'LineStyle',controlLineStyle{1})
         end
         hold on
         if useMPC_ARMAX
-            plot(t(startPlotTime:end),uMPC_ARMAX(startPlotTime:end,mv,simIter),...
+            plot(t(startPlotTime:endPlotTime),uMPC_ARMAX(startPlotTime:endPlotTime,mv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{2},...
                    'LineStyle',controlLineStyle{2})
         end
         if useExpert
-            plot(t(startPlotTime:end),uExpert(startPlotTime:end,mv,simIter),...
+            plot(t(startPlotTime:endPlotTime),uExpert(startPlotTime:endPlotTime,mv,simIter),...
                    'LineWidth',1,...
                    'Color',controlColors{3},...
                    'LineStyle',controlLineStyle{3})
         end
         if usePID
-            plot(t(startPlotTime:end),uPID(startPlotTime:end,mv,simIter),...
+            plot(t(startPlotTime:endPlotTime),uPID(startPlotTime:endPlotTime,mv,simIter),...
                    'LineWidth',1.75,...
                    'Color',controlColors{4},...
                    'LineStyle',controlLineStyle{4},...
@@ -794,12 +818,14 @@ for simIter = simControlFrom:simControlTo
         title(titlesMV{mv})
         ylabel(MVUnits{mv})
         xlabel('Time [hr]')
-        if usePlotLims
-            ylim(MVLims(mv,:));
-        else
-            ylim auto
-        end
+%         if usePlotLims
+%             ylim(MVLims(mv,:));
+%         else
+%             ylim auto
+%         end
+        ylim(MVLims(mv,:));
         yticks(MVTicks(mv,:));
+        xlim(xLimVector);
         mLegend_1 = ['$u_' num2str(mv) '$ MPC'];
         mLegend_2 = ['$u_' num2str(mv) '$ PI'];
 %         legend({mLegend_1,mLegend_2},'Interpreter','latex');
@@ -847,7 +873,8 @@ for simIter = simControlFrom:simControlTo
             title(titlesHyp{hyp})
 %             xlabel(['Controller Sample Hits [' num2str(tau_C_RF/60) 'min/hit]'])
             xlabel(['Time [hr]'])
-            xlim([0 simTime/3600])
+%             xlim([0 simTime/3600])
+            xlim(xLimVector);
             grid on
 
         end
