@@ -604,6 +604,7 @@ close all;
 t = inputs.time/3600;
 %% Plot
 % Titles
+close all;
 titlesCV = {'Torque','Underflow Concentration','Interface Level','Overflow Concentration','Residence Time',...
             'Solid Throughput','Underflow Particle Diameter','Overflow'};
 CVUnits = {'%','%','m','%','hr','ton/hr','N/A','m3/hr'};
@@ -624,12 +625,12 @@ CVUnits = {'%','%','m','%'};
 MVUnits = {'m3/hr','gpt'};
 DVUnits = {'m3/hr','%','N/A'};
 % Colors
-controlColors = {'r','k',[0.4 0.31 0.0],'m'};
-controlLineStyle = {'-','--','--','-.'}; % Put both PID and Expert in m -. for comparison between opt v/s trad
+controlColors = {'r','k','b','m'};
+controlLineStyle = {'-','--',':','-.'}; % Put both PID and Expert in m -. for comparison between opt v/s trad
 controlMarker = {'*','d','o','none'};
 usePID = true;
 useExpert = true;
-simControlFrom = 4;
+simControlFrom = 3;
 simControlTo = 4;
 startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
@@ -704,7 +705,7 @@ for simIter = simControlFrom:simControlTo
         
         title(titlesCV{cv})
         plot(t(startPlotTime:endPlotTime),wRefSimulink(startPlotTime:endPlotTime,cv,simIter),...
-                'Color',[0.4 0.31 0.0],'LineStyle',':','LineWidth',2);
+                'Color',[0.0 0.31 0.0],'LineStyle',':','LineWidth',2);
     %     plot(t(startPlotTime:endPlotTime),yFiltered.signals.values(startPlotTime:endPlotTime,cv),'g','LineWidth',1);
         ylabel(CVUnits{cv})
         xlabel('Time [hr]')
