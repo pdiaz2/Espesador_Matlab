@@ -8,8 +8,8 @@ useExpert = true; showMVComponents = false;
 usePID = true;
 %%%%%%%%%%%%%%%%%
 dvRealData = true;
-imprint = true;
-saveControlResults = true;
+imprint = false;
+saveControlResults = false;
 
 % Code for names:
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
@@ -60,7 +60,7 @@ stepInDVArray = [false;% 1
                 true; % 7
                 false;
                 false;
-                true];
+                false];
 dvStepSizeArray = [
                 0 0 0;% 1
                 0 0 0;% 2
@@ -421,7 +421,7 @@ ySensor = mpc_generate_input(yValuesStruct);
 for simIter = simControlFrom:simControlTo
     %% DV Design
     if (stepInDVArray(simIter))
-        stepTimeDV(1) = floor(4*simTime/10); %4
+        stepTimeDV(1) = floor(0.05*simTime/10); %4
         stepTimeDV(2) = floor(6*simTime/10);
         stepTimeDV(3) = floor(5*simTime/10);
     else
@@ -629,10 +629,8 @@ controlColors = {'r','k','b','m'};
 controlLineStyle = {'-','--',':','-.'}; % Put both PID and Expert in m -. for comparison between opt v/s trad
 controlMarker = {'*','d','o','none'};
 lineWidth = [1.5 1.25 1.5 1.35];
-usePID = true;
-useExpert = true;
-simControlFrom = 2;
-simControlTo = 7;
+plotControlFrom = 2;
+plotControlTo = 7;
 startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
 xLimVector = [0 simTime/3600];
@@ -668,7 +666,7 @@ MVTicks = [70 85 100 115 130;
 % MVTicks = [70 85 100 115 130;
 %            18 21 25 28 32];
 controllersUsedStr = [num2str(useMPC_RF) num2str(useMPC_ARMAX) num2str(useExpert) num2str(usePID)];
-for simIter = simControlFrom:simControlTo
+for simIter = plotControlFrom:plotControlTo
     iterInfo = '                               Iteration %d has figures %d,%d,%d,%d\r\n';
     iterMatrix = [simIter,1+(simIter-1)*4,2+(simIter-1)*4,3+(simIter-1)*4,4+(simIter-1)*4];
     fprintf(iterInfo,iterMatrix)
@@ -922,7 +920,7 @@ for simIter = simControlFrom:simControlTo
     pause(1)
 end
 
-for simIter = simControlFrom:simControlTo
+for simIter = plotControlFrom:plotControlTo
     
     
     if showMVComponents

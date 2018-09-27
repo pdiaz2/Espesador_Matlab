@@ -40,18 +40,23 @@ titlesHyp = {'Solver Exit Flags','F.O. Values'};
 % Units
 CVUnits = {'%','%','m','%'};
 MVUnits = {'m3/hr','gpt'};
-DVUnits = {'m3/s','%','N/A'};
-% Colors
-% Colors
-controlColors = {'r','b','k'};
-controlLineStyle = {'-','-.','--'};
-controlMarker = {'*','none','d'};
-% Y Axis Limits
-CVLims = [15 22;
-         65 75;
-         0 10];
-MVLims = [80 120;
-          20 30];
+DVUnits = {'m3/hr','%','N/A'};
+controlColors = {'r','k','b','m'};
+controlLineStyle = {'-','--',':','-.'}; % Put both PID and Expert in m -. for comparison between opt v/s trad
+controlMarker = {'*','d','o','none'};
+lineWidth = [1.5 1.25 1.5 1.35];
+CVLims = [20 22;
+         72.5 75;
+         0 6];
+MVLims = [65 130;
+          18 32];
+DVLims = [280 400;
+          15 45];
+CVTicks = [20 20.5 21 21.5 22;
+            72.5 73.25 73.85 74.5 75;
+            0 1.5 3 4.5 6];
+MVTicks = [70 85 100 115 130;
+           18 21 25 28 32];
 %%
 if plotTrajectory
     for f = 1:length(controllerHitTimes)
