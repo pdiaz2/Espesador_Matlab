@@ -5,7 +5,7 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMetho
     designParametersFileName = ['mpc_design_parameters_' dateMatFileStr '.mat'];
     load(fixedParametersFileName);
     %% MPC Design Parameters
-    % Weight Matrices (Design) % 0:54 - Antes sin los .^2
+    % Weight Matrices (Design) 
     qMatrix = diag(qCostValues)*qNormMatrix.^2*ones(numCV,N_y-1)*1/((N_y-1)*numCV); 
     rMatrix = diag(rCostValues)*rNormMatrix.^2*ones(numMV,N_u); 
     betaCost = diag(betaCostValues)*betaNormMatrix.^2*ones(numCV,1)*1/(numCV);
@@ -36,7 +36,8 @@ function mpc_generate_design_parameters(dateMatFileStr,N_y,N_u,optimizationMetho
     
     %% MPC Optimization Solver Parameters
     pop = 100;% 200
-    gens = 30;% 100 for GA
+    gens = 30;% 30 for PSO, 100 for GA
+%     gens = 30;
     eliteFraction = 0.05;
     championCounterFraction = 1; % 0.25 for GA
     OptimSolverStruct.GAParameters = [pop; % nPopulation 

@@ -1,9 +1,9 @@
 % load('')
-load('ControlResults_MVP_2509.mat');
+load('ControlResults_MVP_2709_MB.mat');
 close all;
 %%
-imprint = true;
-simIter = 4;
+imprint = false;
+simIter = 2;
 zoomInTimes = [40+15/60];
 figurePath = 'figures\optSeq_Tray\'
 plotTrajectory = true;

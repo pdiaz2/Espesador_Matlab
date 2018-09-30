@@ -14,7 +14,7 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
     numMV = length(U0);
     %% Noise for CV
     cvSNR = [90 90 90 90]; % DB
-    cvVariance = [10 0.1 3 0.000001];
+    cvVariance = [5 0.005 3 0.000001];
     cvNoisePower = cvVariance./10.^(cvSNR/10);
     cvNoiseSeed = [11051993 5031995 8061958 1111960];
 

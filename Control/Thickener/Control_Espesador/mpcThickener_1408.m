@@ -2,7 +2,7 @@ clear all;
 clc;
 close all;
 %% Control Parameters
-useMPC_RF = true;
+useMPC_RF = false;
 useMPC_ARMAX = true;
 useExpert = true; showMVComponents = false;
 usePID = true;
@@ -17,10 +17,13 @@ saveControlResults = false;
     % - <MV>S: MV cost is S. Small (0.001- w.r.t other MV cost)
     % - <tL_CV>: tight limits in CV
     % - <tL_CV_MV>: tight limits in CV and MV
-dateOutputStr = '2509';
+    % - <MB>: move blocking (separated tau_C from kappa_C)
+    % - <PSO_BIG>: N_u*10 points in PSO algorithm
+% 3009 verbatim 2509
+dateOutputStr = '3009';
 dateMatFileStr = '1408';
 figureFolder = 'figures\';
-testName = 'MVP'; 
+testName = 'bestARMAX'; 
 % 'figures\tuningMPC_RF\';
 figurePath = [figureFolder testName '\'];
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
@@ -34,7 +37,9 @@ simTime = 100*3600; % 10*3600
 % 6: Q_f
 % 7: UD
 simControlFrom = 2;
-simControlTo = 7;
+simControlTo = 2;
+plotControlFrom = 2;
+plotControlTo = 2;
 %%%%%%%%%%%%%%%
 % Time sampling specifications
 Dt = 1;
@@ -45,8 +50,10 @@ N_u = 3;%3 Try 6
 kappaControl_RF = 1; %1
 kappaControl_ARMAX = 1; % 5
 optimizationMethod = 'PSO';
-tau_C_RF = kappaControl_RF*tau_R;
-tau_C_ARMAX = kappaControl_ARMAX*tau_R;
+% tau_C_RF = kappaControl_RF*tau_R;
+% tau_C_ARMAX = kappaControl_ARMAX*tau_R;
+tau_C_RF = tau_R;
+tau_C_ARMAX = tau_R;
 
 %% DV interaction specifics
 % -  First two components are MD (Q_f, Cp_f)
@@ -58,8 +65,8 @@ stepInDVArray = [false;% 1
                 true; % 5
                 true; % 6
                 true; % 7
-                false;
-                false;
+                false; % 8
+                false; % 9
                 false];
 dvStepSizeArray = [
                 0 0 0;% 1
@@ -69,9 +76,9 @@ dvStepSizeArray = [
                 0 0.08 0;% 5
                 -38 0 0;% 6
                 0 0 -0.04;% 7
-                0 0 0;
-                0 0 0;
-                0 -0.1 0;
+                0 0 0; % 8
+                0 0 0; % 9
+                0 -0.1 0; % 10
                 0 0 0;
                 ];
 
@@ -80,72 +87,66 @@ startPlotTime = 1; %Wait for noise filter to stabilize
 
 %% Reference Values Struct
 wValuesStruct.delta = [
-                        0 0 0;
-                        0 0 0;
-                        0 0 2;
-                        0 -1 0;
-                        0 0 0;
-                        0 0 0;
-                        0 0 0;
-                        0 0 0;
-                        0 0 0;
-                        0 -0.4 0;
+                        0 0 0;% 1
+                        0 0 0;% 2 
+                        0 0 2;% 3
+                        0 -1 0;% 4
+                        0 0 0;% 5
+                        0 0 0;% 6
+                        0 0 0;% 7
+                        0 0 0;% 8
+                        0 0 0;% 9
+                        0 -0.4 0; % 10
                        ];
-% wValuesStruct.changeBool = logical([
-%                                     0 0 0;
-%                                     0 0 1;
-%                                     0 1 0;
-%                                     0 0 0;
-%                                     0 0 0
-%                                     ]);
+
 wValuesStruct.changeBool = logical([
-                                    0 0 0;
-                                    0 0 0;
-                                    0 0 1;
-                                    0 1 0;
-                                    0 0 0;
-                                    0 0 0;
-                                    0 0 0;
-                                    0 0 0;
-                                    0 0 0;
-                                    0 1 0
+                                    0 0 0;% 1
+                                    0 0 0;% 2
+                                    0 0 1;% 3
+                                    0 1 0;% 4
+                                    0 0 0;% 5
+                                    0 0 0;% 6
+                                    0 0 0;% 7
+                                    0 0 0;% 8
+                                    0 0 0;% 9
+                                    0 1 0% 10
                                     ]);
 wValuesStruct.shape = {
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','mountain','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step';
-                        'step','step','step'
+                        'step','step','step';% 1
+                        'step','step','step';% 2
+                        'step','step','step';% 3
+                        'step','mountain','step';% 4
+                        'step','step','step';% 5
+                        'step','step','step';% 6
+                        'step','step','step';% 7
+                        'step','step','step';% 8
+                        'step','step','step';% 9
+                        'step','step','step';% 10
+                        'step','step','step'% 11
                         };
 wValuesStruct.timeToChange = [
-                                -1 -1 -1;
-                                -1 -1 -1;
-                                -1 -1 floor(simTime/1e1);
-                                -1 floor(simTime/1e1) -1;
-                                -1 -1 -1;
-                                -1 -1 -1;
-                                -1 -1 -1;
-                                -1 -1 -1;
-                                -1 -1 -1;
-                                -1 floor(simTime/1e3) -1;
+                                -1 -1 -1;% 1
+                                -1 -1 -1;% 2
+                                -1 -1 floor(simTime/1e1);% 3
+                                -1 floor(simTime/1e1) -1;% 4
+                                -1 -1 -1;% 5
+                                -1 -1 -1;% 6
+                                -1 -1 -1;% 7
+                                -1 -1 -1;% 8
+                                -1 -1 -1;% 9
+                                -1 floor(simTime/1e3) -1;% 10
                                 ];
 wValuesStruct.addNoiseBool = [
-                                false; %always false for w
-                                false;
-                                false;
-                                false;
-                                false;
-                                false;
-                                false;
-                                false;
-                                false;
-                                false
+                                false; % 1
+                                false;% 2
+                                false;% 3
+                                false;% 4
+                                false;% 5
+                                false;% 6
+                                false;% 7
+                                false;% 8
+                                false;% 9
+                                false% 10
                                 ];
 
 %% MPC RF Cost Values
@@ -189,8 +190,8 @@ betaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
                         1e0 1e2 1e2; % 3
 						1e0 1e2 1e2; % 4 
 						1e0 1e2 1e2; % 5
-						1e0 1e2 1e3; % 6 
-						1e0 1e3 1e2; % 7 
+						1e0 1e2 1e2; % 6 
+						1e0 1e2 1e2; % 7 
                         1e0 1e2 1e2; % 8 
                         1e0 1e2 1e2; % 9 
                         1e0 1e2 1e2; % 10
@@ -199,7 +200,7 @@ betaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
 lambdaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
                         [
 						1 1 1; % 1 OL
-						1 1e2 1e2; % 2
+						1 1e4 1e4; % 2
                         1e4 1e4 1e4; % 3
 						1e4 1e4 1e4; % 4 
 						1e4 1e4 1e4; % 5 
@@ -214,7 +215,7 @@ lambdaCostValuesIterations_RF = ...%repmat([1 1 1],simControlTo,1);
 numCV = size(qCostValuesIterations_RF,2);
 numMV = size(rCostValuesIterations_RF,2);
 %% MPC ARIMAX Cost Values
-qCostValuesIterations_ARMAX = ...%repmat([1 1 100],simControlTo,1);
+qCostValuesIterations_ARMAX = ...
                         [
 						1 1 1; % 1 OL
 						1e0 1e2 1e2; % 2
@@ -229,7 +230,7 @@ qCostValuesIterations_ARMAX = ...%repmat([1 1 100],simControlTo,1);
                         1e0 1e2 1e2  % 11
                         ];
 
-rCostValuesIterations_ARMAX = ...%repmat([0.001 0.01],simControlTo,1);
+rCostValuesIterations_ARMAX = ...
                         [
                         1e14 1e14; % 1 OL
                         1e-3 1e-2; % 2 
@@ -239,12 +240,12 @@ rCostValuesIterations_ARMAX = ...%repmat([0.001 0.01],simControlTo,1);
                         1e-3 1e-2; % 6 
                         1e-3 1e-2; % 7 
                         1e-3 1e-2; % 8 
-                        1e-6 1e-6; % 9 
+                        1e-3 1e-2; % 9 
                        	1e-3 1e-2; % 10
                        	1e-3 1e-2 % 11
                         ];
 rCostValuesIterations_ARMAX = rCostValuesIterations_ARMAX*5e1;
-betaCostValuesIterations_ARMAX = ...%repmat([1 1 1],simControlTo,1);
+betaCostValuesIterations_ARMAX = ...
                         [
 						1 1 1; % 1 OL
 						1e0 1e2 1e2; % 2
@@ -252,13 +253,13 @@ betaCostValuesIterations_ARMAX = ...%repmat([1 1 1],simControlTo,1);
 						1e0 1e2 1e2; % 4 
 						1e0 1e2 1e2; % 5
 						1e0 1e2 1e2; % 6 
-						1e0 1e3 1e2; % 7 
-                        1e4 1e4 1e4; % 8 
-                        1e2 1e2 1e2; % 9 
-                        1e2 1e2 1e2; % 10
-                        1e2 1e2 1e2 % 11
+						1e0 1e2 1e2; % 7 
+                        1e0 1e2 1e2; % 8 
+                        1e0 1e2 1e2; % 9 
+                        1e0 1e2 1e2; % 10
+                        1e0 1e2 1e2 % 11
                         ];
-lambdaCostValuesIterations_ARMAX = ...%repmat([1 1 1],simControlTo,1);
+lambdaCostValuesIterations_ARMAX = ...
                         [
 						1 1 1; % 1 OL
 						1e4 1e4 1e4; % 2
@@ -273,12 +274,53 @@ lambdaCostValuesIterations_ARMAX = ...%repmat([1 1 1],simControlTo,1);
                         1e4 1e4 1e4 % 11
                         ];
 
-% CV
+CV
 boolLimsCV = repmat(logical([1,1,1]),simControlTo,1);
 boolECR = repmat(logical([1,1,1]),simControlTo,1);
 boolLimsMV = repmat(logical([1,1]),simControlTo,1);
 boolRateLimsMV = repmat(logical([1,1]),simControlTo,1);
 cvECR = repmat([0.5,0.5,0.5],simControlTo,1);
+%% MPC ARIMAX = MPC RF
+%{
+% qCostValuesIterations_ARMAX = ...
+%                         [
+% 						1 1 1; % 1 OL 1e0 1e2 1e2; % 2
+%                         1e0 1e2 1e2; % 3
+% 						1e0 1e2 1e2; % 4 1e0 1e2 1e2; % 5 1e0 1e2 1e2; % 6
+% 						1e0 1e2 1e2; % 7
+%                         1e0 1e2 1e2; % 8 1e0 1e2 1e2; % 9 1e0 1e2 1e2; %
+%                         10 1e0 1e2 1e2  % 11 ];
+% 
+% rCostValuesIterations_ARMAX = ...
+%                         [ 1e14 1e14; % 1 OL 1e-3 1e-2; % 2 1e-3 1e-2; % 3
+%                         1e-3 1e-2; % 4 1e-3 1e-2; % 5 1e-3 1e-2; % 6 1e-3
+%                         1e-2; % 7 1e-3 1e-2; % 8 1e-3 1e-2; % 9
+%                        	1e-3 1e-2; % 10 1e-3 1e-2 % 11
+%                         ];
+% rCostValuesIterations_ARMAX = rCostValuesIterations_ARMAX*5e1;
+% betaCostValuesIterations_ARMAX = ...
+%                         [
+% 						1 1 1; % 1 OL 1e0 1e2 1e2; % 2
+%                         1e0 1e2 1e2; % 3
+% 						1e0 1e2 1e2; % 4 1e0 1e2 1e2; % 5 1e0 1e2 1e2; % 6
+% 						1e0 1e2 1e2; % 7
+%                         1e0 1e2 1e2; % 8 1e0 1e2 1e2; % 9 1e0 1e2 1e2; %
+%                         10 1e0 1e2 1e2 % 11 ];
+% lambdaCostValuesIterations_ARMAX = ...
+%                         [
+% 						1 1 1; % 1 OL 1e4 1e4 1e4; % 2
+%                         1e4 1e4 1e4; % 3
+% 						1e4 1e4 1e4; % 4 1e4 1e4 1e4; % 5 1e4 1e4 1e4; % 6
+% 						1e4 1e4 1e4; % 7
+%                         1e4 1e4 1e4; % 8 1e4 1e4 1e4; % 9 1e4 1e4 1e4; %
+%                         10 1e4 1e4 1e4 % 11 ];
+% 
+% CV boolLimsCV = repmat(logical([1,1,1]),simControlTo,1); boolECR =
+% repmat(logical([1,1,1]),simControlTo,1); boolLimsMV =
+% repmat(logical([1,1]),simControlTo,1); boolRateLimsMV =
+% repmat(logical([1,1]),simControlTo,1); cvECR =
+% repmat([0.5,0.5,0.5],simControlTo,1);
+%}
 %% Expert Tuning
 kNeighboursArray = repmat(100,simControlTo,1);
 errorRecSizeArray = repmat(400,simControlTo,1);
@@ -307,10 +349,10 @@ T_iExpertArray = [
                     1e8 1e1 1e1; % 3
                     1e8 1e1 1e1; % 4
                     1e8 1e1 1e1; % 5
-                    1e8 1e2 1e2; % 6
-                    1e8 1e2 1e2; % 7
-                    1e8 1e8 1e8; % 8
-                    1e8 1e8 1e8; % 9
+                    1e8 1e1 1e1; % 6
+                    1e8 1e1 1e1; % 7
+                    1e8 1e1 1e1; % 8
+                    1e8 1e1 1e1; % 9
                     1e1 1e1 1e1; % 10
                     1e1 1e1 1e1; % 11
                     ];
@@ -485,7 +527,7 @@ for simIter = simControlFrom:simControlTo
         tuningStruct.CV.ECR = cvECR(simIter,:);
         tuningStruct.MV.BoolLims = boolLimsMV(simIter,:);
         tuningStruct.MV.BoolRateLims = boolRateLimsMV(simIter,:);
-        mpc_design_armax_object(dateOutputStr,N_y,N_u,kappaControl_RF,...
+        mpc_design_armax_object(dateOutputStr,N_y,N_u,kappaControl_ARMAX,...
                                 qCostValuesIterations_ARMAX(simIter,:),...
                                 rCostValuesIterations_ARMAX(simIter,:),...
                                 betaCostValuesIterations_ARMAX(simIter,:),...
@@ -501,11 +543,11 @@ for simIter = simControlFrom:simControlTo
         yMPC_ARMAX(:,:,simIter) = y.signals.values(:,:);
         uMPC_ARMAX(:,:,simIter) = inputs.signals.values(:,1+numDV:end);
         dMPC_ARMAX(:,:,simIter) = inputs.signals.values(:,1:numDV);
-        optMPC_ARMAX(:,:,simIter) = downsample(solverResults.signals.values(:,:),kappaControl_ARMAX);
-        xHatMPC_ARMAX(:,:,simIter) = downsample(xHat.signals.values(:,:),kappaControl_ARMAX);
+        optMPC_ARMAX(:,:,simIter) = downsample(solverResults.signals.values(:,:),floor(tau_C_ARMAX/tau_R));
+        xHatMPC_ARMAX(:,:,simIter) = downsample(xHat.signals.values(:,:),floor(tau_C_ARMAX/tau_R));
         auxControlMoves = permute(controlMoves.signals.values(:,:,:),[3 2 1]);
         for mv = 1:numMV
-            controlMovesMPC_ARMAX(:,:,mv,simIter) = downsample(auxControlMoves(:,:,mv),kappaControl_ARMAX);
+            controlMovesMPC_ARMAX(:,:,mv,simIter) = downsample(auxControlMoves(:,:,mv),floor(tau_C_ARMAX/tau_R));
         end
        
     end
@@ -629,8 +671,7 @@ controlColors = {'r','k','b','m'};
 controlLineStyle = {'-','--',':','-.'}; % Put both PID and Expert in m -. for comparison between opt v/s trad
 controlMarker = {'*','d','o','none'};
 lineWidth = [1.5 1.25 1.5 1.35];
-plotControlFrom = 2;
-plotControlTo = 7;
+
 startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
 xLimVector = [0 simTime/3600];
