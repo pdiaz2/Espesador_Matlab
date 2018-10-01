@@ -406,14 +406,15 @@ else
             legend({yLegend_1,yLegend_2,yLegend_3,yLegend_4,wLegend},'Interpreter','latex','Location','southwest');
             grid on
             hold off
-        end
-        if imprint
+            if imprint
                 printName = [figurePath 'cv_' controllersUsedStr '_nCV_' num2str(cv)...
                             '_IT_' num2str(simIter) '_' useLimStr...
                             'tCA_' num2str(kappaControl_ARMAX) '_' dateOutputStr];
                 print(printName,'-depsc');
     %             print(printName,'-djpeg');
+            end
         end
+        
 %         f2 = figure(2+(simIter-1)*4);
 %         fig = gcf;
 %         movegui(fig,'northwest')
