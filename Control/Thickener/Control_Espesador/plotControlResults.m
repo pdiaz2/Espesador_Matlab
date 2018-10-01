@@ -11,8 +11,8 @@ usePlotMVLims = true;
 kappaControl_ARMAX = 1;
 dateOutputStr = '3009';
 %%
-plotControlFrom = 2;
-plotControlTo = 2;
+plotControlFrom = 9;
+plotControlTo = 9;
 startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
 xLimVector = [0 simTime/3600];
@@ -23,18 +23,18 @@ xLimVector = [0 simTime/3600];
 % Y Axis Limits
 %%
 % Limits and Ticks for full plots
-CVLims = [20 22;
-         72.5 75;
-         0 6];
-MVLims = [65 130;
-          17 32];
-DVLims = [280 400;
-          15 45];
-CVTicks = [20 20.5 21 21.5 22;
-            72.5 73.25 73.85 74.5 75;
-            0 1.5 3 4.5 6];
-MVTicks = [70 85 100 115 130;
-           18 21 25 28 32];
+% CVLims = [20 22;
+%          72.5 75;
+%          0 6];
+% MVLims = [65 130;
+%           17 32];
+% DVLims = [280 400;
+%           15 45];
+% CVTicks = [20 20.5 21 21.5 22;
+%             72.5 73.25 73.85 74.5 75;
+%             0 1.5 3 4.5 6];
+% MVTicks = [70 85 100 115 130;
+%            18 21 25 28 32];
 % CVLims = [20.75 21.25;
 %          73.25 74.5;
 %          0 5.5];
@@ -47,7 +47,21 @@ MVTicks = [70 85 100 115 130;
 %             0 2.5 5];
 % MVTicks = [70 85 100 115 130;
 %            18 21 25 28 32];
-
+CVLims = [14 22;
+         65 75;
+         0 10];
+MVLims = [65 130;
+          17 32];
+DVLims = [280 400;
+          15 45];
+CVTicks = [20 20.5 21 21.5 22;
+            71.5 72.25 73 73.75 75;
+            0 1.5 3 4.5 6];
+CVTicks = [linspace(CVLims(1,1)+0.25,CVLims(1,2)-0.25,5);
+            linspace(CVLims(2,1)+0.25,CVLims(2,2)-0.25,5);
+            0 2.7 5 7.4 9.8]
+MVTicks = [70 85 100 115 130;
+           18 21 25 28 32];
 %%
 titlesCV = {'Torque','Underflow Concentration','Interface Level','Overflow Concentration','Residence Time',...
             'Solid Throughput','Underflow Particle Diameter','Overflow'};
