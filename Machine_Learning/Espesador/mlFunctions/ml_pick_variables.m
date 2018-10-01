@@ -2,6 +2,7 @@ function [ SimResults ] = ml_pick_variables( selectedCV,selectedMV,selectedDV,..
                                               BigData)
 %ML_PICK_VARIABLES Summary of this function goes here
 %   Detailed explanation goes here
+SimResults.DV = [];
 for cv = 1:length(selectedCV)
     SimResults.CV(cv).Name = BigData.CV(cv).Name;
     SimResults.CV(cv).GroupedTimeSeries = BigData.CV(cv).GroupedTimeSeries; 

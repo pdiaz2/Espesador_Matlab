@@ -8,7 +8,7 @@ for cv = 1:n
     assessmentValues(cv,1) = mean(testData.OutputData(:,cv));
     assessmentValues(cv,2) = var(testData.OutputData(:,cv),1); % w = 1 makes 1/N
     assessmentValues(cv,3) = range(testData.OutputData(:,cv));
-    assessmentValues(cv,4) = size(testData.InputData(:,cv),2)/size(testData.InputData(:,cv),1);
+%     assessmentValues(cv,4) = size(testData.InputData(:,cv),2)/size(testData.InputData(:,cv),1);
 %     assessmentValues(cv,3) = norm(testData(cv).OutputData(:)-assessmentValues(cv,1))^2;
 end
 end

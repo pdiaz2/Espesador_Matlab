@@ -17,6 +17,7 @@ cvToGenerate = 2;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
 selectedDV = [1 2];
+% selectedDV = [];
 %%%%%%%%%%%%%%%%%%%%%
 optimizeMLHyperparameters = false;
 mlMethod = 'ARMAX';
@@ -32,11 +33,11 @@ generateOne = true;
 seed = rng(1231231); % For reproducibility (should look into this after)
 %% Bool Handling
 if generateOne
-    na = 3;
-    nb = 3;
+    na = 5;
+    nb = 4;
     nc = 3;
     nk = 2;
-    offsetChoice = 1;
+    offsetChoice = 2;
     focusChoice = 1;
 else
    waveVector = 1:4;
@@ -154,11 +155,11 @@ if generateOne
                                                         mOrder);
     armaxModel = ML_Model.Model;
     matFileModel = [predictiveModelsPath...
-                    'ARMAX_MDL_' typeOfData noiseStr ioDTStr...
+                    'ARMAX_MDL_NO_' typeOfData noiseStr ioDTStr...
                     'k' num2str(controlParamsStruct.tau_R) '_'...
                     'na' num2str(na) '_nb' num2str(nb)...
                     '_nc' num2str(nc)...
-                    '_' dateTest];
+                    '_' dateTest ];
     if saveModelToMatFile
         save(matFileModel,'armaxModel','mOrder','resultsIter','controlParamsStruct','mlParamsStruct');
     end

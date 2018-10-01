@@ -33,8 +33,8 @@ trainVSValInput = 0.85;
 tau_R = tau_RInput;
 N_y = 20;
 pastDataSamples = 920; % 100 for stored pictures which exhibit good things; 170; 470 best; 348 best best
-K_ahead = 1;
-K_forecast = 3; % >= 1
+K_ahead = 18;
+K_forecast = 48; % >= 1
 varStringRF = ['B' num2str(numTreesInput) ...
               '_k' num2str(tau_RInput) '_'...
               'na' num2str(naInput) '_nb' num2str(nbInput)];
@@ -199,7 +199,7 @@ deadTimeMax = max(max(mlParamsStruct.delayMV_CV));
 armaxToRFWindowLB = deadTimeMax + delayMaxInTime+K_ahead-1;
 armaxToRFWindowUB = 0;
 %% ARMAX Models
-armaxFileName = ['ARMAX_MDL_' typeOfData ioDTStr...
+armaxFileName = ['ARMAX_MDL_FUD_NO_' typeOfData ioDTStr...
                 ioDTStr noiseStr...
                 varStringARMAX '_' dateTest '.mat'];
 load(armaxFileName);
@@ -219,7 +219,6 @@ mlMethod = 'ARMAX';
                     mlParamsStruct.validationSamples,...
                     mOrder.na, mOrder.nb,....
                     mlParamsStruct);
-
 ic.Input = trainingData.InputData(end-(modelOrder+500):end,:);
 ic.Output = trainingData.OutputData(end-(modelOrder+500):end,:);
 pOptions = predictOptions('InitialCondition',ic);
@@ -271,6 +270,7 @@ armaxForecast = armaxForecast.OutputData;
 %% Use No Noise Data
 % For graphical reasons, it is best to remove noise of actual outputs so we
 % can see clearly
+
 if strcmp(typeOfData,'Sim_')
     noiseStrWEON = '';
     matFileName = [nameDataset typeOfData noiseStrWEON dateTest '_BF.mat'];
@@ -382,7 +382,7 @@ if strcmp(typeOfData,'Sim_')
                                             mOrder.na,mOrder.nb,externalInput);
         end
         ReactionCurveStruct(simIter).y_RF = yRC_RF';
-        futureData = [externalInput(1:forecastBatches*K_forecast,:) zeros(forecastBatches*K_forecast,3)];
+        futureData = [externalInput(1:forecastBatches*K_forecast,3:4) zeros(forecastBatches*K_forecast,3)];
         tForecast = [0:tau_R_RC:(forecastBatches*K_forecast-1)*tau_R_RC]';
         augmentedSys = ss(armaxModel,'augmented');
         yRC_ARMAX = lsim(augmentedSys,futureData,tForecast,x0Predicted);
@@ -480,10 +480,10 @@ end
 %% IC for September control ARIMAX
 x0_ARMAX = x0Predicted;
 if strcmp(typeOfData,'Sim_')
-    save(['x0Control_' typeOfData dateTest '.mat'],'x0_RF','x0_ARMAX');
+    save(['x0Control_' typeOfData dateTest '_NO.mat'],'x0_RF','x0_ARMAX');
 end
 %% Save for plot
-pMatName = ['predictionResults_' kAheadStr num2str(pastDataSamples) '_' varStringRF '.mat'];
+pMatName = ['predictionResults_FUD_NO_' kAheadStr num2str(pastDataSamples) '_' varStringRF '.mat'];
 save(pMatName,'RFPredictionStruct','armaxForecast','armaxPredict','ReactionCurveStruct',...
               'validationOutputs','tForecast','timeForecast','timePrediction',...
               'K_ahead','pastDataSamples','K_forecast','n','armaxToRFWindowUB',...
