@@ -9,7 +9,7 @@ simTime = 100*3600;
 usePlotCVLims = true;
 usePlotMVLims = true;
 kappaControl_ARMAX = 1;
-dateOutputStr = '2709_MB';
+dateOutputStr = '3009';
 %%
 plotControlFrom = 2;
 plotControlTo = 2;
@@ -408,7 +408,7 @@ else
             hold off
         end
         if imprint
-                printName = [figurePath 'cv_' controllersUsedStr 'nCV_' num2str(cv)...
+                printName = [figurePath 'cv_' controllersUsedStr '_nCV_' num2str(cv)...
                             '_IT_' num2str(simIter) '_' useLimStr...
                             'tCA_' num2str(kappaControl_ARMAX) '_' dateOutputStr];
                 print(printName,'-depsc');
