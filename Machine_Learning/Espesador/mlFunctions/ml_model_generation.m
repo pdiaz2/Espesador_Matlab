@@ -42,6 +42,8 @@ switch mlParamsStruct.mlMethod
         bestHyp(2) = mOrderStruct.nb;
         bestHyp(3) = mOrderStruct.nc;
         bestHyp(4) = mOrderStruct.nk;
+    case 'Proc'
+        bestHyp(1) = -1;
 end
 %% Generate Machine Learning Model
 disp('Generating Machine Learning Model')

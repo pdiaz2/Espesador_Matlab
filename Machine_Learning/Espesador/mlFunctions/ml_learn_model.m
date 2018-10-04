@@ -92,6 +92,24 @@ function [ Output ] = ml_learn_model(numOutputs,trainingSubset,bestHyp,mlParamsS
         NK = repmat(bestHyp(4),numOutputs,numInputs)+delayMV_CV(:,1:end);
         intNoiseArray = repmat(mlParamsArray{7},numOutputs,1);
         Output.Model = armax(trainingSubset,[NA NB NC NK],'IntegrateNoise',intNoiseArray,opt);
+    elseif strcmp(mlMethod,'Proc')
+        opt = procestOptions();
+        UOffset = [];
+        YOffset = [];
+        if strcmp(mlParamsArray{2},'R_DC')
+            UOffset = mean(trainingSubset.InputData)';
+        end
+        if strcmp(mlParamsArray{3},'R_DC')
+            YOffset = mean(trainingSubset.OutputData)';
+        end
+        opt.InputOffset = UOffset;
+        opt.OutputOffset = YOffset;
+        opt.DisturbanceModel = 'arma1';
+        pEst = {'P1D','P1D','P1D','P1D';
+                'P1D','P1D','P1D','P1D';
+                'P1D','P1D','P1D','P1D'};
+        lala = procest(trainingSubset,pEst,opt);
+        Output.Model = c2d(idtf(lala),trainingSubset.Ts);
     end
 end
 

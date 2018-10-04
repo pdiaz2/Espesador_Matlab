@@ -4,8 +4,8 @@ function mpc_design_armax_object( dateMatFileStr,N_y,N_u,kappaControl_ARMAX,...
 %   Detailed explanation goes here
 %% Mat File Handling
 fixedParametersFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
-armaxModelFile = ['ARMAX_MDL_NO_Sim_Noise_k5_na5_nb4_nc3_1408.mat']; % change to be function of datMatFileStr 5 4 3
-mpcObjectFileName = ['mpc_armax_object_' dateMatFileStr '.mat'];
+armaxModelFile = ['Proc_MDL_NO_Sim_Noise_k5_na5_nb4_nc3_1408.mat']; % change to be function of datMatFileStr 5 4 3
+mpcObjectFileName = ['mpc_proc_object_' dateMatFileStr '.mat'];
 load(fixedParametersFileName);
 load(armaxModelFile);
 
@@ -65,7 +65,7 @@ end
 % different, but the state vector is then THE SAME. Therefore, we can use
 % the last value of the state produced by sysForecast as the nominal state
 % value for the mpcObj.
-mpcObj.Model.Nominal.X = x0_ARMAX;
+% mpcObj.Model.Nominal.X = x0_ARMAX;
 mpcObj.Model.Nominal.Y = x0_RF.y0Memory(:,1);
 mpcObj.Model.Nominal.U = [x0_RF.d0Memory(:,1);x0_RF.u0Memory(:,1);zeros(numCV,1)];
 %% Output Disturbance elimination

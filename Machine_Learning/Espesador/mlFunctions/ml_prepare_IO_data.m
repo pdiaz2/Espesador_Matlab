@@ -38,7 +38,7 @@ function [ predictorMLStruct,delayMaxInTime] = ml_prepare_IO_data( IOBigSet,...
                                             numOLExps, numSamplesPerExp,...
                                             delayMV_CV);
                                         
-    elseif (strcmp(mlMethod,'SS')||strcmp(mlMethod,'ARMAX'))
+    elseif (strcmp(mlMethod,'SS')||strcmp(mlMethod,'ARMAX') || strcmp(mlMethod,'Proc'))
 %         Specify simulation Time sampling
 %         DtSim = na;
 % % %         % Downsample time series by tau_R/DtSim samples

@@ -122,6 +122,8 @@ switch mlMethod
         Results.Fit.FPE = ML_Model.Model.Report.Fit.FPE;
         Results.Fit.AIC = ML_Model.Model.Report.Fit.AIC;
         Results.Fit.MSE = ML_Model.Model.Report.Fit.MSE;
+    case 'Proc'
+        Results = [];
 end
         
         

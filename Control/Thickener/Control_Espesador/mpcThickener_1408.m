@@ -2,14 +2,14 @@ clear all;
 clc;
 close all;
 %% Control Parameters
-useMPC_RF = true;
+useMPC_RF = false;
 useMPC_ARMAX = true;
 useExpert = true; showMVComponents = false;
 usePID = true;
 %%%%%%%%%%%%%%%%%
 dvRealData = true;
-imprint = true;
-saveControlResults = true;
+imprint = false;
+saveControlResults = false;
 
 % Code for names:
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
@@ -39,9 +39,9 @@ simTime = 100*3600; % 10*3600
 % 8: Solid throughput pulse increase
 % 9: Solid throughput pulse decrease
 simControlFrom = 2;
-simControlTo = 9;
+simControlTo = 2;
 plotControlFrom = 2;
-plotControlTo = 9;
+plotControlTo = 2;
 %%%%%%%%%%%%%%%
 % Time sampling specifications
 Dt = 1;

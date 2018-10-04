@@ -3,12 +3,12 @@ close all;
 clc;
 %%
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
-dateOutputStr = '2509';
+dateOutputStr = '3009';
 
-load([resultsPath 'ControlResults_MVP_' dateOutputStr '.mat']);
+load([resultsPath 'ControlResults_final_' dateOutputStr '.mat']);
 figurePath = 'figures\performanceCriteria\';
-imprint = true;
-plotGraphs = true;
+imprint = false;
+plotGraphs = false;
 %% Compute
 wSteadyState = repmat(wRefSimulink(end,:,:),size(wRefSimulink,1),1,1);
 PerformanceCriteriaStruct = struct;
@@ -232,7 +232,7 @@ if plotGraphs
 end
 %% Tabular Results
 clc;
-selectIteration = 7; % Select which test do you wish to see results
+selectIteration = 8; % Select which test do you wish to see results
 selectedCV = [1 2 3];
 selectedMV = [1 2];
 % Table section
@@ -282,3 +282,41 @@ for controller = selectControllers
     end
     fprintf('\r\n')
 end
+
+%% Mean Results
+%% Tabular Results
+clc;
+selectIteration = 8; % Select which test do you wish to see results
+selectedCV = [1 2 3];
+selectedMV = [1 2];
+% end
+for cv = selectedCV
+    fprintf('CV Table %d\r\n',cv)
+    for controller = selectControllers
+        % MSE
+        fprintf('% .2f ',sum(PerformanceCriteriaStruct(controller).MSE(1,cv,:))/selectIteration*1e2)
+
+        % IAE
+        fprintf('% .2f ',sum(PerformanceCriteriaStruct(controller).IAE(1,cv,:))/selectIteration*1e-4)
+
+        % MAE
+        fprintf('% .2f \r\n',sum(PerformanceCriteriaStruct(controller).maxTrackError(1,cv,:))/selectIteration)
+    end
+    
+    fprintf('###############################\r\n')
+end
+
+fprintf('MV Table \r\n');
+for controller = selectControllers
+    % SCV
+    for mv = selectedMV
+        fprintf('% .2f ',sum(PerformanceCriteriaStruct(controller).costDeltaMV(1,mv,:))/selectIteration)
+    end
+    % ISU
+    for mv = selectedMV
+        fprintf('% .2f ',sum(PerformanceCriteriaStruct(controller).ISU(1,mv,:))/selectIteration*1e-6)
+    
+    end
+    fprintf('\r\n')
+end
+
