@@ -11,14 +11,15 @@ persistent bestMeanTrackingError bestMeanTerminalError bestMeanLimBreakError
 persistent bestMaxTrackingError bestMaxTerminalError bestMaxLimBreakError
 persistent bestMinTrackingError bestMinTerminalError bestMinLimBreakError
 persistent bestTrackingCost bestTerminalCost bestLimBreakCost
-persistent h1 h2 h3
-persistent champion championDistancePast championToleranceBreakCounter
+persistent h1 h2 h3 h4
+persistent champion championDistancePast championToleranceBreakCounter itSwarm
 stop = false; % By default, don't stop.
 switch state
     case 'init'
         champion = optimValues.bestx;
         championDistancePast = 1e5;
         championToleranceBreakCounter = 0;
+        itSwarm = 1;
         if plotProgress && (controlHit >= plotFrom)
             h1 = figure;
             ax = gca;
@@ -32,6 +33,11 @@ switch state
             ax = gca;
             ax.XLim = [0 (optimValues.iteration+1)];
             movegui(h3,'north')
+            h4 = figure;
+            ax = gca;
+            ax.XLim = [-17, 17];
+            ax.YLim = [-6, 6];
+            movegui(h4,'south')
         else
             
         end
@@ -77,6 +83,39 @@ switch state
             bestMinTrackingError(:,optimValues.iteration+1) = min(abs(matrixSpTrackingError),[],2);
             bestMinTerminalError(:,optimValues.iteration+1) = min(abs(matrixTerminalError),[],2);
             bestMinLimBreakError(:,optimValues.iteration+1) = min(abs(matrixEpsilonValues),[],2);
+            
+            % Particle evolution
+            if rem(optimValues.iteration,5) == 0 && itSwarm < 5 
+                figure(h4)
+                ax = gca;
+                subplot(2,2,itSwarm)
+                plot(optimValues.swarm(:,1),optimValues.swarm(:,2),'x','MarkerSize',7)
+                xlim([-16,16])
+                ylim([-6,6])
+                set(gca,'xtick',[-15:5:15]);
+                set(gca,'ytick',[-5:2.5:5]);
+                hold on
+                line([-15 -15], [-5 5],'Color',[1 0 0],'LineStyle','-')
+                line([15 15], [-5 5],'Color',[1 0 0],'LineStyle','-')
+                line([-15 15], [-5 -5],'Color',[1 0 0],'LineStyle','-')
+                line([-15 15], [5 5],'Color',[1 0 0],'LineStyle','-')
+%                 line([-15 -15],get(axes,'YLim'),'Color',[1 0 0],'LineStyle','-');
+%                 line([15 15],get(axes,'YLim'),'Color',[1 0 0],'LineStyle','-');
+                title(['Iteration ' num2str(optimValues.iteration)])
+                hold off
+                xlabel('$\Delta U_1(t)$','Interpreter','latex')
+                xlim([-16,16])
+                ylim([-6,6])
+                ylabel('$\Delta U_2(t)$','Interpreter','latex')
+                grid on
+
+%                 line([-5 -5],get(axes,'YLim'),'Color',[1 0 0],'LineStyle','-');
+%                 line([5 5],get(axes,'YLim'),'Color',[1 0 0],'LineStyle','-');
+                itSwarm = itSwarm+1;
+                
+                pause
+            end
+%             legend(legendArray,'Location','southwest')
             
             % Plot
             if rem(optimValues.iteration,10) == 0
@@ -178,8 +217,8 @@ switch state
         clear bestMaxTrackingError bestMaxTerminalError bestMaxLimBreakError
         clear bestMinTrackingError bestMinTerminalError bestMinLimBreakError
         clear bestTrackingCost bestTerminalCost bestLimBreakCost
-        clear h1 h2
-        clear champion championDistancePast championToleranceBreakCounter
+        clear h1 h2 h3 h4
+        clear champion championDistancePast championToleranceBreakCounter itSwarm
         close all
 end
 

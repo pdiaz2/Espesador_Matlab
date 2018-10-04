@@ -2,7 +2,7 @@ clear all;
 clc;
 close all;
 %% Control Parameters
-useMPC_RF = false;
+useMPC_RF = true;
 useMPC_ARMAX = true;
 useExpert = true; showMVComponents = false;
 usePID = true;
