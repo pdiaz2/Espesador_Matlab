@@ -20,7 +20,7 @@ saveControlResults = false;
     % - <MB>: move blocking (separated tau_C from kappa_C)
     % - <PSO_BIG>: N_u*10 points in PSO algorithm
 % 3009 verbatim 2509
-dateOutputStr = '3009';
+dateOutputStr = '0510';
 dateMatFileStr = '1408';
 figureFolder = 'figures\';
 testName = 'final'; 
@@ -38,10 +38,10 @@ simTime = 100*3600; % 10*3600
 % 7: UD
 % 8: Solid throughput pulse increase
 % 9: Solid throughput pulse decrease
-simControlFrom = 2;
-simControlTo = 2;
-plotControlFrom = 2;
-plotControlTo = 2;
+simControlFrom = 8;
+simControlTo = 9;
+plotControlFrom = simControlFrom;
+plotControlTo = simControlTo;
 %%%%%%%%%%%%%%%
 % Time sampling specifications
 Dt = 1;

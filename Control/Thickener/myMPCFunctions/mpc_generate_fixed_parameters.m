@@ -46,7 +46,8 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
     yLowLims(2,:) = 0.97*Y0(2);
     yHighLims(2,:) = 1.03*Y0(2);
     yLowLims(3,:) = 0.9*Y0(3); %0.7055
-    yHighLims(3,:) = 2*Y0(3); % 3.7628
+%     yHighLims(3,:) = 2*Y0(3); % 3.7628
+    yHighLims(3,:) = 6.25;
     fprintf('CV Low Limits are %2.4f \r\n',yLowLims);
     fprintf('CV High Limits are %2.4f \r\n',yHighLims);
 %     yLowLims(4,:) = 0;
