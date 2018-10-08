@@ -6,13 +6,13 @@ figurePath = 'figures\isolatedGraphs\'
 imprint = true;
 subPlotBool = false;
 simTime = 100*3600;
-usePlotCVLims = true;
+usePlotCVLims = false;
 usePlotMVLims = true;
 kappaControl_ARMAX = 1;
 dateOutputStr = '3009';
 %%
-plotControlFrom = 9;
-plotControlTo = 9;
+plotControlFrom = 7;
+plotControlTo = 7;
 startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
 xLimVector = [0 simTime/3600];

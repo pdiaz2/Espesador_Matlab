@@ -2,7 +2,7 @@ clear all;
 clc;
 close all;
 %% Control Parameters
-useMPC_RF = true;
+useMPC_RF = false;
 useMPC_ARMAX = true;
 useExpert = true; showMVComponents = false;
 usePID = true;
@@ -20,7 +20,7 @@ saveControlResults = false;
     % - <MB>: move blocking (separated tau_C from kappa_C)
     % - <PSO_BIG>: N_u*10 points in PSO algorithm
 % 3009 verbatim 2509
-dateOutputStr = '0510';
+dateOutputStr = '0810';
 dateMatFileStr = '1408';
 figureFolder = 'figures\';
 testName = 'final'; 
@@ -38,8 +38,8 @@ simTime = 100*3600; % 10*3600
 % 7: UD
 % 8: Solid throughput pulse increase
 % 9: Solid throughput pulse decrease
-simControlFrom = 8;
-simControlTo = 9;
+simControlFrom = 7;
+simControlTo = 7;
 plotControlFrom = simControlFrom;
 plotControlTo = simControlTo;
 %%%%%%%%%%%%%%%
@@ -76,7 +76,7 @@ stepIter = [ false; %1
              false; %4
              true; %5
              true; %6
-             false; %7
+             true; %7
              false; %8
              false; %9
              false %10
@@ -88,7 +88,7 @@ dvStepSizeArray = [
                 0 0 0;% 4
                 0 0.08 0;% 5
                 -38 0 0;% 6
-                0 0 -0.04;% 7
+                0 0 -0.1;% 7
                 30 0.1 0; % 8
                 -38 -0.1 0; % 9
                 0 -0.1 0; % 10

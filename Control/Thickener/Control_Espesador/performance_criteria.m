@@ -235,24 +235,6 @@ clc;
 selectIteration = 8; % Select which test do you wish to see results
 selectedCV = [1 2 3];
 selectedMV = [1 2];
-% Table section
-% for controller = selectControllers
-%     fprintf('IAE\r\n')
-%     PerformanceCriteriaStruct(controller).IAE(1,selectedCV',selectIteration)
-%     fprintf('MSE\r\n')
-%     PerformanceCriteriaStruct(controller).MSE(1,selectedCV',selectIteration)
-%     fprintf('NMSE\r\n')
-%     PerformanceCriteriaStruct(controller).NMSE(1,selectedCV',selectIteration)
-%     fprintf('MAE\r\n')
-%     PerformanceCriteriaStruct(controller).maxTrackError(1,selectedCV',selectIteration)
-%     fprintf('MAO\r\n')
-%     PerformanceCriteriaStruct(controller).maxAbsOvershoot(1,selectedCV',selectIteration)
-%     fprintf('ISU\r\n')
-%     PerformanceCriteriaStruct(controller).ISU(1,selectedMV',selectIteration)
-%     fprintf('DMV\r\n')
-%     PerformanceCriteriaStruct(controller).costDeltaMV(1,selectedMV',selectIteration)
-%     fprintf('###############################\r\n')
-% end
 for cv = selectedCV
     fprintf('CV Table %d\r\n',cv)
     for controller = selectControllers
@@ -284,7 +266,6 @@ for controller = selectControllers
 end
 
 %% Mean Results
-%% Tabular Results
 clc;
 selectIteration = 8; % Select which test do you wish to see results
 selectedCV = [1 2 3];
