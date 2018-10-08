@@ -3,7 +3,7 @@ close all;
 % load('ControlResults_MVP_2709_MB.mat');
 load('ControlResults_final_3009.mat');
 figurePath = 'figures\isolatedGraphs\'
-imprint = true;
+imprint = false;
 subPlotBool = false;
 simTime = 100*3600;
 usePlotCVLims = false;
@@ -17,9 +17,9 @@ startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
 xLimVector = [0 simTime/3600];
 % For zooming in on certain parts, uncomment below
-% startPlotTime = 55*3600;
-% endPlotTime = 80*3600;
-% xLimVector = [startPlotTime endPlotTime]/3600;
+startPlotTime = 45*3600;
+endPlotTime = 65*3600;
+xLimVector = [startPlotTime endPlotTime]/3600;
 % Y Axis Limits
 %%
 % Limits and Ticks for full plots
