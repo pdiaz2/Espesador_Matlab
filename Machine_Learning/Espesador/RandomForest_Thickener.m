@@ -12,10 +12,10 @@ figurePath = ['figures\'];
 % Save and print bools
 imprint = false;
 saveResultsToMatFile = false;
-saveModelToMatFile = true;
+saveModelToMatFile = false;
 plotForestStats = true;
 %%%%%%
-cvToGenerate = 3;
+cvToGenerate = 2;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
 selectedDV = [1 2];
@@ -237,6 +237,7 @@ if generateOne
             grid on
             xlabel('Predictor Number [n]');
             ylabel('PDE');
+            ylim([-10 1])
             xlim([0 mOrder.na(cvToGenerate)*5]);
             names = {['y_' num2str(cvToGenerate)],num2str(mOrder.na(cvToGenerate)),'d_1',...
                         num2str(mOrder.na(cvToGenerate)*2),'d_2',num2str(mOrder.na(cvToGenerate)*3),...
