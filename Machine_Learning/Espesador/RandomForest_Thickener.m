@@ -10,12 +10,12 @@ predictiveModelsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador
 resultsMLPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsML\';
 figurePath = ['figures\'];
 % Save and print bools
-imprint = false;
+imprint = true;
 saveResultsToMatFile = false;
 saveModelToMatFile = false;
 plotForestStats = true;
 %%%%%%
-cvToGenerate = 2;
+cvToGenerate = 3;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
 selectedDV = [1 2];
