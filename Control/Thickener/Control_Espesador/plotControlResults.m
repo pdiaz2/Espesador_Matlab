@@ -3,7 +3,7 @@ close all;
 % load('ControlResults_MVP_2709_MB.mat');
 % load('ControlResults_final_0611.mat');
 figurePath = 'figures\isolatedGraphs\'
-imprint = false;
+imprint = true;
 subPlotBool = false;
 simTime = 200*3600;
 usePlotCVLims = false;
