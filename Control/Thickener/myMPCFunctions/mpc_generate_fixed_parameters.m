@@ -5,6 +5,7 @@ function mpc_generate_fixed_parameters(dateMatFileStr)
 %     x0FileName = ['x0Control_Sim_1408' dateMatFileStr '.mat'];
     RFParametersFile = ['RFParameters_1408.mat'];
     x0FileName = ['x0Control_Sim_1209.mat'];
+    x0FileName = ['permanent_200_controllerState_2.mat'];
 %     x0FileName = ['x0Control_Sim_1408_NO.mat'];
     %% Initial Conditions
     D0 = [326.3733 0.3143];

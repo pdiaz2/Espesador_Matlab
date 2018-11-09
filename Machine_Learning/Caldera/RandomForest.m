@@ -6,6 +6,7 @@ clc;
 dateMatStr = '0206'
 load(['testData_' dateMatStr '.mat']);
 saveToMatFile = true;
+dateMatStr = '0811';
 matFileName = ['ResultsRF_NoNoise_' dateMatStr '.mat'];
 optimizeMLHyperparameters = false;
 
@@ -20,11 +21,11 @@ generateOne = true;
 
 if generateOne
     % Input wave
-    outputOfInterest = 3;
+    outputOfInterest = 2;
     waveVector = 3;
     experiment = 10;
-    delayUCases = 2;
-    delayYCases = 2;
+    delayUCases = 3;
+    delayYCases = 3;
     
 else
    waveVector = 1:4;
@@ -59,7 +60,8 @@ dimsSystem = [3 3 1];
 %                     4 4 4 4;
 %                     ];
 UBackshiftMatrix = [1 1 1 1;
-                    2 2 2 2];
+                    2 2 2 2;
+                    10 10 10 10];
 [backshiftCasesU, ~] = size(UBackshiftMatrix);
 % Experience has shown that models are very AR
 % YBackshiftMatrix = [1 1 1;
@@ -68,7 +70,8 @@ UBackshiftMatrix = [1 1 1 1;
 %                     4 4 4
 %                     ];
 YBackshiftMatrix = [2 2 2;
-                    4 4 4];
+                    4 4 4;
+                    10 10 10];
 [backshiftCasesY, ~] = size(YBackshiftMatrix);
 %% Raw Data Handling
 tau_R = 5;

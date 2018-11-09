@@ -1,24 +1,24 @@
 close all;
 % Manual inputs
 % load('ControlResults_MVP_2709_MB.mat');
-load('ControlResults_final_3009.mat');
+% load('ControlResults_final_0611.mat');
 figurePath = 'figures\isolatedGraphs\'
 imprint = false;
 subPlotBool = false;
-simTime = 100*3600;
+simTime = 200*3600;
 usePlotCVLims = false;
 usePlotMVLims = true;
 kappaControl_ARMAX = 1;
-dateOutputStr = '3009';
+dateOutputStr = '0811';
 %%
-plotControlFrom = 7;
-plotControlTo = 7;
+plotControlFrom = 2;
+plotControlTo = 9;
 startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
 xLimVector = [0 simTime/3600];
 % For zooming in on certain parts, uncomment below
-startPlotTime = 45*3600;
-endPlotTime = 65*3600;
+% startPlotTime = 45*3600;
+% endPlotTime = 65*3600;
 xLimVector = [startPlotTime endPlotTime]/3600;
 % Y Axis Limits
 %%

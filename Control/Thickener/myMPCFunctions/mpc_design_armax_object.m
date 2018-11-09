@@ -1,17 +1,23 @@
-function mpc_design_armax_object( dateMatFileStr,N_y,N_u,kappaControl_ARMAX,...
+function mpc_design_armax_object( procBool,scaleFactorCV,scaleFactorMV,dateMatFileStr,N_y,N_u,kappaControl_ARMAX,...
                                 qCostValues,rCostValues,betaCostValues,tuningStruct)
 %MPC_DESIGN_ARMAX_OBJECT Summary of this function goes here
 %   Detailed explanation goes here
 %% Mat File Handling
 fixedParametersFileName = ['mpc_fixed_parameters_' dateMatFileStr '.mat'];
-armaxModelFile = ['ARMAX_MDL_Sim_Noise_k5_na5_nb4_nc3_1408.mat']; % change to be function of datMatFileStr 5 4 3
-mpcObjectFileName = ['mpc_armax_object_' dateMatFileStr '.mat'];
+if procBool
+    armaxModelFile = ['Proc_MDL_NO_Sim_Noise_k5_na5_nb4_nc3_1408.mat'];
+    mpcObjectFileName = ['mpc_proc_object_' dateMatFileStr '.mat'];
+else
+    armaxModelFile = ['ARMAX_MDL_Sim_Noise_k5_na5_nb4_nc3_1408.mat']; % change to be function of datMatFileStr 5 4 3
+    mpcObjectFileName = ['mpc_armax_object_' dateMatFileStr '.mat'];
+end
 load(fixedParametersFileName);
 load(armaxModelFile);
 
 %% MPC Object creation
 augmentedSys = ss(armaxModel,'augmented');
-augmentedMPC = setmpcsignals(augmentedSys,'MV',[3 4],'MD',[1 2],'UD',[5 6 7]);
+[GS,GNS] = stabsep(augmentedSys,'MODE',1,'Offset',0.1);
+augmentedMPC = setmpcsignals(GS,'MV',[3 4],'MD',[1 2],'UD',[5 6 7]);
 mpcObj = mpc(augmentedMPC);
 %% MPC Object Specs
 % Controller Sample Time, which is the sample time for the CONTROLLER BLOCK
@@ -33,7 +39,8 @@ for cv = 1:numCV % Not considering Cpef
     %% Cost Assignment
     mpcObj.Weights.OV(1:N_y-1,cv) = sqrt(qCostValues(cv))*ones(N_y-1,1);
     mpcObj.Weights.OV(N_y,cv) = sqrt(betaCostValues(cv)*(N_y-1));
-    mpcObj.OV(cv).ScaleFactor = 1./qNormMatrix(cv,cv)*sqrt(((N_y-1)*(numCV)));
+%     mpcObj.OV(cv).ScaleFactor = 1./qNormMatrix(cv,cv)*sqrt(((N_y-1)*(numCV)));
+    mpcObj.OV(cv).ScaleFactor = sqrt(scaleFactorCV(cv))*1./qNormMatrix(cv,cv)*sqrt(((N_y-1)*(numCV)));
     %% Limits
     if tuningStruct.CV.BoolLims(cv)
         mpcObj.OV(cv).Min = yLowLims(cv);
@@ -48,7 +55,7 @@ end
 for mv = 1:numMV
    %% Cost Assignment
    mpcObj.Weights.ManipulatedVariablesRate(:,mv) = sqrt(rCostValues(mv)); 
-   mpcObj.MV(mv).ScaleFactor = 1./rNormMatrix(mv,mv);
+   mpcObj.MV(mv).ScaleFactor = scaleFactorMV(mv)*1./rNormMatrix(mv,mv);
    %% Limits
    if tuningStruct.MV.BoolLims(mv)
        mpcObj.MV(mv).Min = uLowLims(mv);
@@ -57,6 +64,8 @@ for mv = 1:numMV
    if tuningStruct.MV.BoolRateLims(mv)
        mpcObj.MV(mv).RateMin = deltaULowLim(mv);
        mpcObj.MV(mv).RateMax = deltaUHighLim(mv);
+       mpcObj.MV(mv).RateMinECR = tuningStruct.MVRate.ECR(mv);
+       mpcObj.MV(mv).RateMinECR = tuningStruct.MVRate.ECR(mv);
    end
    
 end
@@ -65,7 +74,7 @@ end
 % different, but the state vector is then THE SAME. Therefore, we can use
 % the last value of the state produced by sysForecast as the nominal state
 % value for the mpcObj.
-mpcObj.Model.Nominal.X = x0_ARMAX;
+% mpcObj.Model.Nominal.X = x0_ARMAX;
 mpcObj.Model.Nominal.Y = x0_RF.y0Memory(:,1);
 mpcObj.Model.Nominal.U = [x0_RF.d0Memory(:,1);x0_RF.u0Memory(:,1);zeros(numCV,1)];
 %% Output Disturbance elimination

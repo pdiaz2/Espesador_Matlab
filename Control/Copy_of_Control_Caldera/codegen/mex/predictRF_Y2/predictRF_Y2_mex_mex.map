@@ -1,0 +1,18 @@
+MEX {
+	global:
+		mexFunction;
+		mexfilerequiredapiversion;
+		emlrtMexFcnProperties;
+		predictRF_Y2;
+		emxEnsureCapacity;
+		emxFree_int32_T;
+		emxFree_real_T;
+		emxInit_int32_T;
+		emxInit_real_T;
+		emxInit_real_T1;
+		predictRF_Y2_initialize;
+		predictRF_Y2_terminate;
+		predictRF_Y2_atexit;
+	local:
+		*;
+};
