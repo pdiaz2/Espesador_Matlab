@@ -21,7 +21,7 @@ saveControlResults = true;
     % - <MB>: move blocking (separated tau_C from kappa_C)
     % - <PSO_BIG>: N_u*10 points in PSO algorithm
 % 3009 verbatim 2509
-dateOutputStr = '0811';
+dateOutputStr = '1111';
 dateMatFileStr = '1408';
 figureFolder = 'figures\';
 testName = 'final'; 
@@ -30,7 +30,7 @@ figurePath = [figureFolder testName '\'];
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
 %%%%%%%%%%
 bool200 = false;
-startSimTime = 200*3600+1;
+startSimTime = 1%;200*3600+1;
 simTime = 200*3600; % 10*3600
 % 1: OL
 % 2: Inertia
@@ -42,7 +42,7 @@ simTime = 200*3600; % 10*3600
 % 8: Solid throughput pulse increase
 % 9: Solid throughput pulse decrease
 simControlFrom = 2;
-simControlTo = 9;
+simControlTo = 2;
 plotControlFrom = simControlFrom;
 plotControlTo = simControlTo;
 %%%%%%%%%%%%%%%
@@ -105,7 +105,7 @@ startPlotTime = 1; %Wait for noise filter to stabilize
 wValuesStruct.delta = [
                         0 0 0;% 1
                         0 0 0;% 2 
-                        0 0 2;% 3
+                        0 0 1.5;% 3
                         0 -1 0;% 4
                         0 0 0;% 5
                         0 0 0;% 6
@@ -450,9 +450,9 @@ for simIter = simControlFrom:simControlTo
         noStepTimeDV(3) = floor(simTime);
     elseif (stepInDVArray(simIter)) && ~stepIter(simIter)
         stepTimeDV(1) = floor(3*simTime/10); %4
-        noStepTimeDV(1) = floor(4*simTime/10); % CHECK
+        noStepTimeDV(1) = floor(5*simTime/10); % CHECK
         stepTimeDV(2) = floor(3*simTime/10); %6
-        noStepTimeDV(2) = floor(4*simTime/10);
+        noStepTimeDV(2) = floor(5*simTime/10);
         stepTimeDV(3) = floor(5*simTime/10); %5
         noStepTimeDV(3) = floor(5*simTime/10);
     else
@@ -497,7 +497,7 @@ for simIter = simControlFrom:simControlTo
         run parametrosEmpty.m
         rng(120938103);
         load('Agosto_SimResults_1304_State.mat');
-        load('permanent_200_state_2.mat');
+%         load('permanent_200_state_2.mat');
         tic;
         sim('mpc_rf_thickener.slx');
         toc;
@@ -537,7 +537,7 @@ for simIter = simControlFrom:simControlTo
         run parametrosEmpty.m
         rng(120938103);
         load('Agosto_SimResults_1304_State.mat');
-        load('permanent_200_state_2.mat');
+%         load('permanent_200_state_2.mat');
         tic;
         sim('mpc_armax_thickener.slx');
         toc;
@@ -599,7 +599,7 @@ for simIter = simControlFrom:simControlTo
         run parametrosEmpty.m
         rng(120938103);
         load('Agosto_SimResults_1304_State.mat');
-        load('permanent_200_state_2.mat');
+%         load('permanent_200_state_2.mat');
         tic;
         sim('expert_control_thickener.slx');
         toc;
@@ -622,7 +622,7 @@ for simIter = simControlFrom:simControlTo
         run parametrosEmpty.m
         rng(120938103);
         load('Agosto_SimResults_1304_State.mat');
-        load('permanent_200_state_2.mat');
+%         load('permanent_200_state_2.mat');
         tic;
         sim('pid_thickener.slx');
         toc;

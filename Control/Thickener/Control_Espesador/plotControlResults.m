@@ -9,7 +9,7 @@ simTime = 200*3600;
 usePlotCVLims = false;
 usePlotMVLims = true;
 kappaControl_ARMAX = 1;
-dateOutputStr = '0811';
+dateOutputStr = '1111';
 %%
 plotControlFrom = 2;
 plotControlTo = 9;
