@@ -11,7 +11,7 @@ xLabelStr = 'Time [hr]';
 LineWidth = 0.7;
 cvLims = [20.7 21.7;
           73 75;
-          -0.5 2.5];
+          -0.1 2];
 %% Plot prediction comparisons
 % Forecast comparison
 % load('predictionResults_48G_348_B100_k5_na6_nb6');
