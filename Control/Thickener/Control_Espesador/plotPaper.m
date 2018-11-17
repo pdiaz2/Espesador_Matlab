@@ -3,16 +3,16 @@ close all;
 % load('ControlResults_MVP_2709_MB.mat');
 load('ControlResults_final_1011.mat');
 figurePath = 'figures\paper\'
-imprint = false;
-subPlotBool = false;
+imprint = true;
+subPlotBool = true;
 simTime = 200*3600;
 usePlotCVLims = false;
 usePlotMVLims = true;
 kappaControl_ARMAX = 1;
 dateOutputStr = '1011';
 %%
-plotControlFrom = 2;
-plotControlTo = 9;
+plotControlFrom = 4;
+plotControlTo = 4;
 startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
 xLimVector = [0 simTime/3600];
@@ -99,8 +99,8 @@ if subPlotBool
         fig = gcf;
         movegui(fig,'southwest')
 
-        for cv = 1:numCV
-            subplot(numCV,1,cv)
+        for cv = 2:numCV
+            subplot(numCV-1,1,cv-1)
             if useMPC_RF
                 plot(t(startPlotTime:endPlotTime),yMPC_RF(startPlotTime:endPlotTime,cv,simIter),...
                         'LineWidth',lineWidth(1),...
@@ -114,22 +114,22 @@ if subPlotBool
                        'Color',controlColors{2},...
                        'LineStyle',controlLineStyle{2})
             end
-            if useExpert
-                plot(t(startPlotTime:endPlotTime),yExpert(startPlotTime:endPlotTime,cv,simIter),...
-                       'LineWidth',lineWidth(3),...
-                       'Color',controlColors{3},...
-                       'LineStyle',controlLineStyle{3})
-            end
-            if usePID
-                plot(t(startPlotTime:endPlotTime),yPID(startPlotTime:endPlotTime,cv,simIter),...
-                       'LineWidth',lineWidth(4),...
-                       'Color',controlColors{4},...
-                       'LineStyle',controlLineStyle{4},...
-                       'Marker',controlMarker{4},'MarkerSize',0.8)
-            end
+%             if useExpert
+%                 plot(t(startPlotTime:endPlotTime),yExpert(startPlotTime:endPlotTime,cv,simIter),...
+%                        'LineWidth',lineWidth(3),...
+%                        'Color',controlColors{3},...
+%                        'LineStyle',controlLineStyle{3})
+%             end
+%             if usePID
+%                 plot(t(startPlotTime:endPlotTime),yPID(startPlotTime:endPlotTime,cv,simIter),...
+%                        'LineWidth',lineWidth(4),...
+%                        'Color',controlColors{4},...
+%                        'LineStyle',controlLineStyle{4},...
+%                        'Marker',controlMarker{4},'MarkerSize',0.8)
+%             end
 
 
-            title(titlesCV{cv})
+%             title(titlesCV{cv})
             plot(t(startPlotTime:endPlotTime),wRefSimulink(startPlotTime:endPlotTime,cv,simIter),...
                     'Color',[0.0 0.45 0.0],'LineStyle',':','LineWidth',2.25);
         %     plot(t(startPlotTime:endPlotTime),yFiltered.signals.values(startPlotTime:endPlotTime,cv),'g','LineWidth',1);
@@ -145,11 +145,17 @@ if subPlotBool
             end
 
             xlim(xLimVector);
-            yLegend_1 = ['$y_' num2str(cv) '$ MPC-RF'];
-            yLegend_2 = ['$y_' num2str(cv) '$ PI'];
+            yLegend_1 = ['MPC-RF'];
+            yLegend_2 = ['MPC-ARIMAX'];
+%             yLegend_1 = ['$y_' num2str(cv) '$ MPC-RF'];
+%             yLegend_2 = ['$y_' num2str(cv) '$ PI'];
             wLegend = ['$w_' num2str(cv) '$'];
         %     yFiltLegend = ['$\tilde{y}_' num2str(cv) '$'];
-    %         legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex');
+            if cv == 2
+                legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex', 'Location', 'northwest');
+            elseif cv == 3
+                legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex', 'Location', 'southwest');
+            end
             grid on
             hold off
         end
@@ -183,7 +189,7 @@ if subPlotBool
                        'LineStyle',controlLineStyle{1})
             end
             hold on
-            title(titlesDV{dv})
+%             title(titlesDV{dv})
             ylabel(DVUnits{dv})
             xlabel('Time [hr]')
             if usePlotMVLims
@@ -228,22 +234,22 @@ if subPlotBool
                        'Color',controlColors{2},...
                        'LineStyle',controlLineStyle{2})
             end
-            if useExpert
-                plot(t(startPlotTime:endPlotTime),uExpert(startPlotTime:endPlotTime,mv,simIter),...
-                       'LineWidth',lineWidth(3),...
-                       'Color',controlColors{3},...
-                       'LineStyle',controlLineStyle{3})
-            end
-            if usePID
-                plot(t(startPlotTime:endPlotTime),uPID(startPlotTime:endPlotTime,mv,simIter),...
-                       'LineWidth',lineWidth(4),...
-                       'Color',controlColors{4},...
-                       'LineStyle',controlLineStyle{4},...
-                       'Marker',controlMarker{4},'MarkerSize',0.8)
-            end
+%             if useExpert
+%                 plot(t(startPlotTime:endPlotTime),uExpert(startPlotTime:endPlotTime,mv,simIter),...
+%                        'LineWidth',lineWidth(3),...
+%                        'Color',controlColors{3},...
+%                        'LineStyle',controlLineStyle{3})
+%             end
+%             if usePID
+%                 plot(t(startPlotTime:endPlotTime),uPID(startPlotTime:endPlotTime,mv,simIter),...
+%                        'LineWidth',lineWidth(4),...
+%                        'Color',controlColors{4},...
+%                        'LineStyle',controlLineStyle{4},...
+%                        'Marker',controlMarker{4},'MarkerSize',0.8)
+%             end
 
 
-            title(titlesMV{mv})
+%             title(titlesMV{mv})
             ylabel(MVUnits{mv})
             xlabel('Time [hr]')
     %         if usePlotLims
@@ -379,22 +385,22 @@ else
                        'Color',controlColors{2},...
                        'LineStyle',controlLineStyle{2})
             end
-            if useExpert
-                plot(t(startPlotTime:endPlotTime),yExpert(startPlotTime:endPlotTime,cv,simIter),...
-                       'LineWidth',lineWidth(3),...
-                       'Color',controlColors{3},...
-                       'LineStyle',controlLineStyle{3})
-            end
-            if usePID
-                plot(t(startPlotTime:endPlotTime),yPID(startPlotTime:endPlotTime,cv,simIter),...
-                       'LineWidth',lineWidth(4),...
-                       'Color',controlColors{4},...
-                       'LineStyle',controlLineStyle{4},...
-                       'Marker',controlMarker{4},'MarkerSize',0.8)
-            end
+%             if useExpert
+%                 plot(t(startPlotTime:endPlotTime),yExpert(startPlotTime:endPlotTime,cv,simIter),...
+%                        'LineWidth',lineWidth(3),...
+%                        'Color',controlColors{3},...
+%                        'LineStyle',controlLineStyle{3})
+%             end
+%             if usePID
+%                 plot(t(startPlotTime:endPlotTime),yPID(startPlotTime:endPlotTime,cv,simIter),...
+%                        'LineWidth',lineWidth(4),...
+%                        'Color',controlColors{4},...
+%                        'LineStyle',controlLineStyle{4},...
+%                        'Marker',controlMarker{4},'MarkerSize',0.8)
+%             end
 
 
-            title(titlesCV{cv})
+%             title(titlesCV{cv})
             plot(t(startPlotTime:endPlotTime),wRefSimulink(startPlotTime:endPlotTime,cv,simIter),...
                     'Color',[0.0 0.45 0.0],'LineStyle',':','LineWidth',2.25);
         %     plot(t(startPlotTime:endPlotTime),yFiltered.signals.values(startPlotTime:endPlotTime,cv),'g','LineWidth',1);
@@ -412,12 +418,12 @@ else
             xlim(xLimVector);
             yLegend_1 = ['MPC-RF'];
             yLegend_2 = ['MPC-ARIMAX'];
-            yLegend_3 = ['EXP'];
-            yLegend_4 = ['PI'];
+%             yLegend_3 = ['EXP'];
+%             yLegend_4 = ['PI'];
             wLegend = ['$w_' num2str(cv) '$'];
         %     yFiltLegend = ['$\tilde{y}_' num2str(cv) '$'];
     %         legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex');
-            legend({yLegend_1,yLegend_2,yLegend_3,yLegend_4,wLegend},'Interpreter','latex','Location','southwest');
+            legend({yLegend_1,yLegend_2, wLegend},'Interpreter','latex','Location','southwest');
             grid on
             hold off
             if imprint
@@ -497,20 +503,20 @@ else
                        'Color',controlColors{2},...
                        'LineStyle',controlLineStyle{2})
             end
-            if useExpert
-                plot(t(startPlotTime:endPlotTime),uExpert(startPlotTime:endPlotTime,mv,simIter),...
-                       'LineWidth',lineWidth(3),...
-                       'Color',controlColors{3},...
-                       'LineStyle',controlLineStyle{3})
-            end
-            if usePID
-                plot(t(startPlotTime:endPlotTime),uPID(startPlotTime:endPlotTime,mv,simIter),...
-                       'LineWidth',lineWidth(4),...
-                       'Color',controlColors{4},...
-                       'LineStyle',controlLineStyle{4},...
-                       'Marker',controlMarker{4},'MarkerSize',0.8)
-            end
-            title(titlesMV{mv})
+%             if useExpert
+%                 plot(t(startPlotTime:endPlotTime),uExpert(startPlotTime:endPlotTime,mv,simIter),...
+%                        'LineWidth',lineWidth(3),...
+%                        'Color',controlColors{3},...
+%                        'LineStyle',controlLineStyle{3})
+%             end
+%             if usePID
+%                 plot(t(startPlotTime:endPlotTime),uPID(startPlotTime:endPlotTime,mv,simIter),...
+%                        'LineWidth',lineWidth(4),...
+%                        'Color',controlColors{4},...
+%                        'LineStyle',controlLineStyle{4},...
+%                        'Marker',controlMarker{4},'MarkerSize',0.8)
+%             end
+%             title(titlesMV{mv})
             ylabel(MVUnits{mv})
             xlabel('Time [hr]')
     %         if usePlotLims
