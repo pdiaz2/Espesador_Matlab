@@ -299,7 +299,7 @@ end
 %% Reaction Curves
 if strcmp(typeOfData,'Sim_')
     makeStepMatrix = eye(4);%;[1 0 1 1];
-    % load('ThickenerOperation_Septiembre_rawData.mat');
+    load('ThickenerOperation_Septiembre_rawData.mat');
     stepTests = true;
     D0 = [326.3733 0.3143 0.356];
     U0 = [114.8275 26.0152]; 
@@ -319,14 +319,14 @@ if strcmp(typeOfData,'Sim_')
             p1_fVals = myStepTest(simTime,Dt,1/2,3*K_forecast*tau_R_RC+stepInitTime,stepInitTime,1,0,simTime/4);
             Q_uVals = myStepTest(simTime,Dt,-20,3*K_forecast*tau_R_RC+stepInitTime,stepInitTime,1,0,simTime/4);
             gptVals = myStepTest(simTime,Dt,-3,3*K_forecast*tau_R_RC+stepInitTime,stepInitTime,1,0,simTime/4);
-            %%
+            %
             Q_fVals = Q_fVals.signals.values;
             Cp_fVals = Cp_fVals.signals.values;
             p1_fVals = p1_fVals.signals.values;
             Q_uVals = Q_uVals.signals.values;
             gptVals = gptVals.signals.values;
 
-            %%
+            %
             Q_f.time = linspace(0,simTime-Dt,simTime/Dt)';
             Q_f.signals.dimensions = [1];
             Q_f.signals.values = Q_fVals;
@@ -358,7 +358,7 @@ if strcmp(typeOfData,'Sim_')
             p1_f.signals.values = D0(3)*ones(1,simTime)';
             p1_f.time = linspace(0,simTime,simTime/Dt)';
         end
-        %%
+        %
         run parametrosEmpty.m
 
         load('Agosto_Sim_1408_Noise_State.mat');
