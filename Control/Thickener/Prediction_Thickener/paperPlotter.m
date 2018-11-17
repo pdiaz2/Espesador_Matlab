@@ -314,31 +314,31 @@ end
 % % % %     end
 % % % % end
 % % Reaction Curves
-% % load('predictionResults_48G_530_B50_Ny_48_k5_na6_nb6');
-% % for simIter = 1:size(makeStepMatrix)
-% %     for cv = 1:n
-% %         figure
-% %         title(CVNames{cv})
-% %         hold on
-% %         plot(tForecast/3600,ReactionCurveStruct(simIter).yThickener(:,cv)','LineWidth',1.5)
-% %         plot(tForecast/3600,ReactionCurveStruct(simIter).y_ARMAX(cv,:),'--k','LineWidth',1.5);
-% %         plot(tForecast/3600,ReactionCurveStruct(simIter).y_RF(:,cv)','-.r','LineWidth',1.5)
-% % 
-% %         ylabel(CVUnits{cv})
-% %         xlabel(xLabelStr)
-% %         
-% %         hold off
-% %         grid on
-% %         legendCell = {'Validation','ARIMAX','RF_{b}'};
-% %         locationStr = input('Loc','s');
-% %         location = locateLegends(locationStr);
-% %         legend(legendCell,'Location',location);
-% %         printName = [figurePath 'RC_' CVSaveName{cv} num2str(simIter)];
-% %         if imprint
-% %             print(printName,'-depsc');
-% %         end
-% %     end
-% % end
+load('predictionResults_48G_530_B50_Ny_48_k5_na6_nb6');
+for simIter = 1:size(makeStepMatrix)
+    for cv = 1:n
+        figure
+%         title(CVNames{cv})
+        hold on
+        plot(tForecast/3600,ReactionCurveStruct(simIter).yThickener(:,cv)','LineWidth',1.5)
+        plot(tForecast/3600,ReactionCurveStruct(simIter).y_ARMAX(cv,:),'--k','LineWidth',1.5);
+        plot(tForecast/3600,ReactionCurveStruct(simIter).y_RF(:,cv)','-.r','LineWidth',1.5)
+
+        ylabel(CVUnits{cv})
+        xlabel(xLabelStr)
+        
+        hold off
+        grid on
+        legendCell = {'Thickener Output','ARIMAX Forecast','Forest forecast'};
+        locationStr = input('Loc','s');
+        location = locateLegends(locationStr);
+        legend(legendCell,'Location',location);
+        printName = [figurePath 'RC_' CVSaveName{cv} num2str(simIter)];
+        if imprint
+            print(printName,'-depsc');
+        end
+    end
+end
 % % 
 % % close all
 % % %%
