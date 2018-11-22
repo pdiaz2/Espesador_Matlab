@@ -3,12 +3,13 @@ close all;
 clc;
 %%
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
-dateOutputStr = '3009';
+dateOutputStr = '1011';
 
 load([resultsPath 'ControlResults_final_' dateOutputStr '.mat']);
 figurePath = 'figures\performanceCriteria\';
 imprint = false;
 plotGraphs = true;
+selectIteration = 9; % Select which test do you wish to see results
 %% Compute
 wSteadyState = repmat(wRefSimulink(end,:,:),size(wRefSimulink,1),1,1);
 PerformanceCriteriaStruct = struct;
@@ -87,8 +88,8 @@ CVLims = [15 22;
 MVLims = [80 120;
           20 30];
 %% Graphical Results
-selectIteration = 7; % Select which test do you wish to see results
-selectControllersStr = '1111'; % RF,ARMAX,Exp,PI
+
+selectControllersStr = '1100'; % RF,ARMAX,Exp,PI
 selectedCV = [2 3];
 selectedMV = [1 2];
 contString = '';
@@ -232,7 +233,6 @@ if plotGraphs
 end
 %% Tabular Results
 clc;
-selectIteration = 8; % Select which test do you wish to see results
 selectedCV = [1 2 3];
 selectedMV = [1 2];
 for cv = selectedCV
@@ -267,7 +267,6 @@ end
 
 %% Mean Results
 clc;
-selectIteration = 8; % Select which test do you wish to see results
 selectedCV = [1 2 3];
 selectedMV = [1 2];
 % end

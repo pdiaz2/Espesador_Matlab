@@ -9,8 +9,8 @@ usePID = true;
 
 %%%%%%%%%%%%%%%%%
 dvRealData = true;
-imprint = true;
-saveControlResults = true;
+imprint = false;
+saveControlResults = false;
 
 % Code for names:
     % - BS: BigSearch. Big pop (100+) and big gens (100+)
@@ -31,7 +31,7 @@ resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\H
 %%%%%%%%%%
 bool200 = false;
 startSimTime = 1%;200*3600+1;
-simTime = 200*3600; % 10*3600
+simTime = 2*3600; % 10*3600
 % 1: OL
 % 2: Inertia
 % 3: Bed Level
