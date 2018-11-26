@@ -2,16 +2,16 @@ close all;
 % Manual inputs
 % load('ControlResults_MVP_2709_MB.mat');
 load('ControlResults_final_1011.mat');
-figurePath = 'figures\paper\'
-imprint = false;
+figurePath = 'figures\isolatedGraphs_Correc\'
+imprint = true;
 subPlotBool = false;
 simTime = 200*3600;
-usePlotCVLims = false;
+usePlotCVLims = true;
 usePlotMVLims = true;
 kappaControl_ARMAX = 1;
 dateOutputStr = '1011';
 %%
-plotControlFrom = 2;
+plotControlFrom = 9;
 plotControlTo = 9;
 startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
@@ -47,19 +47,19 @@ xLimVector = [startPlotTime endPlotTime]/3600;
 %             0 2.5 5];
 % MVTicks = [70 85 100 115 130;
 %            18 21 25 28 32];
-CVLims = [14 22;
-         65 75;
-         0 10];
+CVLims = [17.5 22;
+         71 75;
+         0 7.5];
 MVLims = [65 130;
           17 32];
 DVLims = [280 400;
           15 45];
 CVTicks = [20 20.5 21 21.5 22;
-            71.5 72.25 73 73.75 75;
+            72.5 73.25 73.85 74.5 75;
             0 1.5 3 4.5 6];
 CVTicks = [linspace(CVLims(1,1)+0.25,CVLims(1,2)-0.25,5);
             linspace(CVLims(2,1)+0.25,CVLims(2,2)-0.25,5);
-            0 2.7 5 7.4 9.8]
+            linspace(CVLims(3,1)+0.1, CVLims(3,2)-0.1,5)];
 MVTicks = [70 85 100 115 130;
            18 21 25 28 32];
 %%
@@ -417,7 +417,11 @@ else
             wLegend = ['$w_' num2str(cv) '$'];
         %     yFiltLegend = ['$\tilde{y}_' num2str(cv) '$'];
     %         legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex');
-            legend({yLegend_1,yLegend_2,yLegend_3,yLegend_4,wLegend},'Interpreter','latex','Location','southwest');
+            if cv == 3 || cv == 1
+                legend({yLegend_1,yLegend_2,yLegend_3,yLegend_4,wLegend},'Interpreter','latex','Location','southwest');
+            else
+                legend({yLegend_1,yLegend_2,yLegend_3,yLegend_4,wLegend},'Interpreter','latex','Location','northwest');
+            end
             grid on
             hold off
             if imprint
