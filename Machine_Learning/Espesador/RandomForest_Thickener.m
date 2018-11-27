@@ -8,7 +8,7 @@ typeOfData = 'Sim_';
 dateTest = '1408';
 predictiveModelsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\PredictiveModels\';
 resultsMLPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsML\';
-figurePath = ['figures\'];
+figurePath = ['figures\paperGraphs\'];
 % Save and print bools
 imprint = true;
 saveResultsToMatFile = false;
@@ -225,7 +225,9 @@ if generateOne
             positiveIndexes = forestStats.OOBPermutedDelta > 0;
             permutedDeltaPos = forestStats.OOBPermutedDelta(positiveIndexes);
             permutedDeltaNeg = forestStats.OOBPermutedDelta(~positiveIndexes);
+%             permutedDeltaPos = forestStats.OOBPermutedDelta; % CHANGE % CAMBIAR Borrar
             figure
+%             permutedDeltaPos = permutedDeltaPos([1:72,1+72*2:72*5]); % CHANGE % CAMBIAR Borrar
             y1 = plot(10*log10(permutedDeltaPos),'b*');
             hold on
             y2 = plot(mean(10*log10(permutedDeltaPos))*ones(1,length(permutedDeltaPos)),'r');
@@ -238,13 +240,16 @@ if generateOne
             xlabel('Predictor Number [n]');
             ylabel('PDE');
             ylim([-10 1])
-            xlim([0 mOrder.na(cvToGenerate)*5]);
+            xlim([0 mOrder.na(cvToGenerate)*4]); % CHANGE % CAMBIAR, era 5
             names = {['y_' num2str(cvToGenerate)],num2str(mOrder.na(cvToGenerate)),'d_1',...
                         num2str(mOrder.na(cvToGenerate)*2),'d_2',num2str(mOrder.na(cvToGenerate)*3),...
                         'u_1',num2str(mOrder.na(cvToGenerate)*4),'u_2',num2str(mOrder.na(cvToGenerate)*5)};
-            set(gca,'xtick',[mOrder.na(cvToGenerate)/2:mOrder.na(cvToGenerate)/2:mOrder.na(cvToGenerate)*5],'xticklabel',names);
+%             names = {['y_' num2str(cvToGenerate)],num2str(mOrder.na(cvToGenerate)),'d_1',...
+%                         num2str(mOrder.na(cvToGenerate)*2),'u_1',num2str(mOrder.na(cvToGenerate)*3),...
+%                         'u_2',num2str(mOrder.na(cvToGenerate)*4)};
+            set(gca,'xtick',[mOrder.na(cvToGenerate)/2:mOrder.na(cvToGenerate)/2:mOrder.na(cvToGenerate)*5],'xticklabel',names); % CHANGE CAMBIAR era 5
             axes = gca;
-            for divLine = mOrder.na(cvToGenerate):mOrder.na(cvToGenerate):mOrder.na(cvToGenerate)*5
+            for divLine = mOrder.na(cvToGenerate):mOrder.na(cvToGenerate):mOrder.na(cvToGenerate)*5 % CHANGE CAMBAR era 5
                 line([divLine divLine],get(axes,'YLim'),'Color',[1 0 1],'LineStyle',':');
             end
             hold off

@@ -3,7 +3,7 @@ close all;
 % load('ControlResults_MVP_2709_MB.mat');
 load('ControlResults_final_1011.mat');
 figurePath = 'figures\isolatedGraphs_Correc\'
-imprint = true;
+imprint = false;
 subPlotBool = false;
 simTime = 200*3600;
 usePlotCVLims = true;
@@ -11,8 +11,8 @@ usePlotMVLims = true;
 kappaControl_ARMAX = 1;
 dateOutputStr = '1011';
 %%
-plotControlFrom = 9;
-plotControlTo = 9;
+plotControlFrom = 4
+plotControlTo = 4;
 startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
 xLimVector = [0 simTime/3600];
