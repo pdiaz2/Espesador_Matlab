@@ -410,8 +410,8 @@ else
             end
 
             xlim(xLimVector);
-            yLegend_1 = ['MPC-RF'];
-            yLegend_2 = ['MPC-ARIMAX'];
+            yLegend_1 = ['RF-MPC'];
+            yLegend_2 = ['ARIMAX-MPC'];
             yLegend_3 = ['EXP'];
             yLegend_4 = ['PI'];
             wLegend = ['$w_' num2str(cv) '$'];
@@ -528,6 +528,7 @@ else
             mLegend_1 = ['$u_' num2str(mv) '$ MPC'];
             mLegend_2 = ['$u_' num2str(mv) '$ PI'];
     %         legend({mLegend_1,mLegend_2},'Interpreter','latex');
+            legend({'RF-MPC','ARIMAX-MPC'})
             grid on
 
         end

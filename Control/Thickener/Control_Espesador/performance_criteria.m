@@ -9,7 +9,7 @@ load([resultsPath 'ControlResults_final_' dateOutputStr '.mat']);
 figurePath = 'figures\performanceCriteria\';
 imprint = false;
 plotGraphs = true;
-selectIteration = 9; % Select which test do you wish to see results
+selectIteration = 4; % Select which test do you wish to see results
 %% Compute
 wSteadyState = repmat(wRefSimulink(end,:,:),size(wRefSimulink,1),1,1);
 PerformanceCriteriaStruct = struct;
@@ -266,10 +266,11 @@ for controller = selectControllers
 end
 
 %% Mean Results
-clc;
+% clc;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
 % end
+selectIteration = 8;
 for cv = selectedCV
     fprintf('CV Table %d\r\n',cv)
     for controller = selectControllers

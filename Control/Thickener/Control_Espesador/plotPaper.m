@@ -4,7 +4,7 @@ close all;
 load('ControlResults_final_1011.mat');
 figurePath = 'figures\paper\'
 imprint = true;
-subPlotBool = true;
+subPlotBool = false;
 simTime = 200*3600;
 usePlotCVLims = false;
 usePlotMVLims = true;
@@ -416,11 +416,11 @@ else
             end
 
             xlim(xLimVector);
-            yLegend_1 = ['MPC-RF'];
-            yLegend_2 = ['MPC-ARIMAX'];
+            yLegend_1 = ['RF-MPC'];
+            yLegend_2 = ['ARIMAX-MPC'];
 %             yLegend_3 = ['EXP'];
 %             yLegend_4 = ['PI'];
-            wLegend = ['$w_' num2str(cv) '$'];
+            wLegend = ['$w_' num2str(cv-1) '$'];
         %     yFiltLegend = ['$\tilde{y}_' num2str(cv) '$'];
     %         legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex');
             legend({yLegend_1,yLegend_2, wLegend},'Interpreter','latex','Location','southwest');
@@ -530,6 +530,11 @@ else
             mLegend_1 = ['$u_' num2str(mv) '$ MPC'];
             mLegend_2 = ['$u_' num2str(mv) '$ PI'];
     %         legend({mLegend_1,mLegend_2},'Interpreter','latex');
+            if mv == 2
+                legend({'RF-MPC','ARIMAX-MPC'}, 'Location', 'sw')
+            else
+                legend({'RF-MPC','ARIMAX-MPC'}, 'Location', 'ne')
+            end
             grid on
 
         end
