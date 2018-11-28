@@ -264,9 +264,9 @@ if subPlotBool
             mLegend_2 = ['$u_' num2str(mv) '$ PI'];
     %         legend({mLegend_1,mLegend_2},'Interpreter','latex');
             if mv == 2
-                legend({'RF-MPC','ARIMAX-MPC'}, 'Location', 'sw')
+                legend({'RF-MPC','ARIMAX-MPC'}, 'Interpreter','latex', 'Location', 'sw')
             else
-                legend({'RF-MPC','ARIMAX-MPC'}, 'Location', 'ne')
+                legend({'RF-MPC','ARIMAX-MPC'}, 'Interpreter','latex', 'Location', 'ne')
             end
             grid on
 
