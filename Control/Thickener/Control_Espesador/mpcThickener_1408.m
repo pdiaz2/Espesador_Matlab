@@ -2,14 +2,14 @@ clear all;
 clc;
 close all;
 %% Control Parameters
-useMPC_RF = true; 
-useMPC_ARMAX = false; reverse = 1; procBool = false; plotComputedMV = true; plotSatMV = false;
+useMPC_RF = false; 
+useMPC_ARMAX = true; reverse = 1; procBool = false; plotComputedMV = true; plotSatMV = false;
 useExpert = false; showMVComponents = false;
 usePID = false;
 
 %%%%%%%%%%%%%%%%%
 dvRealData = true;
-imprint = true;
+imprint = false;
 saveControlResults = false;
 
 % Code for names:
@@ -731,10 +731,14 @@ for simIter = plotControlFrom:plotControlTo
         end
         hold on
         if useMPC_ARMAX
-            plot(t(startPlotTime:endPlotTime),yMPC_ARMAX(startPlotTime:endPlotTime,cv,simIter),...
+%             plot(t(startPlotTime:endPlotTime),yMPC_ARMAX(startPlotTime:endPlotTime,cv,simIter),...
+%                    'LineWidth',lineWidth(2),...
+%                    'Color',controlColors{2},...
+%                    'LineStyle',controlLineStyle{2})
+              plot(t(startPlotTime:endPlotTime),yMPC_ARMAX(startPlotTime:endPlotTime,cv,simIter),...
                    'LineWidth',lineWidth(2),...
-                   'Color',controlColors{2},...
-                   'LineStyle',controlLineStyle{2})
+                   'Color','b',...
+                   'LineStyle','-')
         end
         if useExpert
             plot(t(startPlotTime:endPlotTime),yExpert(startPlotTime:endPlotTime,cv,simIter),...
@@ -752,8 +756,8 @@ for simIter = plotControlFrom:plotControlTo
         
         
         title(titlesCV{cv})
-        plot(t(startPlotTime:endPlotTime),wRefSimulink(startPlotTime:endPlotTime,cv,simIter),...
-                'Color',[0.0 0.45 0.0],'LineStyle',':','LineWidth',2.25);
+%         plot(t(startPlotTime:endPlotTime),wRefSimulink(startPlotTime:endPlotTime,cv,simIter),...
+%                 'Color',[0.0 0.45 0.0],'LineStyle',':','LineWidth',2.25);
     %     plot(t(startPlotTime:endPlotTime),yFiltered.signals.values(startPlotTime:endPlotTime,cv),'g','LineWidth',1);
         ylabel(CVUnits{cv})
         xlabel('Time [hr]')
