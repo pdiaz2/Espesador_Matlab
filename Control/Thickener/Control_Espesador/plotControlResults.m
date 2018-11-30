@@ -1,10 +1,10 @@
 close all;
 % Manual inputs
 % load('ControlResults_MVP_2709_MB.mat');
-load('ControlResults_final_1111.mat');
+load('ControlResults_final_1011.mat');
 figurePath = 'figures\final_Correc\'
 imprint = false;
-subPlotBool = true;
+subPlotBool = false;
 simTime = 200*3600;
 usePlotCVLims = true;
 usePlotMVLims = true;

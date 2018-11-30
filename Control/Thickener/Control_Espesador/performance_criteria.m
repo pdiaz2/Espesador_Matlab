@@ -8,8 +8,8 @@ dateOutputStr = '1011';
 load([resultsPath 'ControlResults_final_' dateOutputStr '.mat']);
 figurePath = 'figures\performanceCriteria\';
 imprint = false;
-plotGraphs = true;
-selectIteration = 4; % Select which test do you wish to see results
+plotGraphs = false;
+selectIteration = 9; % Select which test do you wish to see results
 %% Compute
 wSteadyState = repmat(wRefSimulink(end,:,:),size(wRefSimulink,1),1,1);
 PerformanceCriteriaStruct = struct;
@@ -89,7 +89,7 @@ MVLims = [80 120;
           20 30];
 %% Graphical Results
 
-selectControllersStr = '1100'; % RF,ARMAX,Exp,PI
+selectControllersStr = '1111'; % RF,ARMAX,Exp,PI
 selectedCV = [2 3];
 selectedMV = [1 2];
 contString = '';
@@ -266,21 +266,20 @@ for controller = selectControllers
 end
 
 %% Mean Results
-% clc;
+clc;
 selectedCV = [1 2 3];
 selectedMV = [1 2];
-% end
 selectIteration = 8;
 for cv = selectedCV
     fprintf('CV Table %d\r\n',cv)
     for controller = selectControllers
-        % MSE
+        %MSE
         fprintf('% .2f ',sum(PerformanceCriteriaStruct(controller).MSE(1,cv,:))/selectIteration*1e2)
 
-        % IAE
+        %IAE
         fprintf('% .2f ',sum(PerformanceCriteriaStruct(controller).IAE(1,cv,:))/selectIteration*1e-4)
 
-        % MAE
+        %MAE
         fprintf('% .2f \r\n',sum(PerformanceCriteriaStruct(controller).maxTrackError(1,cv,:))/selectIteration)
     end
     
@@ -289,11 +288,11 @@ end
 
 fprintf('MV Table \r\n');
 for controller = selectControllers
-    % SCV
+    %SCV
     for mv = selectedMV
         fprintf('% .2f ',sum(PerformanceCriteriaStruct(controller).costDeltaMV(1,mv,:))/selectIteration)
     end
-    % ISU
+    %ISU
     for mv = selectedMV
         fprintf('% .2f ',sum(PerformanceCriteriaStruct(controller).ISU(1,mv,:))/selectIteration*1e-6)
     
