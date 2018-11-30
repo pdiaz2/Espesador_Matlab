@@ -1,15 +1,15 @@
 close all;
 % Manual inputs
 % load('ControlResults_MVP_2709_MB.mat');
-load('ControlResults_final_1011.mat');
-figurePath = 'figures\final_Correc\'
+load('ControlResults_final_1111.mat');
+figurePath = 'figures\isolatedGraphs_Correc\'
 imprint = false;
 subPlotBool = false;
 simTime = 200*3600;
 usePlotCVLims = true;
 usePlotMVLims = true;
 kappaControl_ARMAX = 1;
-dateOutputStr = '1011';
+dateOutputStr = '1111';
 %%
 plotControlFrom = 2
 plotControlTo = 3;
