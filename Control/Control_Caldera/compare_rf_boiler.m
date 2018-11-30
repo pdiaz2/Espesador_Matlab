@@ -99,7 +99,7 @@ for m = 1:numMakes
         legend({yLegend,yHatLegend},'Interpreter','latex');
         grid on
         if imprint
-            printName = [figurePath 'boiler_cv_' num2str(cv) '_2911'];
+            printName = [figurePath 'boiler_' num2str(m) '_cv_' num2str(cv) '_2911'];
             print(printName,'-depsc');
         end
     end
@@ -114,7 +114,7 @@ for m = 1:numMakes
         legend({dLegend},'Interpreter','latex');
         grid on
         if imprint
-            printName = [figurePath 'boiler_dv_' num2str(dv) '_2911'];
+            printName = [figurePath 'boiler_' num2str(m) '_dv_' num2str(dv) '_2911'];
             print(printName,'-depsc');
         end
     end
@@ -129,7 +129,7 @@ for m = 1:numMakes
         legend({mLegend},'Interpreter','latex');
         grid on
         if imprint
-            printName = [figurePath 'boiler_mv_' num2str(mv) '_2911'];
+            printName = [figurePath 'boiler_' num2str(m) '_mv_' num2str(mv) '_2911'];
             print(printName,'-depsc');
         end
     end
