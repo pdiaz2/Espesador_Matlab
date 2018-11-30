@@ -2,7 +2,7 @@ clear all;
 clc;
 close all;
 %% Control Parameters
-useMPC_RF = true; 
+useMPC_RF = false; 
 useMPC_ARMAX = true; reverse = 1; procBool = false; plotComputedMV = true; plotSatMV = false;
 useExpert = true; showMVComponents = false;
 usePID = true;
@@ -30,8 +30,8 @@ figurePath = [figureFolder testName '\'];
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
 %%%%%%%%%%
 bool200 = false;
-startSimTime = 1%;200*3600+1;
-simTime = 2*3600; % 10*3600
+startSimTime = 200*3600+1;
+simTime = 30*3600; % 10*3600
 % 1: OL
 % 2: Inertia
 % 3: Bed Level

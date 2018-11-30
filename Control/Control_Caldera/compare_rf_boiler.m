@@ -7,14 +7,15 @@ makeMatrix = eye(4)%;[1 0 1 1];
 % Dt = 1/40; % 5 seconds sampling time
 Dt = 1; % 5 seconds sampling time
 simTime = 100;
-amplitude = 20;
+amplitude = 5;
+figurePath = 'figures\rf_boiler\'
 [numMakes ~] = size(makeMatrix);
 stepInitTime = 60;
 tau_R = 5;
 dateMatFileStr = '0606';
 delayParametersFile = ['delayParameters_' dateMatFileStr '.mat'];
 startPlotTime = 1;
-imprint = false;
+imprint = true;
 %%
 %% Initial Conditions
 D0 = 35.7834;
@@ -33,10 +34,10 @@ nTrees = ones(1,numCV)*100
 nPredictors = [8 12 12]
 %% Simulation Time
 simTime = 1200;
-titlesCV = {'Presión de vapor y consigna (%)','Oxígeno en exceso y consigna (%)',...
-        'Nivel de agua y consigna (%)'};
-titlesMV = {'Combustible (%)','Aire (%)', 'Agua (%)'};
-titlesDV = {'Demanda de vapor (%)'};
+titlesCV = {'Steam Pressure (%)','Oxygen Level (%)',...
+        'Water Level (%)'};
+titlesMV = {'Fuel (%)','Air (%)', 'Water Inflow (%)'};
+titlesDV = {'Steam Demand(%)'};
 for m = 1:numMakes
     make = makeMatrix(m,:);
     demandaVals = myStepTest(simTime,Dt,1/2,simTime/3,stepInitTime,1,0,simTime/4);
@@ -79,46 +80,56 @@ for m = 1:numMakes
     
     close all;
     
-    figure(1)
+    
     for cv = 1:numCV
+        figure
         caca = yHat.signals.values(cv,1,:);
         yHatVector(:,cv) = reshape(caca,simTime+1,1);
-        subplot(numCV,1,cv)
-        plot(downsample(t(1:end),tau_R),downsample(y.signals.values(1:end,cv),tau_R),'LineWidth',1)
+%         subplot(numCV,1,cv)
+        t_down = downsample(t(1:end),tau_R);
+        yNoJat = downsample(y.signals.values(1:end,cv),tau_R);
+        plot(t_down(1:end-1),yNoJat(1:end-1),'LineWidth',1)
         hold on
-        plot(downsample(t(1:end),tau_R),downsample(yHatVector(1:end,cv),tau_R)','LineWidth',1)
+        yJat = downsample(yHatVector(1:end,cv),tau_R)';
+        plot(t_down(1:end-1),yJat(2:end),'LineWidth',1)
         title(titlesCV{cv})
-        xlabel('Tiempo (s)')
+        xlabel('Time [s]')
         yLegend = ['$y_' num2str(cv) '$'];
         yHatLegend = ['$\hat{y}_' num2str(cv) '$'];
         legend({yLegend,yHatLegend},'Interpreter','latex');
         grid on
+        if imprint
+            printName = [figurePath 'boiler_cv_' num2str(cv) '_2911'];
+            print(printName,'-depsc');
+        end
     end
-    figure(2)
+    
     for dv = 1:numDV
-        subplot(numDV,1,dv)
+        figure
+%         subplot(numDV,1,dv)
         plot(t(startPlotTime:end),inputs.signals.values(startPlotTime:end,dv),'LineWidth',1)
         title(titlesDV{dv})
-        xlabel('Tiempo (s)')
+        xlabel('Time [s]')
         dLegend = ['$d_' num2str(dv) '$'];
         legend({dLegend},'Interpreter','latex');
         grid on
         if imprint
-            printName = [figurePath 'mpc_rf_DV_' dateMatFileStr];
+            printName = [figurePath 'boiler_dv_' num2str(dv) '_2911'];
             print(printName,'-depsc');
         end
     end
-    figure(3)
+    
     for mv = 1:numMV
-        subplot(numMV,1,mv)
+        figure
+%         subplot(numMV,1,mv)
         plot(t(startPlotTime:end),inputs.signals.values(startPlotTime:end,mv+numDV),'LineWidth',1)
         title(titlesMV{mv})
-        xlabel('Tiempo (s)')
+        xlabel('Time [s]')
         mLegend = ['$u_' num2str(mv) '$'];
         legend({mLegend},'Interpreter','latex');
         grid on
         if imprint
-            printName = [figurePath 'mpc_rf_MV_' dateMatFileStr];
+            printName = [figurePath 'boiler_mv_' num2str(mv) '_2911'];
             print(printName,'-depsc');
         end
     end

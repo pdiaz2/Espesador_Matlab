@@ -1,18 +1,18 @@
 close all;
 % Manual inputs
 % load('ControlResults_MVP_2709_MB.mat');
-load('ControlResults_final_1011.mat');
-figurePath = 'figures\isolatedGraphs_Correc\'
+load('ControlResults_final_1111.mat');
+figurePath = 'figures\final_Correc\'
 imprint = false;
-subPlotBool = false;
+subPlotBool = true;
 simTime = 200*3600;
 usePlotCVLims = true;
 usePlotMVLims = true;
 kappaControl_ARMAX = 1;
 dateOutputStr = '1011';
 %%
-plotControlFrom = 4
-plotControlTo = 4;
+plotControlFrom = 2
+plotControlTo = 3;
 startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
 xLimVector = [0 simTime/3600];
@@ -410,8 +410,8 @@ else
             end
 
             xlim(xLimVector);
-            yLegend_1 = ['RF-MPC'];
-            yLegend_2 = ['ARIMAX-MPC'];
+            yLegend_1 = ['MPC-RF'];
+            yLegend_2 = ['MPC-ARIMAX'];
             yLegend_3 = ['EXP'];
             yLegend_4 = ['PI'];
             wLegend = ['$w_' num2str(cv) '$'];
@@ -528,7 +528,7 @@ else
             mLegend_1 = ['$u_' num2str(mv) '$ MPC'];
             mLegend_2 = ['$u_' num2str(mv) '$ PI'];
     %         legend({mLegend_1,mLegend_2},'Interpreter','latex');
-            legend({'RF-MPC','ARIMAX-MPC'})
+%             legend({'RF-MPC','ARIMAX-MPC'})
             grid on
 
         end
