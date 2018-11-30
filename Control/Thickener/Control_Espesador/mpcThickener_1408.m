@@ -2,14 +2,14 @@ clear all;
 clc;
 close all;
 %% Control Parameters
-useMPC_RF = false; 
-useMPC_ARMAX = true; reverse = 1; procBool = false; plotComputedMV = true; plotSatMV = false;
-useExpert = true; showMVComponents = false;
-usePID = true;
+useMPC_RF = true; 
+useMPC_ARMAX = false; reverse = 1; procBool = false; plotComputedMV = true; plotSatMV = false;
+useExpert = false; showMVComponents = false;
+usePID = false;
 
 %%%%%%%%%%%%%%%%%
 dvRealData = true;
-imprint = false;
+imprint = true;
 saveControlResults = false;
 
 % Code for names:
@@ -21,7 +21,7 @@ saveControlResults = false;
     % - <MB>: move blocking (separated tau_C from kappa_C)
     % - <PSO_BIG>: N_u*10 points in PSO algorithm
 % 3009 verbatim 2509
-dateOutputStr = '1111';
+dateOutputStr = '3011';
 dateMatFileStr = '1408';
 figureFolder = 'figures\';
 testName = 'final'; 
@@ -30,8 +30,8 @@ figurePath = [figureFolder testName '\'];
 resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\Hard_Data\ResultsControl\';
 %%%%%%%%%%
 bool200 = false;
-startSimTime = 200*3600+1;
-simTime = 30*3600; % 10*3600
+startSimTime = 1;%200*3600+1;
+simTime = 200*3600; % 10*3600
 % 1: OL
 % 2: Inertia
 % 3: Bed Level
@@ -41,8 +41,8 @@ simTime = 30*3600; % 10*3600
 % 7: UD
 % 8: Solid throughput pulse increase
 % 9: Solid throughput pulse decrease
-simControlFrom = 2;
-simControlTo = 2;
+simControlFrom = 1;
+simControlTo = 1;
 plotControlFrom = simControlFrom;
 plotControlTo = simControlTo;
 %%%%%%%%%%%%%%%
@@ -685,7 +685,7 @@ xLimVector = [0 simTime/3600];
 % endPlotTime = 56*3600;
 xLimVector = [startPlotTime endPlotTime]/3600;
 % Y Axis Limits
-usePlotLims = true;
+usePlotLims = false;
 useYTicks = false;
 % Limits and Ticks for full plots
 CVLims = [20 22;
@@ -809,13 +809,13 @@ for simIter = plotControlFrom:plotControlTo
         title(titlesDV{dv})
         ylabel(DVUnits{dv})
         xlabel('Time [hr]')
-        if usePlotLims
+%         if usePlotLims
             ylim(DVLims(dv,:));
             useLimStr = '';
-        else
-            useLimStr = 'nl_';
-            ylim auto
-        end
+%         else
+%             useLimStr = 'nl_';
+%             ylim auto
+%         end
         xlim(xLimVector);
         dLegend = ['$d_' num2str(dv) '$'];
 %         legend({dLegend},'Interpreter','latex');
