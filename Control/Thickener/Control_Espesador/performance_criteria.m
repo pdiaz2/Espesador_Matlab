@@ -8,8 +8,8 @@ dateOutputStr = '1011';
 load([resultsPath 'ControlResults_final_' dateOutputStr '.mat']);
 figurePath = 'figures\performanceCriteria\';
 imprint = false;
-plotGraphs = false;
-selectIteration = 9; % Select which test do you wish to see results
+plotGraphs = true;
+selectIteration = 7; % Select which test do you wish to see results
 %% Compute
 wSteadyState = repmat(wRefSimulink(end,:,:),size(wRefSimulink,1),1,1);
 PerformanceCriteriaStruct = struct;

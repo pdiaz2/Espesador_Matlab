@@ -3,12 +3,12 @@ clc;
 close all;
 %% Control Parameters
 useMPC_RF = false; 
-useMPC_ARMAX = false; reverse = 1; procBool = false; plotComputedMV = true; plotSatMV = false;
+useMPC_ARMAX = true; reverse = 1; procBool = false; plotComputedMV = true; plotSatMV = false;
 useExpert = false; showMVComponents = false;
 usePID = true;
 
 %%%%%%%%%%%%%%%%%
-dvRealData = true;
+dvRealData = false;
 imprint = false;
 saveControlResults = false;
 
