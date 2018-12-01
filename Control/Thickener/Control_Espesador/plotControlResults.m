@@ -1,7 +1,7 @@
 close all;
 % Manual inputs
 % load('ControlResults_MVP_2709_MB.mat');
-load('ControlResults_final_1111.mat');
+load('ControlResults_final_1011.mat');
 figurePath = 'figures\isolatedGraphs_Correc\'
 imprint = true;
 subPlotBool = false;
@@ -9,10 +9,10 @@ simTime = 200*3600;
 usePlotCVLims = false;
 usePlotMVLims = true;
 kappaControl_ARMAX = 1;
-dateOutputStr = '1111';
+dateOutputStr = '1011';
 %%
 plotControlFrom = 2
-plotControlTo = 3;
+plotControlTo = 2;
 startPlotTime = 1; %1
 endPlotTime = length(t); %length(t)
 xLimVector = [0 simTime/3600];
@@ -417,10 +417,10 @@ else
             wLegend = ['$w_' num2str(cv) '$'];
         %     yFiltLegend = ['$\tilde{y}_' num2str(cv) '$'];
     %         legend({yLegend_1,yLegend_2,wLegend},'Interpreter','latex');
-            if cv == 3 || cv == 1
-                legend({yLegend_1,yLegend_2,yLegend_3,yLegend_4,wLegend},'Interpreter','latex','Location','southwest');
+            if cv == 2 || cv == 1
+                legend({yLegend_1,yLegend_2,yLegend_3,yLegend_4,wLegend},'Interpreter','latex','Location','southeast');
             else
-                legend({yLegend_1,yLegend_2,yLegend_3,yLegend_4,wLegend},'Interpreter','latex','Location','northwest');
+                legend({yLegend_1,yLegend_2,yLegend_3,yLegend_4,wLegend},'Interpreter','latex','Location','southwest');
             end
             grid on
             hold off

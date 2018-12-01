@@ -3,9 +3,9 @@ clc;
 close all;
 %% Control Parameters
 useMPC_RF = false; 
-useMPC_ARMAX = true; reverse = 1; procBool = false; plotComputedMV = true; plotSatMV = false;
+useMPC_ARMAX = false; reverse = 1; procBool = false; plotComputedMV = true; plotSatMV = false;
 useExpert = false; showMVComponents = false;
-usePID = false;
+usePID = true;
 
 %%%%%%%%%%%%%%%%%
 dvRealData = true;
@@ -41,8 +41,8 @@ simTime = 200*3600; % 10*3600
 % 7: UD
 % 8: Solid throughput pulse increase
 % 9: Solid throughput pulse decrease
-simControlFrom = 1;
-simControlTo = 1;
+simControlFrom = 2;
+simControlTo = 2;
 plotControlFrom = simControlFrom;
 plotControlTo = simControlTo;
 %%%%%%%%%%%%%%%
@@ -756,8 +756,8 @@ for simIter = plotControlFrom:plotControlTo
         
         
         title(titlesCV{cv})
-%         plot(t(startPlotTime:endPlotTime),wRefSimulink(startPlotTime:endPlotTime,cv,simIter),...
-%                 'Color',[0.0 0.45 0.0],'LineStyle',':','LineWidth',2.25);
+        plot(t(startPlotTime:endPlotTime),wRefSimulink(startPlotTime:endPlotTime,cv,simIter),...
+                'Color',[0.0 0.45 0.0],'LineStyle',':','LineWidth',2.25);
     %     plot(t(startPlotTime:endPlotTime),yFiltered.signals.values(startPlotTime:endPlotTime,cv),'g','LineWidth',1);
         ylabel(CVUnits{cv})
         xlabel('Time [hr]')
