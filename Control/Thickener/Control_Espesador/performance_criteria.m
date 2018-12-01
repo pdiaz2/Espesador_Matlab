@@ -6,8 +6,8 @@ resultsPath = 'C:\Users\Felipe\Documents\MATLAB\PabloDiaz\Git\Espesador_Matlab\H
 dateOutputStr = '1011';
 
 load([resultsPath 'ControlResults_final_' dateOutputStr '.mat']);
-figurePath = 'figures\performanceCriteria\';
-imprint = false;
+figurePath = 'figures\';
+imprint = true;
 plotGraphs = true;
 selectIteration = 7; % Select which test do you wish to see results
 %% Compute

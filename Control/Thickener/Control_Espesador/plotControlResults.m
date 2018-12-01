@@ -2,8 +2,8 @@ close all;
 % Manual inputs
 % load('ControlResults_MVP_2709_MB.mat');
 load('ControlResults_final_1011.mat');
-figurePath = 'figures\isolatedGraphs_Correc\'
-imprint = false;
+figurePath = 'figures\'
+imprint = true;
 subPlotBool = false;
 simTime = 200*3600;
 usePlotCVLims = false;
